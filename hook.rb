@@ -15,7 +15,7 @@ loop {
 
   system('git pull')
   system('rake generate')
-  ##system('rake deploy')	##will loop circle
+  system('rake deploy')			##be careful  hook.loop
   puts ''
 }
 
