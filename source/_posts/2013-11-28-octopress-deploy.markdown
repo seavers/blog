@@ -62,7 +62,7 @@ loop {
 另一种方案是, nginx直接请求 _deploy 目录
 ```
 	location /blog/ {
-		alias /octopress/_deploy/;
+		alias ~/octopress/public/;
 	}
 ```
 
