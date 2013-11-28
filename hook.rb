@@ -15,6 +15,7 @@ loop {
 
   system('git pull')
   system('rake generate')
+  system('rake deploy')
   puts ''
 }
 
