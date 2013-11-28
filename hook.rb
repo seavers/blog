@@ -5,6 +5,8 @@ puts "Listening on port " + server.addr[1].to_s
   
 loop {
   client = server.accept()
+
+  puts Time.now
   while((x = client.gets) != "\r\n")
     puts x
   end
