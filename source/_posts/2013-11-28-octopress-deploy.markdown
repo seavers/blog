@@ -8,8 +8,8 @@ categories:
 
 今天准备实现 octopress 的自动部署, 完成以下功能
 
-    * 在github.com提交markdown文件后,自动触发服务器打包更新
-    * 服务器打包更新后, 同步至github.io, 以及服务器展示
+* 在github.com提交markdown文件后,自动触发服务器打包更新
+* 服务器打包更新后, 同步至github.io, 以及服务器展示
 
 实现之前, 参考了下这篇, [监听github，自动编译octopress博客](http://imxylz.com/blog/2013/11/27/build-octopress-with-github-hook/), 写的蛮不错的
 不过, 我的方案, 有些不同的地方
@@ -38,7 +38,7 @@ loop {
 
   system('git pull')
   system('rake generate')
-  //system('rake deploy')
+  ##system('rake deploy')
   puts ''
 }
 ```
@@ -66,12 +66,17 @@ loop {
 	}
 ```
 
+## 部署在github上
 当然, 如果想在github.io上部署, 需要再同步至github.io, 如在刚才在hook.rb里修改
 ```
 	rake deploy
 ```
+这里要小心,这样改会死循环的. 
+deploy会触发git commit, commit再触发hook, hook里再deploy,再commit, 如此死循环
+所以需要在hook里判断是master还是source
 
-
+另一种解决方案, 就是把master与source, 放置在不同git仓库上
+这样, 提交source的时候, 就不会触发blog的hook了
 
 
 
