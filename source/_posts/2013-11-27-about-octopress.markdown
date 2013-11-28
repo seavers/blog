@@ -18,7 +18,7 @@ categories:
 
 发现 octopress 是基于ruby 写的, 还是挺好用的
 
-```shell
+```
 rake --help
 rake --tasks
 rake new_post[title]
