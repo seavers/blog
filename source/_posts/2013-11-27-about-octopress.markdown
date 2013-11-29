@@ -4,6 +4,7 @@ title: "about octopress"
 date: 2013-11-27 18:30:41 +0800
 comments: true
 categories: 
+- octopress
 ---
 
 

@@ -4,6 +4,7 @@ title: "sed"
 date: 2013-11-28 16:50:01 +0800
 comments: true
 categories: 
+- ubuntu
 ---
 
 sed是基于行进行文本替换的神器, 这里记录一些自己常用的功能

@@ -4,6 +4,7 @@ title: "octopress 自动部署方案"
 date: 2013-11-28 22:20:52 +0800
 comments: true
 categories: 
+- octopress
 ---
 
 今天准备实现 octopress 的自动部署, 完成以下功能
