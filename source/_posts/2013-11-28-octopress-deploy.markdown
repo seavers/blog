@@ -18,7 +18,7 @@ categories:
 ## 钩子
 在github的项目设置的Service Hooks中添加一个WebHook URLs的钩子
 ```
-	http://blog.lianghaijun.com:4001/blog-update
+	http://<host>:<port>/blog-update
 ```
 而github钩子, 我采用的是ruby, 命名为hook.rb
 ```ruby
