@@ -4,6 +4,7 @@ title: "html5版仙剑"
 date: 2013-11-27 23:20:11 +0800
 comments: true
 categories: 
+- html5
 ---
 
 刚学习html5时, 为了练手, 基于html5写了版仙剑, [http://xianjian.github.com/](http://xianjian.github.com/)

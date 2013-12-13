@@ -4,6 +4,7 @@ title: "utuntu group"
 date: 2013-12-02 14:28:53 +0800
 comments: true
 categories: 
+- ubuntu
 ---
 
 

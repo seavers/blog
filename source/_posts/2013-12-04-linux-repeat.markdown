@@ -4,8 +4,7 @@ title: "linux repeat"
 date: 2013-12-04 15:32:01 +0800
 comments: true
 categories: 
-- linux
-- repeat
+- ubuntu
 ---
 
 linux下循环执行命令
