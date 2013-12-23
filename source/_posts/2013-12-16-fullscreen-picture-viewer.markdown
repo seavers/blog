@@ -7,11 +7,8 @@ categories:
 - chrome
 ---
 
-今天写了一个chrome扩展,可以用于全屏查看图片
-
-## 全屏图片查看器 chrome 扩展
- * 用于隐藏掉网页内其它内容,只留下大图
- * chrome 安装地址: [fullscreen.crx](http://www.lianghaijun.com/download/fullscreen.crx)
+## 全屏图片查看器是一个chrome扩展
+  可以用于全屏查看图片,当查看网页时,按f键后,会隐藏掉网页里的其它内容,只留下大图
 
 ## 举一些实际的使用场景
 
@@ -24,8 +21,8 @@ categories:
  * 按f键 (fullscreen的缩写)
  * 按w/s按来调整threshold, 调整图片最小尺寸的阀值
 
-
-源码见[github](https://github.com/seavers/fullscreen)
+扩展下载: [fullscreen.crx](http://www.lianghaijun.com/download/fullscreen.crx)
+源码浏览: [github](https://github.com/seavers/fullscreen)
 
 ## 试用
  * 图片大小的默认阀值是350px
