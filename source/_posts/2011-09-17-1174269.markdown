@@ -1,0 +1,33 @@
+---
+layout: post
+title: "display, position, float 之间的关系"
+date: 2011-09-17 22:52:00 +0800
+comments: true
+categories:
+- css
+tags:
+- 布局 定位 浮动
+---
+
+从 css2.1 规范中翻译而来
+出处见: http://www.w3.org/TR/CSS21/visuren.html#dis-pos-flo
+
+Ps: 原文中的box未翻译, 可理解为盒模型, 或盒子
+
+影响 产生box及布局的三个属性 - display, position, float 之间的关系如下:
+
+
+*  如果 display 的值为none, 则忽略position与float, 这种情况下, 元素不产生box
+*  如果 position 的值为 absolute 或者 fixed, 则box绝对定位, float的值设定为 none , display 的值按照下面的表格来设定. box 的定位将决定于 top, right, bottom, left 属性及box的容器
+*  如果 float 的值不是 none, 则 box 是浮动的且 display 按照下面的表格来设定
+*  如果元素是根元素, display 按下面的表格来设定, 有一个例外: 当指定的值为list-item时,将变成计算后的 block 还是 list-item, 这点没有在CSS2.1中定义   (这句话不会翻译了)
+*  剩余的 display 按照指定的方式来显示
+
+
+
+[table]
+|specified value| computed value |
+|inline-table   | table          |
+|inline, table-row-group, table-column, table-column-group, table-header-group, table-footer-group, table-row, table-cell, table-caption, inline-block| block |
+|others|same as specified |
+[/table]

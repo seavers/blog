@@ -1,0 +1,75 @@
+---
+layout: post
+title: "android 整合 maven 环境"
+date: 2013-04-30 14:33:00 +0800
+comments: true
+categories:
+- android
+tags:
+- android
+-  maven
+---
+
+我们再先整理一下思路:
+
+使用eclipse:
+
+1. 创建:  adt自带的android创建插件  New -> android application project
+2. 引入:  import -> existing project into workspace
+3. 打包:  run as ->  android application
+
+使用maven:
+
+1. 创建: maven archetype:generate (99: de.akquinet.android.archetypes:android-quickstart)
+      https://github.com/akquinet/android-archetypes
+2. 运行: maven clean package android:deploy android:run    (android-maven-plugin)
+3. 引入eclipse:
+       a).  mvn eclipse:eclipse
+       b).  import -> android -> existing android code into workspace
+       c).  注意, 要选中 copy projects into workspace , 否则会有 overlaps 问题
+       d).  下次,已经存在.project .classpath, 直接导入已存在的java工程即可
+4.  打包同上~~~
+
+
+-----------------------------------------
+
+用maven编译android并部署
+```
+  export ANDROID_HOME=~/android/sdk/
+  mvn clean package android:deploy android:run
+```
+
+其中package中使用了 android-maven-plugin中的
+
+* android-maven-plugin:3.5.0:generate-sources
+* android-maven-plugin:3.5.0:proguard
+* android-maven-plugin:3.5.0:emma
+* android-maven-plugin:3.5.0:dex
+* android-maven-plugin:3.5.0:apk
+
+这四个mvn指令,穿插在了package正常打包过程中
+这四个mvn指令,均是直接调用了android.sdk中的platform-tools中的某个指令或java调用
+
+```
+<plugin>
+    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+    <artifactId>android-maven-plugin</artifactId>
+    <version>3.1.1</version>
+    <extensions>true</extensions>
+    <configuration>
+     <sdk>
+      <platform>16</platform>
+     </sdk>
+    </configuration>
+   </plugin>
+
+```
+
+
+maven.android的eclipse常用插件是 m2e-android 插件
+可以认为m2e-android也是同样的道理,
+
+
+
+
+

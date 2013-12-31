@@ -1,0 +1,58 @@
+---
+layout: post
+title: "ubuntu下的apache"
+date: 2013-04-06 15:06:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+-  apache
+---
+
+最近仔细的研究了下ubuntu的apache
+
+ubuntu下的apache跟其它操作系统下的apache, 有很大的区别
+
+ubuntu下安装apache
+```
+    sudo apt-get install apache2
+```
+ubuntu下启用apache的模块
+```
+   sudo a2enmod <modname>
+```
+
+ubuntu下的apache的设计, 有很大程度上, 是帮助程序员尽量的减少conf的改动
+比如:
+1. 让apache启用一个模块
+     a) 我们可以看到apache下的模块,是以文件的形式存在的, mods-enables下, 多一个模块的引用, 就表示启用一个模块, 而全部的模块, 是保存在 mods-available中的
+     b) 这样设计的原因, 就在于, 启用以及停用模块, 简化为文件的操作
+     c) 这样, apt-get,a2enmod这样的命令行,会更方便的执行命令, 否则要用正则匹配conf文件, 复杂麻烦,易出错, 而且耦合在了一起, 不利于apache的conf版本升级
+2. 让apache启用一个站点
+       同上面的设计一样,  站点也是使用 sites-available 以及 sites-enables 来管理的
+3. conf.d 的设计
+       a) 使用 conf.d 目录的设计, 让增加以及修改 apache2.conf 文件的方式, 改为了文件操作
+       b) 比如支持一个proxy的, 或者 Redirect 类的, 可以简化增加一个文件配置
+4. 利用别名的技术
+       a)  增加一个 phpmyadmin
+```
+     sudo ln -s  /usr/share/phpmyadmin  /var/www/phpmyadmin
+```
+      b)  或者自定义的代码库
+```
+     sudo ln -s  /home/admin/workspace  /var/www/workspace
+```
+```
+     sudo ln -s  /home/admin/.m2/repository      /var/www/maven2
+```
+5. 使用 .htaccess
+        将 .htaccess 打包在代码库里, 统一使用上面的别名部署, 统一代码管理, 减少与 apache 的相关配置文件的耦合
+6.  使用 .htpasswd
+        这其实也是一个不错的实践
+
+
+
+
+
+

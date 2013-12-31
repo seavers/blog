@@ -1,0 +1,31 @@
+---
+layout: post
+title: "一道智力题"
+date: 2010-06-20 21:47:00 +0800
+comments: true
+categories:
+- 思考
+tags:
+---
+
+<div class="iteye-blog-content-contain" style="font-size: 14px;">
+<p>请回答以下问题: <br>　　　　1、第一个答案是b的问题是哪一个？<br>　　　　（a）2；（b） 3；（c）4；（d）5；（e）6 <br>　　　　2、唯一的连续两个具有相同答案的问题是： <br>　　　　（a）2，3；（b）3，4；（c）4，5；（d）5，6；（e）6，7； <br>　　　　3、本问题答案和哪一个问题的答案相同？ <br>　　　　（a）1；（b）2；（c）4；（d）7；（e）6<br>　　　　4、答案是a的问题的个数是： <br>　　　　（a）0；（b）1；（c）2；（d）3；（e）4 <br>　　　　5、本问题答案和哪一个问题的答案相同？ <br>　　　　（a）10；（b）9；（c）8；（d）7；（e）6 <br>　　　　6、答案是a的问题的个数和答案是什么的问题的个数相同？ <br>　　　　（a）b；（b）c；（c）d；（d）e；（e）以上都不是 <br>　　　　7、按照字母顺序，本问题的答案和下一个问题的答案相差几个字母？ <br>　　　　（a）4；（b）3；（c）2；（d）1；（e）0。（注：a和b相差一个字母） <br>　　　　8、答案是元音字母的问题的个数是： <br>　　　　（a）2；（b）3；（c）4；（d）5；（e）6。（注：a和e是元音字母） <br>　　　　9、答案是辅音字母的问题的个数是： <br>　　　　（a）一个质数；（b）一个阶乘数；（c）一个平方数；（d）一个立方数，（e）5的倍数 <br>　　　　10、本问题的答案是： <br>　　　　（a）a；（b）b；（c）c；（d）d；（e）e</p>
+<p> </p>
+<p> </p>
+<p>我的答案:</p>
+<p> </p>
+<p>1. 第1题不能是b, 否则自相矛盾<br>2. 第2题不能是a, 否则123题矛盾<br>2.1 1为c,2不能为abc, 1为d,2不能为abcd,1为e,2不能为abde<br>3. 第3题不能是a, 因为第四题不可能是a<br>4. 第3题不能是b, 否则234题都是b则与第二题矛盾<br>4.1 1为e, 3不能是abe, 6为b,则3,5不能为e<br>5. 第4题不能是a, 否则自相矛盾<br>5.1 1234为 abcc abdd abee,cdeb cedb dedcbddxb dedebddxb ecdccbdcx<br>5.2 根据上面来判断,a的个数, 1题为d或e都不可能, 第1题只能是ac<br>5.3 如1234为cdeb cedb时, cdebee cedbxdd -&gt; cdebee cedbaddxxa cedbcddcxx<br>6. 第7题不能是e, 否则与第2题矛盾<br>7. 第7,8题,可能的结果是 Xe, ca, dc 三种可能, 即第8题为ace, 即元音个数为246三种可能, 那么辅音则为864三种可能<br>8. 第9题的结果为 a) 235 b) 126 c) 149 d) 18 e) 5 10 即结果为bcd 即648三种可能<br>9. 即第789三题可能为 aec bec cad cec dcb dec<br>10. 即第5789 四题可能为 axxx bdcb cdcb ddcb ddec exxx<br>10.1 如1234为cdeb,cedb时, cdebeedcba cedbaddcba cedbaddeca cedbcddcadx cedbcddceca<br>10.2 上面的,成立的有 cdebeedcba<br>11. 当第1题是a时, 第2题是b<br>a) 第1234题为 abcc时, 第5题为a,与4矛盾, 5789为bdcb,cdcb ddcb时,已经7个辅音,与9矛盾, 当5为e时,与2矛盾<br>b) 第1234题为 abdd时, 789题为dcb dec, 5610为 aca 即abddacdcba不成立<br>c) 第1234题为 abee时, 第6题为e, 第8题为e, 3个a,4个e,与8题矛盾</p>
+<p>综上所述, 只有一种情况成立 cdebeedcba</p>
+<p><br>其它方析(曾经使用过的分析)<br>11. 第8题不能为a, 否则第5题abcde都不可能, 即789为xec,dcb, 且5789 axxx xdcb ddec exxx<br>12. 第8题只能是ce<br>13. 第9题只能是bc<br>14. 如果第8题为e, 有两种1个a+5个e或2个a+4个e<br>a) 第6个必须为e,否则只有1210可以为e,不够4个<br>b) 1xa+5xe 4b6e8e, 1c, 3510e 2d7a cdebeeaece与6矛盾<br>c) 2xa+4xe 4c6e8e, 1为a时, 510必须为e abcceeaece与2矛盾 1不a, 只能为d, 5为b,310只能e,只有7为a,与4矛盾<br>d) 因此第8题不能为e,只能为c<br>15. 第89只能为cb, 7只能为d,10不能为b<br>16. 第2,3不为e时, 15610必须为a或e, 1为a则</p>
+<p>15. 当第1题不为a时, 123都不可能为ab, 只有56710四题可能为a<br>a) 当56710为a时, 123都不可能为ab, 与6矛盾, 即4不能为e<br>b) 当5610或者6710时,题为a时, 1238都不可能为b, 79不能同时为b, 矛盾, 所以6不能为a<br>c) 当5710为a时, 45678910为daxaeca, 第2题cde都不可选择, 矛盾<br>d) 所以只能有1个a或者2个a<br>e) 当4选择b时, 1234为cdeb,cedb, 5只能为e<br>e1) 1234为cdeb, 5为e, 6为e, 78910为dcba即 cdebeedcba 成立<br>e2) 1234为cedb, 5为e, 6为d, 6,8矛盾<br>f) 当4选择c时, 1只能为de, 1234都不能为ab, 3不能c 8不能为ab, 56710可能为ab,9可能为b<br>f1) 123为 dcd dce ded时 4c5b 只能是dedcbddcb<br>f2) 123为 ecd ece ede时</p>
+<p>f1) 当5为a时,10为a, 67不能为a, <br>f2) 当5不为a时,<br>f3) 当6为a时, 1234为</p>
+<p>f1) 当1为d, 59为b, 则dxxcbxdcbx,则只有10为a,与4矛盾<br>f2) 当1为e, ecxccb edxcbb</p>
+<p><br>8. 如果第1题选d, 第234不能为b,则59为b,则dxxxbxdcbx,即只能有第10题可能为a,而第4题不能选ab,矛盾, 即第1题不可能为d</p>
+<p>15. 当第1题为c时, 那么5不能为a, 否则与4矛盾, 5不能为d, 否则5与7矛盾<br>a) 第12题为cd时, 4为b, 5不能为a, 456789为bbdcb ccdcb eexxx,</p>
+<p> </p>
+<p><br>1 a c d e<br>2 b c d e<br>3 c d e<br>4 b c <br>5 a b c d e<br>6 a b c d e<br>7 d<br>8 c <br>9 b<br>10 a c d e</p>
+<p>9. 即第35789 五题可能为 cxxxx,</p>
+<p>9. 如果第1题为e, 第2345不能为b,则6为b</p>
+<p><br>cxxbdxxxbxdcbx dcxbbxdcb dexxbddcb deccbddcbx dedxbddcbxexxxxb<br>1 567 10 15610 15710 16710abcd ce bc</p>
+<p>ae=13 22 15 24<br>15 4b8e6+1210 6e 4b6e8e35101a|7aaxebeexexecdebeeaece<br>24 4c8e6+12106b7b 4c6e8e3510 1a7a510axdxceeabxceeaecedxecbeaeca<br>1 2 8 10</p>
+</div>

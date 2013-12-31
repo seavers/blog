@@ -1,0 +1,15 @@
+---
+layout: post
+title: "version compare"
+date: 2011-02-11 21:34:00 +0800
+comments: true
+categories:
+- java
+tags:
+- log4j
+-  Apache
+---
+
+[img]http://dl.iteye.com/upload/attachment/412672/dda5fd96-afce-3f8c-bdf3-bf20b8228fe7.jpg[/img]
+
+Apache log4j™ 1.3 development has been abandoned and no future releases or development is anticipated. Users of Apache log4j 1.3 are encouraged to migrate to Apache log4j 1.2 or to monitor and contribute to the Apache log4j 2.0 development effort. The companions for Apache log4j 1.2 provide many of the features that were developed during the Apache log4j 1.3 development effort.

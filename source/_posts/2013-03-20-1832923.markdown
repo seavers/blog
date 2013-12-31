@@ -1,0 +1,62 @@
+---
+layout: post
+title: "cubieboard上手"
+date: 2013-03-20 20:19:00 +0800
+comments: true
+categories:
+- cubieboard
+tags:
+- cubieboard
+---
+
+最近刚买了cubieboard, 入手到玩转后的各个过程记录下
+
+购买链接: http://item.taobao.com/item.htm?id=18271795262
+已有装备: 笔记本, 无线路由器
+入手装备: cubieboard, 带电源,ttl2usb线等
+关键问题: 无显示器与电视
+超市购物: 读卡器+网线,  (从手机上拿的TF卡)
+
+Q: 没有显示器与电视, 如何连接
+
+* 板子预装的android, 启动后, 可以直连至无线路由器, 但无法ssh或telnet上
+* 使用TTL线进行连接 http://linux-sunxi.org/Cubieboard/TTL
+* 然后使用windows/putty连接  方式:serial COM3 速率:115200
+* 然后接上电源就可以看到输出信息了, 这时就可以敲shell命令了 (如ls)
+* 没有找到命令行下载与安装软件的方式, 后续考虑
+
+
+Q: 在tf卡上安装ubuntu
+
+* 用读卡器装tf卡连接到了ubuntu笔记本上
+* 刚开始时, 容量有问题, 只有64M, 用fdisk命令解决了, 见前一博文
+* 刷tf方法见:   http://blog.sina.com.cn/s/blog_5459f60d0101h0j3.html
+http://cn.cubieboard.org/forum.php?mod=viewthread&tid=55&extra=page%3D1
+(precise在镜像上已经失效了,换quantal(即v12.10))
+* 装上tf卡, 拔电源重启, 就可在ttl上看到, 已经连接到ubuntu上, 并且可以敲命令了
+* 在/etc/resolv.conf配置nameserver, 就可以ping通baidu.com了
+* apt-get install openssh-server, 然后就可以拔掉ttl线了,
+* 买上无线网卡, 就可拔掉网线, 连接线, 只剩下电源线了
+
+
+Q: 刷nand
+
+* 可使用官网提供的方式刷系统
+* 也可以用tf卡的ubuntu, 直接写系统至 /dev/nand
+* 拔掉tf卡, 用nand上的系统启动
+
+
+接下来, 就可以搜索各种有趣的玩法了~~~
+
+
+---------
+sd卡刷ubuntu/linaro, (来源见前面描述)
+```
+git clone https://github.com/linux-sunxi/sunxi-bsp/ 
+cd sunxi-bsp 
+wget http://dl.linux-sunxi.org/amery/sunxi-3.0/latest/cubieboard_hwpack.tar.xz
+wget http://releases.linaro.org/latest/ubuntu/quantal-images/alip/linaro-quantal-alip-20121124-519.tar.gz
+./scripts/sunxi-media-create.sh /dev/sdb cubieboard_hwpack.tar.xz linaro-quantal-alip-20121124-519.tar.gz
+```
+
+

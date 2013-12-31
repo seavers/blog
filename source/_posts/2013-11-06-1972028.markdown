@@ -1,0 +1,42 @@
+---
+layout: post
+title: "ubuntu ipconfig"
+date: 2013-11-06 13:45:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+---
+
+sudo vi /sbin/ipconfig
+
+```
+#! /bin/bash
+for word in `ifconfig eth0 | grep "inet addr" | sed  's/          inet addr/addr/g'`; do echo $word | sed 's/:/\t/g'; done
+route -n | awk '/UG/ {printf "gateway    %-21s %s\n", $2,$8}' ;
+grep nameserver /etc/resolv.conf ;
+```
+
+
+```
+sudo chmod +x /sbin/ipconfig
+
+ipconfig
+
+```
+
+
+
+
+---------
+待改进
+
+* 支持eth0 与 wlan0
+* 支持dnsmasq
+
+
+
+
+
+
