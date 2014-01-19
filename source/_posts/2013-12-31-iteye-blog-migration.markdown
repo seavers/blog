@@ -4,6 +4,7 @@ title: "iteye 博客迁移"
 date: 2013-12-31 15:16:16 +0800
 comments: true
 categories: 
+- octopress
 ---
 
 之前一直是在iteye上写博客的, 后来建立了本博客系统后, 就希望将博客从iteye上迁移过来
@@ -15,6 +16,8 @@ iteye2markdown是一款博客迁移工具,可以将博客从iteye迁移至octopr
 * 此工具会自动下载iteye博客上的所有文章
 * 接着会将博客中的bbcode代码转换成markdown
 * 下载转换后的markdown可用于octopress,迁移至自己的博客系统上
+
+<!--more-->
 
 使用方式:
 

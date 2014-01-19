@@ -15,6 +15,8 @@ categories:
 * 方便的网页分析工具,最好能提供类似css selector的元素选择器
 * 简单方便的数据处理模块
 
+<!--more-->
+
 写个简单的例子
 ```
 #encoding:utf-8

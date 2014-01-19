@@ -7,7 +7,9 @@ categories:
 - ubuntu
 ---
 
-linux下循环执行命令
+linux下循环执行命令, 小工具, 觉得有用, 可收录
+
+<!--more-->
 
 ```
 	vi ~/.bash_aliases

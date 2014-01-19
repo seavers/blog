@@ -12,6 +12,8 @@ categories:
 * 在github.com提交markdown文件后,自动触发服务器打包更新
 * 服务器打包更新后, 同步至github.io, 以及服务器展示
 
+<!--more-->
+
 实现之前, 参考了下这篇, [监听github，自动编译octopress博客](http://imxylz.com/blog/2013/11/27/build-octopress-with-github-hook/), 写的蛮不错的
 不过, 我的方案, 有些不同的地方
 

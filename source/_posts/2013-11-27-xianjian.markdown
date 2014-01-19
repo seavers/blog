@@ -9,6 +9,8 @@ categories:
 
 刚学习html5时, 为了练手, 基于html5写了版仙剑, [http://xianjian.github.com/](http://xianjian.github.com/)
 
+<!--more-->
+
 当时花了不少心血, 也解决了不少算法问题, 可用度80%, 然而后来比较忙, 就停止了
 
 今天心血来潮, 在服务器上重新部署了一套, 欢迎试用 (图片点击右键, 新窗口打开)
