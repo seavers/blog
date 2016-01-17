@@ -1,0 +1,9 @@
+---
+layout: nil
+---
+{"list": [
+  {% for post in site.posts %}
+	{ "title":"{{ post.title }}", "url":"{{ post.url }}" },
+  {% endfor %}
+	{}
+]}
