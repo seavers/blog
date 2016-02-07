@@ -1,0 +1,67 @@
+---
+layout: post
+title: "raspberry 网络设置"
+date: 2013-04-20 19:52:00 +0800
+comments: true
+categories:
+- cubieboard
+tags:
+- raspberry
+---
+
+今天调了一天 raspberry pi 的网络设置
+
+测试结论如下
+1. raspberry pi的USB确实有问题, 插拔都会引起系统重启, 尤其是TTL2USB以及USB网卡
+2. usb网卡在TTL模式下时, 可以设置成功, 拔掉TTL后, 自动重启, 然后就连不上了, 再接上TTL, 网络又好了, 很怪
+3. 有线网卡, DHCP下总是不成功, 设置死IP后, 就成功了, 可以断掉TTL, 重启后,依然正常
+4. 有线网卡, DHCP下也是可以成功的, 需要在rc.local中添加 dhclient eth0
+
+正常的/etc/network/interfaces 如下
+
+```
+auto lo
+iface lo inet loopback
+
+auto eth0
+allow-hotplug eth0
+#iface eth0 inet dhcp
+iface eth0 inet static
+   address 192.168.1.8 
+   netmask 255.255.255.0
+   gateway 192.168.1.1
+
+allow-hotplug wlan0
+iface wlan0 inet manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface default inet dhcp
+
+```
+
+
+以上测试基于2013-02-09-wheezy-raspbian.img
+只改动了 interfaces , 其余未动
+
+
+
+dhcp的/etc/network/interfaces 如下
+
+```
+auto lo
+iface lo inet loopback
+
+auto eth0
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+allow-hotplug wlan0
+iface wlan0 inet manual
+wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+iface default inet dhcp
+
+```
+并在 /etc/rc.local中添加一行, 需在exit 0前
+dhclient eth0
+
+5.  难道无线网卡也是同样的问题, 再试下
+

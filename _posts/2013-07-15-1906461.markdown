@@ -1,0 +1,24 @@
+---
+layout: post
+title: "下列签名无效： NODATA 1 NODATA 2"
+date: 2013-07-15 11:42:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+---
+
+ubuntu下 apt-get update 时,报错
+下列签名无效： NODATA 1 NODATA 2
+
+原因是: 网络连接出错了, 对应的网址连不上去
+
+比如: archive.ubuntu.com,   连接不上, 可换成 cn.archive.ubuntu.com
+或者: 网络有代理, 什么的被拦截了
+
+
+
+
+
+

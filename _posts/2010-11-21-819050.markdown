@@ -1,0 +1,11 @@
+---
+layout: post
+title: "SimpleDateFormat 不是线程安全的``"
+date: 2010-11-21 19:53:00 +0800
+comments: true
+categories:
+- java
+tags:
+---
+
+原来SimpleDateFormat不是线程安全的``

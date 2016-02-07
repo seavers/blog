@@ -1,0 +1,55 @@
+---
+layout: post
+title: "chrome  support for sass"
+date: 2013-02-28 15:51:00 +0800
+comments: true
+categories:
+- css
+tags:
+- chrome
+-  sass
+---
+
+chrome  support for sass
+
+
+很多人说 chrome 已经支持 sass了，但是怎么个支持法，却没有提及，通过google，搜出来一些资料，共享下
+
+
+chrome开启sass
+1. chrome://flags,   启用开发者工具实验  => 点击最下方重启
+2. chrome开发者工具(F12), 右下角setttings,experiments,support for sass => 重启
+3. OK 可以了
+
+
+如何使用
+1. 使用sass --watch文件夹， 实时编译 .scss 文件至 .css
+```
+   sass --watch .:. --debug-info --line-number
+```
+其中冒号前后，为监视的目录
+2. chrome打开页面, 页面中的link，使用编译后的 .css
+3. 开发者工具中， 查看 .css 文件， 已经变成了 .scss文件，并可以点击过去
+
+
+注意点：
+debug调试， .scss 文件只支持 file://
+
+
+
+Ps: 原以为会支持实时编译，原来不是，可惜了
+
+
+
+参考:
+
+
+* http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html
+* http://wiki.netbeans.org/SourceMapsExampleSASS
+
+
+
+
+
+
+

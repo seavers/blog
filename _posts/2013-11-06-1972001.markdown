@@ -1,0 +1,127 @@
+---
+layout: post
+title: "ubuntu 注册 wins"
+date: 2013-11-06 12:17:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+-  samba
+-  dns
+---
+
+以下是为了让ubuntu进入windows网络,实现互ping,互连
+
+
+1. ubuntu进入windows网络,必须安装samba
+```
+sudo apt-get install samba
+```
+2. 修改/etc/samba/smb.conf, 将wins server修改为正确的ip
+      可以在windows上, 敲入ipconfig /all得到具体ip
+3. 重启服务
+```
+sudo service nmbd restart
+```
+4. 验证下
+```
+nmblookup -R -U <wins_server_ip> <hostname>
+```
+5. 这时windows就可访问ubuntu,可以直接ping通
+6. ubuntu互ping, 需要设置search domain
+```
+echo 'search abc.com' >> /etc/resolv.conf
+```
+
+
+-----
+
+1. 如果IP改变后, wins_server的缓存的ip不正确了,
+可以删除以下两个文件
+/var/cache/samba/wins.dat
+/var/cache/samba/browse.dat 
+然后重启 nmbd 即可
+2. 如果ubuntu ping 时, ip仍然不正确, 检查下dns server
+      (这块还没有搞清楚, 试试换备用server, 或者等等dns同步)
+3. 
+
+
+-------
+
+如果只是为了互连互通,只需要 nmbd 服务即可
+如果还需要windows共享文件的服务, 需启动smbd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===========================================================
+
+
+nsswitch.conf是SUN公司开发的一种扩充（name services switch）
+
+```
+# /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you have the `glibc-doc-reference' and `info' packages installed, try:
+# `info libc "Name Service Switch"' for information about this file.
+
+aliases:    邮件别名, sendmail(8) 使用该文件. 
+ethers:     以太网号. 
+group:      用户组, getgrent(3) 函数使用该文件. 
+hosts:      主机名和主机号, gethostbyname(3) 以及类似的函数使用了该文件. 
+netgroup:   网络内主机及其用户的列表, 访问规则使用该文件. 
+network:    网络名及网络号, getnetent(3) 函数使用该文件. 
+passwd:     用户口令, getpwent(3) 函数使用该文件. 
+protocols:  网络协议, getprotoent(3) 函数使用该文件. 
+publickey:  NIS+及NFS 所使用的secure_rpc的公开密匙. 
+rpc:        远程过程调用名及调用号, getrpcbyname(3) 及类似函数使用该文件. 
+services:   网络服务, getservent(3) 函数使用该文件. 
+shadow:     shadow用户口令, getspnam(3) 函数使用该文件.
+```
+
+
+=====================
+
+hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4
+
+* files:  /etc/hosts
+* mdns :  dnsmasq  avahi-daemon
+* dns  :  dns server
+
+
+===================
+
+dnsmasq
+
+Dnsmasq is a lightweight, easy to configure DNS forwarder and DHCP server. 
+https://wiki.archlinux.org/index.php/Dnsmasq_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)
+
+
+stop dnsmasq:
+1. sudo vi /etc/NetworkManager/NetworkManager.conf
+2. comment  dns=dnsmasq
+3. sudo service network-manager restart

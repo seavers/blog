@@ -1,0 +1,70 @@
+---
+layout: post
+title: "ubuntu下安装phpmyadmin"
+date: 2013-04-01 23:22:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu phpmyadmin
+---
+
+其实ubuntu下安装phpmyadmin很简单
+
+```
+sudo apt-get install phpmyadmin
+```
+
+然而,装完之后的配置, 就让人容易出错了
+起初我一直在修改  /usr/share/phpmyadmin/config.inc.php
+然而,不是的,正确的位置在  /etc/phpmyadmin/config.inc.php, 而它又 include 了 /var/lib/phpmyadmin/config.inc.php
+我们需要修改的文件, 应该是 /var/lib/phpmyadmin/config.inc.php
+
+事实上, 我们没有必要手工去修改 config.inc.php
+我们可以这样配置   http://localhost/phpmyadmin/setup/
+
+有两个命令可以帮助我们
+* pma-configure
+* pma-secure
+这两个命令, 都没有参数, 作用相反, 一个为打开配置开关, 另一个为关闭配置,禁止修改
+当我们需要修改时, 就执行pma-configure, 修改完后,执行 pma-secure
+当然, 这两个命令都需要 sudo 权限
+
+于是整体流程如下:
+install phpmyadmin -> pma-configure -> /phpmyadmin/setup -> pma-secure
+
+
+当然, 我们需要将phpmyadmin放置在apache下面, 或者 nginx下
+```
+sudo ln -s /usr/share/phpmyadmin  /var/www/
+```
+事实上, 上面的步骤也是多余的
+看看 /etc/phpmyadmin/apache.conf , 你就明白了
+```
+Alias /phpmyadmin /usr/share/phpmyadmin
+```
+而且还有别的配置
+
+
+----------------------
+
+这么多的内容, 其实你可以从这里看出点端倪来
+```
+dpkg -L phpmyadmin
+```
+这样, 你可以看到 phpmyadmin到底在硬盘上装了什么文件
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

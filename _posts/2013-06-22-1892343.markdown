@@ -1,0 +1,45 @@
+---
+layout: post
+title: "nginx expires 绝对过期时间"
+date: 2013-06-22 00:09:00 +0800
+comments: true
+categories:
+- nginx
+tags:
+- nginx
+-  expires
+---
+
+nginx expires 绝对过期时间
+
+参考: http://wiki.nginx.org/HttpHeadersModule
+
+```
+  expires       24h;
+  expires       modified +24h;
+  expires       @15h30m;
+  expires       0;
+  expires       -1;
+  expires       epoch;
+```
+
+@time 表示绝对过期时间, 基于一天的某个时间点来过期
+
+@15h30m, 这里的意思是每天15点30分的时候,请求过期
+
+举例, 比如
+访问时间为  08:00, 则过期时间为 15:30
+访问时间为  21:33, 则过期时间为 第二天的15:30分
+
+
+
+原文中的解释:
+Times written with an @ prefix represent an absolute time-of-day expiry, written in either the form Hh or Hh:Mm, where H ranges from 0 to 24, and M ranges from 0 to 59 (available from versions 0.7.9 & 0.6.34).
+
+
+
+
+
+
+
+

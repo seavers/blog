@@ -1,0 +1,31 @@
+---
+layout: post
+title: "ubuntu 无法载入支持的服务器方式列表  请检查您的gvfs安装"
+date: 2013-05-08 11:10:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+---
+
+ubuntu "无法载入支持的服务器方式列表  请检查您的gvfs安装" 的解决方案
+
+碰到两次这个错误了,记录下解决方案
+
+```
+sudo apt-get remove gvfs
+sudo apt-get install ubuntu-desktop
+```
+
+原因不明,重装解决问题
+
+补: 如果有些ubuntu底层的组件,类似gvfs, libgtk2.0等被卸载掉,又不想重装系统,直接install ubuntu-desktop就可以了
+
+
+
+
+
+
+
+

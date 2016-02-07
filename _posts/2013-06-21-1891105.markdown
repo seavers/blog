@@ -1,0 +1,35 @@
+---
+layout: post
+title: "umount"
+date: 2013-06-21 13:53:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+-  umount
+---
+
+mount nfs后,　如果遇到服务器修改 /etc/exports 等原因时,经常会遇到
+```
+umount2: Stale NFS file handle
+umount: htdocs: Stale NFS file handle
+```
+或者
+```
+/var/www/html was not found in /proc/mounts
+```
+等问题
+
+
+解决方案:
+
+* 找到使用目录的进程, kill掉
+* sudo umount -f /directory
+* sudo umount -i -f /directory
+* sudo umount -i -d -r -n -v -f  /directory
+
+用umount的各种参数,　总是有办法 unmount的
+
+
+

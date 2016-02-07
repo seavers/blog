@@ -1,0 +1,45 @@
+---
+layout: post
+title: "parseURL"
+date: 2012-07-22 23:00:00 +0800
+comments: true
+categories:
+- javascript
+tags:
+- url
+-  javascript
+---
+
+我们知道, 在location对象中, 可以直接获取 hostname, search , hash 等参数
+而链接的url中, 我们没有现成的API可以获取这些参数
+下面是一个小方法, 可以得到链接中的各种参数
+
+
+```js
+function parseURL(url) {
+	var ret = {};
+	ret.href = url;
+
+	var match = url.match(/^([^\/:]+:)?(?:\/\/([^\/:]*)(?::([\d]+))?)?(\/?[^\?#]*)?(\?[^\#]*)?(#.*)?$/i);
+	if (match) {
+		ret.isValid = true;
+		ret.protocol = match[1] || '';
+		ret.hostname = match[2] || '';
+		ret.port = match[3] || '';
+		ret.host = ret.hostname + ret.port ? ':' : '' + ret.port;
+		ret.pathname = match[4] || "/";
+		ret.origin = ret.protocol + ret.host ? '//' : '' + ret.host;
+		ret.search = match[5] || '';
+		ret.hash = match[6] || '';
+	} else {
+		ret.isValid = false;
+		ret.path = ret.url;
+	}
+	return ret;
+}
+```
+
+
+
+
+

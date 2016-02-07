@@ -1,0 +1,133 @@
+---
+layout: post
+title: "利用bat反编译jar包生成源码jar包"
+date: 2012-02-21 22:27:00 +0800
+comments: true
+categories:
+- java
+tags:
+- java
+-  反编译
+---
+
+之前曾发表在 csdn(blog.csdn.net/seavers) 上, 不过, csdn的代码乱掉了, 今天重新整理了一下
+
+
+反编译所使用的工具是jad.exe,笔者的测试版本是1.5.8e,压缩与解压缩使用的是WinRAR
+
+jad.exe 可反编译一个class文件为java文件,笔者的BAT可通过此工具将一个jar包反编译成一个完整的源码jar包,同时生成的目录也可以在eclipse中使用
+
+jad.exe 官方网站 ： http://www.kpdus.com/jad.html   (已失效, 从[这里](https://github.com/seavers/jad)或者附件下载)
+
+BAT脚本见后
+
+安装方法如下:
+
+        复制粘贴后面的文本为一个BAT,然后与jad.exe放在同一个目录即可(WinRAR需正确安装)
+
+使用方法如下:   (有3种使用方法, 使用其中任意一种均可,结果是相同的)
+
+     1. 双击BAT,提示输入需反编译的jar包,请输入完整的jar路径
+     2. 直接将 jar 包拖放在bat上
+     3.右键点击jar包,选择打开方式,然后选择使用该BAT来执行
+
+运行后的结果如下:
+
+      在jar包的同一目录下, 将会生成一个目录,一个jar,目录下有两个子目录,一个目录存放解压缩后的所有class,一个目录存放反编译后的java文件,jar包是用源码压缩生成的
+
+几点说明:
+
+    1. 工具中使用的WinRAR是自动识别安装路径的,请正确安装WinRAR
+    2. 工具使用的jad.exe,须与BAT放在同一目录,或者放在PATH可搜索到的位置
+    3.  jar包中非class文件,也会完整拷贝在源码目录下,方便生成源码工程
+    4. 生成的目录名与原 jar 包同名, 生成的源码 jar 包的文件名是在原名称中加入-src而生成, 如原 jar 包为 jdbc.jar, 则生成的目录名为 jdbc, 而生成的源码jar 包名则为 jdbc-src.jar
+    5. eclipse使用方法1, 将BAT生成的目录放在workspace中,然后创建同名工程
+    6. eclipse使用方法2,在 eclipse 中创建同名工程,使用src为源文件目录,bin为class文件目录,然后将BAT生成的目录拷贝在eclipse的workspace中 
+
+该BAT为 blog.csdn.net/seavers 原创, BAT源码仅供个人学习,使用,研究,未经本人同意,不可用于商业用途
+
+---------------------------------------------------------------------------
+
+我通常的使用方式是: 将 bat 与 jad.exe 解压在windows根目录, .jar右键用bat打开发后, 第二次及以后使用就方便多了
+
+BAT更新了一下
+
+
+ 
+
+ 
+
+BAT源码如下: (请直接拷贝在BAT文件中)
+
+```
+::功能:     利用bat反编译jar包生成源码jar包
+::作者:     seavers
+::博客:     http://seavers.iteye.com/
+::版本:     1.7
+
+
+::打开/关闭命令行显示
+REM @echo OFF
+
+::::::::::::::::::::::::::::解析并设置变量::::::::::::::::::
+
+
+::查找jad文件的路径, 这里取的jad.exe, 表示从PATH中查找,如果想手工指定,需在这里修改
+set JAD_PATH=jad.exe
+
+::设置解压出的class文件存放的位置(相对路径)
+set CLASS_PATH=bin
+
+::设置反编译后的java文件存放的位置(相对路径)
+set JAVA_PATH=src
+
+::检查JAD文件是否存在bat所在目录下,
+if exist "%~dp0jad.exe" set JAD_PATH=%~dp0jad.exe
+
+::判断参数个数,如果没有文件参数,则报错,这里也可以使用%~f1,也可以用%1,没有关系,之后要去掉引号
+if ""%1""=="""" (set /P JAR_PATH=请输入要反编译的JAR包的路径...) else (set JAR_PATH=%~f1)
+if '%JAR_PATH:~0,1%%JAR_PATH:~0,1%'=='""' set JAR_PATH=%JAR_PATH:~1,-1%
+
+::获取源代码存放的路径,这里取JAR包所在路径,然后去掉".jar"作为文件夹路径, 这里的LOCATION不能带引号,因为下面还要追加字符)
+if ""%2""=="""" (set LOCATION=%JAR_PATH:~0,-4%) else (set LOCATION=%~f2)
+
+::::::::::::::::::::开始执行程序:::::::::::::::::::::::::::::::
+
+::获取WinRAR.exe的路径,设置在临时变量rarpath中
+for /f "usebackq delims=" %%i in (`ftype WinRAR`) do set RARPATH=%%i
+
+::对rarpath进行解析,去掉前面7个节符,去掉后面5个字符,得到WinRAR执行路径
+::路径大致是这样的形式  Winrar="C:\Program Files\WinRAR\WinRAR.exe" "%1"
+set RAREXE=%RARPATH:~7,-5%
+
+::调用WinRAR命令,解压文件到指定目录的bin目录下
+%RAREXE% x "%JAR_PATH%" "%LOCATION%\%CLASS_PATH%\"
+
+::遍历整个bin目录,取所有class文件,调用jad.exe反编译出源码,非class的拷贝到src目录下
+::打开变量延迟功能
+setlocal EnableDelayedExpansion
+for /r "%LOCATION%\bin" %%i in (*.*) do if '%%~xi'=='.class' ("%JAD_PATH%"  -o -r -sjava -ff -b -nonlb -space -t -8 -d"%LOCATION%\%JAVA_PATH%" "%%~si") else (set TEMP_PATH=%%i & echo f|xcopy "%%i" "!TEMP_PATH:%LOCATION%\bin=%LOCATION%\src!")
+endlocal EnableDelayedExpansion
+
+::将产生的java文件压缩成源码文件
+%RAREXE% a -ep1 -r "%LOCATION%-src.zip" "%LOCATION%\%JAVA_PATH%\*.*"
+
+
+::::::::::::::::::程序结束, 显示运行结果::::::::::::::::::::::
+echo *********************************************
+echo 程序运行结束
+echo 解析的JAR包的路径为 %JAR_PATH%
+echo 解压缩工具WinRAR.exe的路径为 %RAREXE%
+echo 反编译工具JAD.exe的路径为 %JAD_PATH%
+echo 解析后的文件的根路径为 %LOCATION%
+echo 解析后的class文件存放在 %LOCATION%\%CLASS_PATH%
+echo 解析后的java文件存放在 %LOCATION%\%JAVA_PATH%
+echo 压缩后的java文件存放在 %LOCATION%-src.zip
+echo *********************************************
+pause
+
+
+```
+
+
+

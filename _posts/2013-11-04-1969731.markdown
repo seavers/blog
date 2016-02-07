@@ -1,0 +1,27 @@
+---
+layout: post
+title: "ubuntu 五笔"
+date: 2013-11-04 15:36:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+---
+
+ubuntu 使用五笔输入法
+ubuntu 13.10 测试通过
+
+* sudo apt-get install ibus-table-wubi
+* ibus-daemon -x -r -d
+* 选择五笔输入,生效
+
+使用SHIFT+SPACE切换全半角
+使用SHIFT切换中英文输入
+
+
+
+
+
+
+

@@ -1,0 +1,20 @@
+---
+layout: post
+title: "linux进阶命令"
+date: 2011-01-05 20:11:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+-  Linux
+---
+
+linux版本：uname -ar
+cpu信息：  cat /proc/cpuinfo
+mem信息：  cat /proc/meminfo
+
+apache日志，过滤IP,并按照IP的次数倒排序
+cat 2011-01-05-access.log | awk '{print $1}' | sort | uniq -c | sort -k1,1nr
+
+同理，有于 url, referer, status.code

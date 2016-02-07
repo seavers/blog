@@ -1,0 +1,27 @@
+---
+layout: post
+title: "Class.forName 返回 String[].class"
+date: 2013-08-13 11:38:00 +0800
+comments: true
+categories:
+- java
+tags:
+- java
+---
+
+A: 如何通过Class.forName 返回 String[].class
+Q: Class.forName("[Ljava.lang.String;")
+
+
+因为 String[].class.getName() => "[Ljava.lang.String;"
+经测试, 反过来, 也成立
+
+因此: 
+在sqlmap-config.xml可以这样写
+
+```
+<typeHandler javaType="[Ljava.util.String;" callback="xxxxxx.StringArrayTypeHandler" />
+```
+
+
+

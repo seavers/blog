@@ -1,0 +1,90 @@
+---
+layout: post
+title: "git的本质"
+date: 2013-02-17 00:33:00 +0800
+comments: true
+categories:
+- git
+tags:
+- git
+---
+
+git 的本质
+
+配置:
+git的配置操作，本质上，都是在修改config文件 (.git/config) 
+* git config -l
+
+其中
+remote.origin.fetch 与 remote.origin.url 即是 remote 的配置
+
+* git remote -v 就是显示配置, git remote -v show <name> 细节
+* git remote add|rm|set-url|rename 即是增删改操作
+* git prune 是与服务器同步的功能
+
+
+其中
+branch.master.remote 与  branch.master.merge 即是 branch的配置
+
+* git branch -v 就是显示配置
+* git branch <branchName>|-m|-d 就是增删改的操作
+* git branch --set-upstream 设置分支对应的 remote
+
+
+
+
+分支名:
+git 命令，使用分支时，需要一个名字， 如origin/master, refs/remotes/origin/HEAD等
+其实，可以参考 .git/refs目录， 就明白了
+
+* heads 代表本地分支
+* remotes 代表远程分支
+* tag 代表tags分支
+* master 与 HEAD 同义
+
+当我们需要使用分支时，语法大致是这样的  (refs/)? (heads/|remotes/|tags/)? <name>
+即，refs 或者 heads 等， 都是可以省略的， git 会遍历查询
+假如有冲突时， git报错 warngin: refname '...' is ambiguous ， 但还会执行第一个
+
+当然还有更精确及表示更多标识的方式， 即 commitId
+而 tag 只是将 commitId 取了一个容易记忆的名字
+而 分支，远程分支，可以理解为是一个 commitId 的有序列表（可变数组）
+
+
+
+
+分支操作:
+假如将远程仓库也看成是一个个本地分支的话， 就会明白了
+
+* git pull 就是  git merge origin/master
+* git reset <commit> 就是 还原至某分支的状态    (会根据参数，还原 文件，index, commit)
+* git rebase 可以看作是另一种merge操作， 算法不同
+
+
+
+操作index
+* git add    追加 index
+* git rm     删除文件，以追加index
+* git mv     移动文件，并追加index
+* git reset  清除uncommit的index
+
+
+clone
+* 这个大家都知道了，就是一系列git操作的组合
+
+
+checkout
+* 就是在操作HEAD的位置
+
+
+git
+* git的所有操作，如果理解清每个命令， 是如何操作 file, index, commit, branch 的，就都理解了
+
+
+
+
+
+
+
+
+
