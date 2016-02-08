@@ -1,0 +1,82 @@
+---
+layout: post
+title: "使用符号链接提高工作效率"
+date: 2013-03-07 14:23:00 +0800
+comments: true
+categories:
+- 思考
+tags:
+- 符号链接  junction  mklink
+---
+
+使用符号链接提高工作效率
+
+目标
+本文主要阐述一种理念，如何使用符号链接来提高工作效率
+
+什么是符号链接
+1. windows下使用junction或者mklink /J创建的符号链接 (非快捷方式)
+2. linux下使用ln -s创建的符号链接
+
+
+让我们来先看看各种使用场景
+
+*dropbox*
+很多网盘只支持同步单一个文件夹，容易设计，容易理解，容易使用
+但事实上会遇到很多不方便，尤其是想同步一个已经存在的目录时
+使用junction或ln -s吧，不仅同步，还不影响原来的开发环境
+
+*apache*
+apache默认安装的时候，根目录是指向 /var/www 的
+很多人喜欢去改 apache.conf 来修改ROOT 比如改至 ~/workspace 这样的
+其实可以这样用 ln -s ~/workspace  /var/www/workpsace
+这样能解决几个问题
+a). 系统重装时，或者更换环境时， /home/xx/workspace要换成 /home/yy/workspace，因为使用 ~ ，apache可能不知所云
+b). 这时，如果想重新搭环境，改apache.conf是个问题，是从网上下载一份，还是拷贝之前，有时喜欢把这些配置放在云盘备份，但有些目录系统重装后目录就没了，或者要配置另一个环境
+c). SCM维护大量机器的时候，也是希望.conf可以统一，不统一的再用include子conf
+d). 如果使用 alias, 这不要改配置还要重启吗？ 试试符号链接吧, ls一目了然
+e). 也许会有很多不错的使用方式
+    i). 把公司统一配置的tools从共享服务器别名过来，里面已经装了dummyimage等等
+    ii). 把github目录别名过来，直接浏览器预览
+    iii). 把 ~/personal/secret 临时别名下，使用完后，马上删除别名
+f). 很多好处
+
+
+*切换版本*
+比如: 
+http://backup.com/nodejs/lastest/index.html
+http://backup.com/nodejs/v8.0.16/index.html
+http://backup.com/nodejs/v8.0.22/index.html
+这里的lastest目录，就使用符号链接吧
+
+http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest/
+这里的lastest，也应该是某个版本的符号链接吧
+难道每发布一次版本，改下apache.conf，再重启，用符号链接
+
+你经常在python2 与 python3 之间切换，这些路径在很多地方都配置过，在shell,在历史维护任务，在很多django工程中，你新找到一个python3的运行统计工具，你想尝试下，建立一个python别名，大家都指向到这里吧，随时切换
+
+*mod-enabled*
+无意中发现ubuntu中的/etc/apache2/中的模块是这样管理的
+将增加删除一个模块，改为文件操作，不用再修改配置文件了
+如果能不改配置文件，就会有以下好处
+1. 命令行工具，帮忙调整apache配置时，可以不用去改配置文件，避名意外
+2. apt-get做插件开发时，不需要去解析修改配置文件，直接改文件就可能是一个插件了
+
+*/etc/init.d/*
+在linux下面，有很多目录下，都是由一些别名文件组成的
+/etc/init.d/    /etc/fonts/conf.d
+这些目录大部分是相当于一个list的工作，用于收集需要进行的任务
+然后将各个任务从四面八方收集而来，这里只是一个汇总工作，不破坏各个任务的内容
+
+*库*
+win7引入的库，其实也是一个别名，也是一个符号链接的应用
+
+
+
+*你有什么想法？*
+
+
+
+
+
+

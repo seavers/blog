@@ -1,0 +1,30 @@
+---
+layout: post
+title: "ubuntu安装maven3"
+date: 2013-06-28 13:39:00 +0800
+comments: true
+categories:
+- maven
+tags:
+- maven
+-  ubuntu
+---
+
+ubuntu 安装 maven3的方法就是
+
+```
+  sudo apt-get install maven
+```
+
+一直以来, 以为 install maven安装的是 maven1.x
+而 install maven2 安装的是 maven2.x
+而看到某些论坛说安装maven3, 要使用 ppa ,
+后来才知道错了
+
+install maven 安装的就是最新版本的maven
+
+在  12.04, 13.04 测试通过
+
+
+
+

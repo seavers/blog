@@ -1,0 +1,102 @@
+---
+layout: post
+title: "function 工具集"
+date: 2012-11-19 22:09:00 +0800
+comments: true
+categories:
+- javascript
+tags:
+- function
+---
+
+function 工具集
+
+
+经常会碰到这样的问题
+1. button.click 后，只调用一次方法
+2. window.scroll触发太频繁，导致滚动加载次数太多
+3. document.keyup次数太多，导致智能提示调用次数太多 
+
+
+你需要以下的方法来解决此类问题
+
+```js
+
+$('a.load').on('click', $.once(function() {
+     $('#tabs .first').load(url);
+}));
+
+$(window).on('scroll', $.throttle(function() {
+     $('#rest').lazyload();    
+}));
+
+$(input).on('keyup', $.debounce(function() {
+     $.suggest($(this).val())
+}));
+
+```
+
+
+
+工具集源码如下：
+
+```js
+$.bind = function(func, context) {
+      var args = Array.prototype.slice.call(arguments, 2);
+      return function() {
+          return  func.apply(context, args);
+      }
+}
+
+//只调用一次
+$.once = function(func){
+        var ran = false;
+	return function() {
+		if(ran) return;
+		ran = true;
+		func();
+	}
+}
+
+//ms时间内只执行一次
+$.throttle = function(func, ms) {
+   ms = ms || 150;
+
+   var last = +new Date();
+   var timer ;
+    return function() {
+        var now = +new Date();
+        if(now - last > ms) {
+             timer = null;
+             last = now;
+             func();
+        } else {
+             timer = setTimeout(func, ms - (now-last));
+        }
+    }
+}
+
+//缓冲ms时间后才执行
+$.debounce = function(func, ms) {
+       ms = ms || 150;
+
+       var timer;
+       return function() {
+           clearTimeout(timer);
+           timer = setTimeout(func, ms);
+      }
+}
+
+```
+
+
+
+
+*  underscore, yui 中有throttle, debounce两个方法, jquery中没有发现
+
+
+
+
+
+
+

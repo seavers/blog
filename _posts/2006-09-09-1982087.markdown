@@ -1,0 +1,10 @@
+---
+layout: post
+title: "windowsNT系统"
+date: 2006-09-09 23:39:00 +0800
+comments: true
+categories:
+- windows
+---
+
+<img alt="" src="http://p.blog.csdn.net/images/p_blog_csdn_net/seavers/NT%E6%8A%80%E6%9C%AF.bmp">

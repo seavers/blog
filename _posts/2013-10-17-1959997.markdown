@@ -1,0 +1,73 @@
+---
+layout: post
+title: "pycompile not found"
+date: 2013-10-17 16:10:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+---
+
+sudo apt-get remove python 后, 出现了很多错误, 导致后续的无法进行
+
+
+pycompile not found
+解决方案: 删掉 /usr/bin/pycompile, 然后继续apt-get -f install / remove
+
+
+gconf2 not found 错误
+sudo dpkg-reconfigure gconf2
+sudo apt-get --purge remove gconf2
+
+
+gconf2安装时 gconf-schemas not found
+因安装gconf2时,需执行脚本,脚本中需要python,而python需要gconf2
+导致了这个地方的问题
+
+解决方案: 注掉报错的脚本中的那几行命令,然后重新执行
+或:  如果已经安装了python的话, ln -s 下python即可
+
+
+==============================
+
+ubuntu从13.04升级至13.10时,报/usr/bin/python错误,不知原因
+修改/usr/bin/python链接位置时,也无法通过
+故直接remove python python3, 然后就出现上面的错误了
+修复后, 可以执行do-release-upgrade了
+
+
+
+ubuntu的包管理,要赞一下
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

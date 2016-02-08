@@ -1,0 +1,48 @@
+---
+layout: post
+title: "wget 整站下载"
+date: 2013-11-26 10:22:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+-  wget
+---
+
+下载整站
+```
+wget -r -nv --restrict-file-names=nocontrol http://seavers.iteye.com/
+```
+
+下载时可以加 -np, 不下载父目录
+```
+wget -r -nv --restrict-file-names=nocontrol -np http://seavers.iteye.com/blog/
+```
+
+下载时, 加入断点续传
+```
+wget -r -nv -c --restrict-file-names=nocontrol http://seavers.iteye.com/
+```
+
+
+
+* --restrict-file-names=nocontrol 用来解决中文乱码问题
+
+
+
+
+* http://aotee.com/using-wget-recursive-download-the-entire-station
+* http://www.cnblogs.com/lybeta/archive/2012/05/23/2514759.html
+* http://blog.csdn.net/flyskywhy/article/details/7777972
+* http://www.butian.org/knowledge/linux/254.html
+
+
+
+
+
+
+
+
+
+

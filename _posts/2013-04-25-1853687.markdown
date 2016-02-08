@@ -1,0 +1,107 @@
+---
+layout: post
+title: "maven 多环境配置"
+date: 2013-04-25 17:29:00 +0800
+comments: true
+categories:
+- maven
+tags:
+- maven
+---
+
+maven多环境配置
+
+比较常见的maven的多环境配置
+
+```
+<build>
+  <resources>
+     <resource>
+       <directory>src/main/resources</directory>
+         <filtering>true</filtering>
+     </resource>
+  </resources>
+  <profiles>
+    <profile>
+      <id>development</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <filters>
+        <filter>src/main/resources/profile/development.properties</filter>
+      </filters>
+    </profile>
+    <profile>
+      <id>production</id>
+      <filters>
+        <filter>src/main/resources/profile/production.properties</filter>
+      </filters>
+     </profile>
+  </profiles>
+</build>
+```
+
+```
+    mvn jetty:run
+    mvn jetty:run -Pproduction
+```
+
+当没有写P参数时，采用development的profile,若指定，则使用指定的profile
+
+
+另外一种写，个人认为比较优化
+
+```
+<properties>
+  <env>development</env>
+<build>
+  <filters>
+    <filter>src/main/resources/profile/${env}.properties</filter>
+  </filters>
+  <resources>
+     <resource>
+       <directory>src/main/resources</directory>
+         <filtering>true</filtering>
+     </resource>
+  </resources>
+</build>
+```
+
+
+```
+   mvn jetty:run
+   mvn jetty:run -Denv=production
+```
+
+
+默认的采用properties中的配置，不同的环境采用指定的参数
+
+
+-----------------------------
+
+
+多环境需要注意的点：
+1. 在切换环境时，不能改动源代码，如操作系统，线上线下，切换数据库等
+2. 源代码独立于环境配置，或配置文件独立，或切换环境名称
+3. 环境所有配置独立，需独立server管理
+4. 环境名称切换，则可扩展性不强，但适应性强，管理方便
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

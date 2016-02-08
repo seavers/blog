@@ -1,0 +1,73 @@
+---
+layout: post
+title: "ubuntu name server"
+date: 2013-03-23 14:47:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu samba mdns
+---
+
+我们在ubuntu下经常会遇到以下问题
+
+1. windows下ping ubuntu的机器名ping不到
+2. ubuntu下ping windows下的机器名 ping 不到
+3. ubuntu下ping ubuntu下的机器名ping不到
+
+以上就是碰到了name server的问题了
+
+首先, 我们要理清楚以下几个问题
+
+1. windows是如何根据name寻找ip的
+2. ubuntu是如何根据name寻找ip的
+3. mac呢
+
+name到ip的映射有以下几个方式
+1. /etc/hosts的方式, 用户自行配置的, 优先级最高
+2. wins  windows用于解析名字的服务
+3. mdns 是apple发明的, ubuntu下也可以使用
+4. dns服务, 通常由ISP提供,  一般局域网搜不到, 就要去外网搜了
+另外:
+wins 的服务, 有时会有域服务器来提供服务
+
+由此: windows 与 ubuntu 下互通name, 需要敲定要走 wins还是mdns
+1. windows 下默认支持 wins 服务, 有服务器,也有客户端支持
+2. ubuntu下走wins,  可以安装 samba , 由 nmbd服务器提供服务端
+3. ubuntu 下 ping wins, 可以在 smb.conf 下配置 wins server
+4. windows 下走 mdns 服务, 可以安装apple的itunes, 由bonjour提供服务端
+5. ubuntu 下安装 mdns服务, 可使用 avahi-demon 来提供 mdns 服务
+6. ubuntu 下解析 mdns, 可以在 /etc/resolv.conf 中配置, 由 dnsmasq 来提供解析
+7. mac 上默认提供了 mdns 与 wins
+
+因此, 不动 windows, 可以在 ubuntu 中安装以下服务
+```
+sudo apt-get install samba
+sudo apt-get install avahi-daemon
+sudo apt-get install libnss-mdns             ##necessary?
+
+sudo vi /etc/nsswitch.conf   (hosts:          files mdns4_minimal dns)
+sudo vi /etc/samba/smb.conf
+
+sudo service smbd restart
+sudo service nmbd restart
+//sudo service avahi-daemon restart
+sudo dnsmasq
+
+sudo service networking restart
+```
+
+如果ubuntu一直ping不通mac.local or ipad.local,请尝试重启
+这样, 在 windows, ubuntu, mac 下互相ping hostname就OK了
+补: mdns 的ping时, 要加 .local
+
+
+相关的命令有:  ping nslookup host dig nbtscan nmblookup nmap
+sudo netstat -ntp
+sudo ss -nlt
+
+相关的文件有:
+/etc/resolv.conf
+/etc/nsswitch.conf
+/etc/NetworkManager/NetworkManager.conf
+https://wiki.archlinux.org/index.php/Avahi

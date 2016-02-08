@@ -1,0 +1,26 @@
+# Site settings   http://jekyll.bootcss.com/docs/configuration/
+title: seavers的博客
+email: seavers@163.com
+description: > # this means to ignore newlines until "baseurl:"
+  Looking for Interest
+baseurl: "/blog" # the subpath of your site, e.g. /blog/
+url: "http://www.lianghaijun.com" # the base hostname & protocol for your site
+#twitter_username: seavers
+github_username:  seavers
+
+permalink: /:year-:month-:day-:title.html
+
+# Build settings
+markdown: MyKramdown  ## maruku|rdiscount|redcarpet|kramdown
+kramdown:
+   input: GFM
+   extensions:
+     - autolink
+     - footnotes
+     - smart
+
+   syntax_highlighter: rouge ##pygments ##coderay
+   syntax_highlighter_opts:
+     ##line_numbers: table 
+     wrap: div
+

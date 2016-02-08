@@ -1,0 +1,98 @@
+---
+layout: post
+title: "ibatis typehandler"
+date: 2013-08-09 18:57:00 +0800
+comments: true
+categories:
+- java
+tags:
+- ibatis
+-  typehandler
+---
+
+今天配置typehandler时碰到一个问题
+
+主要解决的问题是
+java.sql.SQLException: Cannot convert value '0000-00-00 00:00:00' from column 18 to TIMESTAMP
+
+解决方案: 替换掉系统默认的 typehandler, 抛出异常时,改为null
+
+
+```
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE sqlMapConfig
+ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+ "http://www.ibatis.com/dtd/sql-map-config-2.dtd">
+<sqlMapConfig>
+	<settings 
+		cacheModelsEnabled="true" 
+	/>
+	<typeHandler javaType="java.util.Date" callback="xxxxxxxxx.CustomDateTypeHandler" />
+	
+	<sqlMap resource="sqlmap/sqlmap-price.xml" />	
+</sqlMapConfig>
+
+```
+
+
+这里需要注意的是
+
+1. typeHandler 中的 jdbcType 取值应为 null, DATE, TIME, 这里用的null
+2. typehandler 必须要在 sqlmap 前面, 否则sqlmap中的类型handler就会用默认的
+
+
+下面是自定义的datetypehandler
+
+```
+package xxxxxxxxx;
+
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.ibatis.sqlmap.engine.type.DateTypeHandler;
+
+public class CustomDateTypeHandler extends DateTypeHandler {
+
+
+	@Override
+	public Object getResult(ResultSet rs, String columnName) throws SQLException {
+		try {
+			return super.getResult(rs, columnName);
+		} catch(SQLException e) {
+			if("S1009".equals(e.getSQLState())) {
+				return null;
+			}
+			throw e;
+		}
+	}
+
+	@Override
+	public Object getResult(ResultSet rs, int columnIndex) throws SQLException {
+		try {
+			return super.getResult(rs, columnIndex);
+		} catch(SQLException e) {
+			if("S1009".equals(e.getSQLState())) {
+				return null;
+			}
+			throw e;
+		}
+	}
+
+	@Override
+	public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
+		try {
+			return super.getResult(cs, columnIndex);
+		} catch(SQLException e) {
+			if("S1009".equals(e.getSQLState())) {
+				return null;
+			}
+			throw e;
+		}
+	}
+
+}
+```
+
+
+

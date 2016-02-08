@@ -1,0 +1,28 @@
+---
+layout: post
+title: "curlftpfs"
+date: 2013-06-21 22:06:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+-  curlftpfs
+-  mount
+---
+
+多数curlftpfs的例子是这样的
+
+```
+sudo curlftpfs –o rw,allow_other ftp://username:password@192.168.1.111 /ftp
+```
+
+这种写法,有一个缺点,就是,当mount查看时, 会显示出密码
+
+换成另一种写法吧:
+
+```
+sudo curlftpfs -o rw,allow_other,user=username:password ftp://192.168.1.111 /ftp
+```
+
+

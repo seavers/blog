@@ -1,0 +1,71 @@
+---
+layout: post
+title: "maven的全局去除依赖"
+date: 2013-09-22 15:01:00 +0800
+comments: true
+categories:
+- maven
+tags:
+- maven
+-  spring
+---
+
+我们在maven中有时候希望将某个依赖包彻底去除
+
+
+如我们的系统使用的是spring3.1.2, 但是依赖的二方包中, 总是或多或少依赖了spring2.5.6, 希望有个方法, 能全局去除掉
+
+
+```
+<!-- globally exclusion -->
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring</artifactId>
+	<version>2.5.6.SEC03</version>
+	<scope>provided</scope>
+</dependency>
+```
+
+以上方式, 有个弊端, 就是eclipse中, 还是会依赖, 且容易用混
+
+
+有三个方案(建议使用第三种)
+```
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring</artifactId>
+	<version>99.0-does-not-exist</version>
+	<scope>provided</scope>
+</dependency>
+```
+
+```
+<dependency>
+	<groupId>org.springframework</groupId>
+	<artifactId>spring</artifactId>
+	<version>2.5.6</version>
+	<scope>system</scope>
+	<systemPath>${basedir}/lib/empty.jar</systemPath>
+</dependency>
+```
+
+```
+			<plugin>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+					<classpathContainers>
+						<classpathContainer>org.eclipse.jdt.launching.JRE_CONTAINER</classpathContainer>
+					</classpathContainers>
+					<excludes>
+						<exclude>org.springframework:spring</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+```
+
+
+
+
+

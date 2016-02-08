@@ -1,0 +1,96 @@
+---
+layout: post
+title: "ubuntu 与 windows 的互联与共享"
+date: 2013-02-21 18:23:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu
+-  samba
+---
+
+windows访问ubuntu
+
+1. ubuntu 安装 samba
+
+```
+sudo apt-get install samba
+```
+
+2. 修改 /etc/samba/smb.conf文件
+
+```
+
+[global]
+   workgroup = WORKGROUP
+   server string = %h server (Samba, Ubuntu)
+;   wins support = no
+   wins server =  (用ipconfig /all里看， 或者直接填网关ip)
+   dns proxy = no
+   name resolve order = lmhosts host wins bcast
+
+   security = share
+   usershare allow guests = yes
+[share]
+      path = /home/ubuntu/
+      available = yes
+      browseable = yes
+      public = yes
+      writable = yes
+
+```
+
+
+3. 重启服务
+```
+sudo restart smbd
+sudo restart nmbd
+```
+
+* smbd 是 samba 的文件共享服务
+* nmbd 是 windows name 解析服务
+
+
+4. OK
+这样，windows 就可以ping 通,且能查看unbutu的共享文件
+
+
+-----------------------
+
+ubuntu 访问windows
+
+1. 安装服务
+```
+sudo apt-get install cifs
+```
+
+2. mount
+```
+sudo mount -t cifs //hostname/share  /mnt/path/to/name -o username=user
+```
+
+
+
+------------------------
+
+
+补： 上述是通过samba即cifs实现，也可通过ftp, webdav 等等其它协议实现互相访问
+
+
+
+其它问题
+
+1. ubuntu ping 的时候速度很慢，ping taobao.com 也慢
+http://forum.ubuntu.org.cn/viewtopic.php?f=116&t=345288
+2. ping <hostname> 默认会解析全域名
+可以在 /etc/resolv.conf 中进行修改，将 search 修改为 正确的域后缀
+
+
+
+
+
+
+
+
+
