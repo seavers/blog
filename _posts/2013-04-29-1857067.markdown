@@ -1,0 +1,47 @@
+---
+layout: post
+title: "android开发环境"
+date: 2013-04-29 23:06:00 +0800
+comments: true
+categories:
+- android
+tags:
+- android
+---
+
+android 开发环境搭建
+
+刚接触android开发, 前辈们都说现在的android开发环境比以前容易搭建了~~~
+
+
+搭建方式如下:
+
+1.  下载android sdk
+http://developer.android.com/sdk/index.html
+下载后的sdk, 包括了 eclipse 以及 sdk
+2.  解压, 并切换至 eclipse 目录, 打开 eclipse
+3.  eclipse打开菜单window-android SDK Manager下载SDK sources
+4.  安装m2e-android 用于maven工程    (当然没有使用maven就算了)
+web: http://rgladwell.github.com/m2e-android/
+update: http://rgladwell.github.com/m2e-android/updates/
+5.  import导入 maven版的android工程
+
+
+另外:
+
+由于android自带的eclipse不支持eclipse marketplace
+你也可以下载最新版eclipse
+然后从插件市场中下载 android sdk, m2e-android 
+
+
+
+
+入门必备,存档留念
+
+
+
+
+
+
+
+

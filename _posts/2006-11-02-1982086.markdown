@@ -1,0 +1,19 @@
+---
+layout: post
+title: "缓冲区溢出漏洞"
+date: 2006-11-02 23:49:00 +0800
+comments: true
+categories:
+---
+
+<p>贴一小段自己写的小程序</p>
+<p>//MS VC++ 6.0 Console lhj<br>#include &lt;windows.h&gt;<br></p>
+<p>void main()<br>{<br>//保留原来的返回地址<br>DWORD *pBackAddress = (DWORD *)&amp;pBackAddress + 2;<br>DWORD BackAddress = *pBackAddress;</p>
+<p>//获取自己的执行代码地址<br>HMODULE hModule = LoadLibrary("User32.dll");<br>DWORD Address = (DWORD)GetProcAddress(hModule, "MessageBoxA");</p>
+<p>//缓冲区溢出<br>DWORD Buffer[100];<br>Buffer[0] = 0x5050C033;// xoreax, eaxpush eaxpush eax<br>Buffer[1] = 0xE8905050;// pusheax pusheax<br>Buffer[2] = Address - (DWORD)&amp;Buffer[3];// call MessageBoxA<br>Buffer[3] = 0xE9909090;// jmpBackAddress<br>Buffer[4] = BackAddress - (DWORD)&amp;Buffer[5];</p>
+<p>//更改返回地址<br>*pBackAddress = (DWORD)Buffer;</p>
+<p>}</p>
+<p></p>
+<p>举例:</p>
+<p>void MyRecv(char buffer)<br>{<br>char TempBuf[1024];<br>memset(TempBuf, 0, 1024);<br>int len = recv(TempBuf);<br>memcpy(buffer, TempBuf, len);<br>}</p>
+<p>如果在我们的程序中调用过这样一段程序, 那么我们的程序将面临着溢出的危险!</p>

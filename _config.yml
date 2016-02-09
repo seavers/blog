@@ -1,0 +1,73 @@
+# Site settings   http://jekyll.bootcss.com/docs/configuration/
+title: seavers的博客
+subtitle: Looking for Interest
+email: seavers@163.com
+author: seavers
+#simple_search: http://google.com/search
+description: > # this means to ignore newlines until "baseurl:"
+  Looking for Interest
+
+url: "http://www.lianghaijun.com" # the base hostname & protocol for your site
+baseurl: "/blog" # the subpath of your site, e.g. /blog/
+permalink: /:year-:month-:day-:title.html
+
+date_format: "ordinal"
+#twitter_username: seavers
+github_username:  seavers
+
+exclude: ['Gemfile', 'Gemfile.lock']
+
+# Build settings
+markdown: MyKramdown  ## maruku|rdiscount|redcarpet|kramdown
+kramdown:
+   input: GFM
+   extensions:
+     - autolink
+     - footnotes
+     - smart
+
+   syntax_highlighter: rouge ##pygments ##coderay
+   syntax_highlighter_opts:
+     #line_numbers: table 
+     wrap: div
+
+
+gems:
+  - jekyll-archives
+  - jekyll-paginate
+
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layout: 'archive'
+  permalinks:
+    tag: '/tag/:name/'
+    category: '/categories/:name/'
+
+### plugins
+# jekyll-paginate:
+paginate: 10          # Posts per page on the blog index
+paginate_path: '/page/:num'   # Directory base for pagination URLs eg. /blog/page/2/
+
+
+recent_posts: 5       # Posts in the sidebar Recent Posts section
+#excerpt_link: "Read on &rarr;"  # "Continue reading" link text at the bottom of excerpted articles
+
+titlecase: false       # Converts page and post titles to titlecase
+
+# list each of the sidebar modules you want to include, in the order you want them to appear.
+# To add custom asides, create files in /source/_includes/custom/asides/ and add them to the list like 'custom/asides/custom_aside_name.html'
+#default_asides: [asides/recent_posts.html, asides/github.html, asides/delicious.html, asides/pinboard.html, asides/googleplus.html]
+default_asides: [asides/category_list.html, asides/recent_posts.html, asides/blog_link.html]
+
+# Each layout uses the default asides, but they can have their own asides instead. Simply uncomment the lines below
+# and add an array with the asides you want to use.
+# blog_index_asides:
+# post_asides:
+# page_asides:
+
+
+# duoshuo comments
+duoshuo_comments: true
+duoshuo_short_name: lianghaijun

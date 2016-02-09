@@ -1,0 +1,31 @@
+---
+layout: post
+title: "maven常用技巧"
+date: 2013-03-22 17:19:00 +0800
+comments: true
+categories:
+- maven
+tags:
+- maven
+---
+
+maven常用技巧
+
+限定只使用内置的archetypes
+```
+mvn archetype:generate -DarchetypeCatalog=internal
+```  
+
+
+mvn创建spring mvc 
+https://github.com/kolorobot/spring-mvc-quickstart-archetype
+
+```
+mvn archetype:generate -DarchetypeGroupId=com.github.spring-mvc-archetypes -DarchetypeArtifactId=spring-mvc-quickstart -DarchetypeVersion=1.0.0-SNAPSHOT -DgroupId=hello -DartifactId=hello -Dversion=1.0.0
+```
+
+
+
+
+
+

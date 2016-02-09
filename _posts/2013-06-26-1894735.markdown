@@ -1,0 +1,60 @@
+---
+layout: post
+title: "git 与 svn 同步"
+date: 2013-06-26 15:44:00 +0800
+comments: true
+categories:
+- git
+tags:
+- git
+-  svn
+---
+
+svn 与 git 保持同步
+
+
+
+* 先svn checkout url 把svn上的代码checkout下来
+* 进入工程目录
+* git init
+* git remote add origin git@github.com:username/project.git
+* git pull
+* git branch --set-upstream master origin/master
+* git reset
+* git status
+* git commit -a -m "update"
+* git push
+
+
+其中 git reset 不好处理,可以
+  git reset --hard
+  svn -R revert .
+
+
+另外:
+
+* svn propget svn:ignore .
+* svn propset svn:ignore . -Fingore.txt
+
+
+ignore.txt 中 加入  .git .gitignore
+.gitignore 中 加入  .svn
+
+
+```
+.svn
+bin
+target
+.settings
+.project
+.classpath
+
+/assets/node_modules
+```
+
+
+
+
+
+
+

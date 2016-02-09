@@ -1,0 +1,47 @@
+---
+layout: post
+title: "js的简单串行加载方案"
+date: 2012-09-12 00:29:00 +0800
+comments: true
+categories:
+- javascript
+tags:
+- 串行
+---
+
+写了一个超简单的串行加载工具, 不想引入框架时, 可以试用下
+
+```js
+(function (all) {
+	var callee = arguments.callee;
+	all.shift()(function(data) {
+		callee.call(null, all, data);
+	});
+})([
+	function(next) {
+		setTimeout(function() {
+			document.body.innerHTML += '<li>first';
+
+			next();
+		}, 1000)
+	}, function(next) {
+		setTimeout(function() {
+			document.body.innerHTML += '<li>second';
+
+			next();
+		}, 2000)
+	}, function(next) {
+		setTimeout(function() {
+			document.body.innerHTML += '<li>third';
+
+		}, 3000)
+	}
+]);
+
+
+```
+
+
+
+
+

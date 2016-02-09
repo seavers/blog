@@ -1,0 +1,41 @@
+---
+layout: post
+title: "ubuntu 下使用 tf 卡"
+date: 2013-03-20 16:45:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- ubuntu  tf  sd u盘
+---
+
+记录下,在ubuntu下使用tf卡的问题
+
+在ubuntu使用了下tf卡,在windows下使用读卡器正常, 在ubuntu下就变成63M了
+
+使用
+```
+sudo fdisk /dev/sdb
+```
+之后为交互式的命令行操作
+
+* 使用p显示当前分区情况
+* 使用d命令删除了所有的分区
+* 使用o命令改为兼容的分区表结构 或 用c,没有研究
+* 使用a命令,增加可引导标识
+* 使用w命令,保存退出
+* 使用q命令,不保存退出
+
+中间操作时,会遇到一些error(如设备忙),请尝试以下办法
+* 操作完一个命令,如o后,先w保存退出,然后重新fdisk进命令后,再操作
+* 使用d删除完全后,w保存后,再重新进入操作
+* 分区后,还要再格式化为某个文件系统, 关键词 mkfs
+* /dev/sdb为tf卡, /dev/sdb1为第一个分区, /dev/sdb2为第二个分区
+
+
+fdisk后, ubuntu与windows就都正常了, 没试过U盘,改天看看~~
+
+
+
+
+

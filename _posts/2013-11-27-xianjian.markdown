@@ -1,0 +1,42 @@
+---
+layout: post
+title: "html5版仙剑"
+date: 2013-11-27 23:20:11 +0800
+comments: true
+categories: 
+- html5
+---
+
+刚学习html5时, 为了练手, 基于html5写了版仙剑, [http://xianjian.github.com/](http://xianjian.github.com/)
+
+<!--more-->
+
+当时花了不少心血, 也解决了不少算法问题, 可用度80%, 然而后来比较忙, 就停止了
+
+今天心血来潮, 在服务器上重新部署了一套, 欢迎试用 (图片点击右键, 新窗口打开)
+
+[![xianjian](/uploads/xianjian.png)](http://xianjian.u.qiniudn.com/)
+
+刚开始下载时, 速度有点慢, 请耐心等待, 后续再更改算法, 如果本地玩, 可以git clone哦~~
+
+  * 在线试玩,可以使用[qiniudn](http://xianjian.u.qiniudn.com) 或者 [github](http://xianjian.github.com) 或者 [博客内](http://www.lianghaijun.com/xianjian/)
+  * github地址在  [https://github.com/seavers/xianjian](https://github.com/seavers/xianjian)
+  * 其实还有一个java版的 [https://github.com/seavers/pal](https://github.com/seavers/pal)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,10 @@
+{% capture site.baseurl %}{{ site.root | strip_slash }}{% endcapture %}
+
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    {% for category in site.categories %}
+        <li class='category'><a href="{{ site.baseurl }}/category/{{ category[0] }}">{{ category[0] }} ({{ category[1] | size }})</a></li>
+    {% endfor %}
+  </ul>
+</section>

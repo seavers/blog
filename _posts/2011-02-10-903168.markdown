@@ -1,0 +1,35 @@
+---
+layout: post
+title: "php 学习笔记 (1)"
+date: 2011-02-10 22:02:00 +0800
+comments: true
+categories:
+- php
+tags:
+- PHP
+-  Java
+---
+
+与java.String对比
+[table]
+||id|java.String|php.String|
+||0| equals | strcmp |
+||1| substring(start,end)| substr(string,start,length) |
+||2| indexOf(str, fromIndex)|  strpos stripos  ,  strstr  stristr  strrpos|
+||3| concat(str) (+)| (.)|
+||4| startsWith ||
+||5| endsWith ||
+||6| getBytes | |
+||7| matches | |
+||8| replace | str_replace(find, replace, str, count)  ,  str_ireplace|
+||9| replaceAll ||
+||10| split | |
+||11| toLowerCase | strtolower() |
+||12| toUpperCase | strtoupper()|
+||13| trim() | trim()  ltrim()  rtrim()|
+||14| length | strlen |
+||15|  | md5|
+||16| format|fprintf|
+[/table]
+
+php    join  md5

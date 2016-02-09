@@ -1,0 +1,6 @@
+// This File is imported last, and will override other styles in the cascade
+// Add styles here to make changes without digging in too much
+body>a{display:none}
+#wb_connect_btn{float:right}
+p+ul,p+ol {margin-top: -20px}
+hr {margin-bottom: 20px}

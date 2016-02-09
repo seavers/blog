@@ -1,0 +1,62 @@
+---
+layout: post
+title: "包管理软件"
+date: 2013-03-01 22:38:00 +0800
+comments: true
+categories:
+- 思考
+tags:
+---
+
+常见的各类包管理软件对比
+
+包管理分类
+
+* 操作系统包管理  如: yum (RHL), apt-get(ubuntu), homebrew(mac)
+* 语言级别  如: npm(nodejs), gem(ruby),pip(python), bower(javascript), maven(java)
+
+
+总结
+
+* 包管理几乎都有list, install, uninstall, update|upgrade, search 等功能
+* 语言级别时, 因涉及到应用, 会分 local与global, 会有工程配置如package.json
+* maven比较特殊, 不支持install, 需要手工配置pom.xml   (需要不少插件)
+
+
+一些列表
+[table]
+|name   | list | install | uninstall| update | search | init|
+|apt-get| apt-cache  | install | uninstall | upgrade | apt-cache search | |
+|yum     | ||||||
+|brew    | list | install | uninstall | upgrade | search | |
+|npm     | local | -g --save  | prune  | update |  /regexp | package.json|
+|gem     | --local | local| cleanup | update | --remote | Gemfile (bundle init)|
+|pip       | freeze | install | uninstall | ---- | search | |
+|bower  | list  | -g --save | cache-clean | update | search  |  component.json |
+[/table]
+
+
+心得
+
+* yum, apt-get, npm, gem 几乎是官方的, 但mac, python还是选择性较多
+* install 并保存至 .json 配置时, 使用 --save参数, 但gem,python不清楚,待补充
+* 有些update是更新版本信息的, upgrade才是升级所有组件
+* 组件的依赖版本冲突如何办, npm的方法确实不错
+
+
+
+
+汇总列表
+
+* apt-get(ubuntu),yum(fedora),macports(mac),homebrew(mac),pkg(solaris),emerge(Gentoo)
+* npm(nodejs),gem(ruby),pip(python),easy_install(python),nuget(vs),bower(javascript)
+* maven(java),grunt(java),gradle(java),pear(php),cpan(perl)
+* 
+
+
+
+
+各种镜像:
+http://ruby.taobao.org/
+http://gems.rubyforge.org/
+http://gems.github.com/

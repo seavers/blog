@@ -1,0 +1,29 @@
+---
+layout: post
+title: "批量转换GBK到UTF-8"
+date: 2013-05-02 18:58:00 +0800
+comments: true
+categories:
+- ubuntu
+tags:
+- bash
+-  ubuntu
+---
+
+批量转换GBK到UTF-8
+
+```
+find src | grep ".java" | grep -v ".svn" | xargs -I% echo "iconv -f GBK -t UTF-8 % > %.temp " | bash
+find src | grep ".java" | grep -v ".svn" | grep -v ".temp" | xargs -I% echo "cp %.temp %" | bash
+find src | grep ".java" | grep -v ".svn" | grep ".temp" | xargs -I% echo "rm %" | bash
+```
+
+注意, 如果直接用
+```
+iconv -f GBK -t UTF-8 filename > filename
+```
+会挂掉的, 导致filename清空,所以用的.temp
+
+
+
+

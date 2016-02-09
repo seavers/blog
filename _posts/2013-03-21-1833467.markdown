@@ -1,0 +1,51 @@
+---
+layout: post
+title: "sunxi-bsp 脚本分析"
+date: 2013-03-21 15:36:00 +0800
+comments: true
+categories:
+- cubieboard
+tags:
+- cubieboard sunxi-media-create
+---
+
+cubieboard刷sd卡时, 使用了下面的脚本
+https://github.com/linux-sunxi/sunxi-bsp/blob/master/scripts/sunxi-media-create.sh
+
+命令如下:
+./script/sunxi-media-create.sh /dev/sdb 引导文件 操作系统文件
+
+
+####分析如下:
+
+* umount sd
+* sd卡前1M的字节,全部清0
+* sfdisk命令写分区表
+* 两个分区分别格式化成vfat与ext4文件系统
+* 解压两个文件到临时目录
+* /bootloader/sunxi-spl.bin 写至sd卡8K处, (第二引导系统处)
+* /bootloader/u-boot.bin 写至32K处        (真正的引导模块)
+* 两个分区mount至文件系统
+* 拷贝文件 /kernel/uImage => 第一分区
+* 拷贝文件 /kernel/*.bin  => 第一分区
+* 拷贝文件 /kernel/*.scr  => 第一分区
+* 拷贝文件 操作系统文件/*   => 第二分区
+* 拷贝文件 /rootfs/*      => 第二分区
+
+
+
+####总结如下:
+
+* 脚本主要是分区,格式化,拷贝文件
+* 分成两个区,两个文件解压后,拷贝至分区内
+
+
+
+####关于源码
+源码的github上,有几多很特别的目录, 是打不开的, 很怪~~~
+更详细的可参考:
+http://linux-sunxi.org/Main_Page/zh_cn#.E8.BD.AF.E4.BB.B6
+
+
+
+
