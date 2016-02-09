@@ -1,0 +1,82 @@
+---
+layout: post
+title: "inline元素上支持的css属性"
+date: 2012-03-03 22:39:00 +0800
+comments: true
+categories:
+- css
+tags:
+- inline
+-  css
+---
+
+今天在测试时,意外发现inline元素是可以设置background与border的, 之前有所误解, 故对其它的css属性重新回顾了下
+
+随手写了一个demo:
+
+```html
+<h3>inline测试</h3>
+<div style="width:110px">&nbsp;
+<a href="#" style="
+    background: #ccc;
+    padding: 11px;
+    margin-left: 80px;
+    line-height: 70px;
+    border: 1px solid blue;
+">display</a>
+
+<i href="#" style="
+    background: #ccc;
+    padding: 11px;
+    margin-left: 80px;
+    line-height: 70px;
+    border: 1px solid blue;
+    min-width: 10px;
+    min-height: 10px;
+    overflow: hidden;
+    max-width: 10px;
+    max-height: 10px;.;
+    resize: both;
+">inline</i>
+</div>
+
+```
+
+
+经测试
+1. inline元素, 有效的: background, margin-left, margin-right, padding, border
+2. inline元素, 无效的: width, height, margin-top, margin-bottom
+3. 因width, height无效, 因此下列属性也无效: text-align, text-indent, min|max-width|height, overflow
+4. 原文字相关的依然有效, 如word-spacing,  word-wrap,  white-space, letter-spacing
+5. 下面两个有效, line-height, vertical-align, box-shadow
+6. float,position及与之相关top,left, 不考虑, 已经不是inline了
+
+其中 border, line-height, 这两个可以多多利用
+
+*思考:*
+1. inline元素的宽高是不能定义, 即宽高度是由inline元素inline内容的元素决定的,(ie6,ie7下高度会受inline-block元素的影响)
+2. 即宽高完全是自适应而得出的, 因此也不存在overflow的问题, min|max-width|height也没有影响
+3. margin四个属性, left|right 与 top|bottom 有不同的待遇
+4. margin-top, margin-bottom, 可以用line-height模拟, 但有很大不同, 与inline-block也不兼容,  另 margin:0 auto的居中效果, 也没有作用
+
+*其次: *
+1. div元素, 使用 display:inline 以上几条也成立
+2. button元素, 使用display:inline, 样式没有变化, 等于于inline-block
+
+
+*最后: *
+mdn中说: 默认 inline-level 的元素 (inline + inline-block)
+
+* b, big, i, small, tt
+* abbr, acronym, cite, code, dfn, em, kbd, strong, samp, var
+* a, bdo, br, img, map, object, q, script, span, sub, sup
+* button, input, label, select, textarea
+
+其中img, button, input, label, select, textarea 并没有以上的特征, 测试了一下, 设置inline与inline-block, 效果是一样的, 没有变化, 都等同于设置了inline-block
+
+
+
+
+
+
+

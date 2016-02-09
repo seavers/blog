@@ -1,0 +1,69 @@
+---
+layout: post
+title: "sed"
+date: 2013-11-28 16:50:01 +0800
+comments: true
+categories: 
+- ubuntu
+---
+
+sed是基于行进行文本替换的神器, 这里记录一些自己常用的功能
+
+<!--more-->
+
+直接替换
+```
+  cat data.txt | sed 's/abc/def/g'
+```
+
+删掉空行
+```
+  cat data.txt | sed '/^$/d'
+```
+
+删除掉第一行
+```
+  cat data.txt | sed '1d'
+```
+
+删除掉每行的第一个字符
+```
+  cat data.txt | sed 's/^.//g'
+```
+
+
+
+还有一些从[其它地方](http://baiqiuyi.com/linux/review-sed-command-for-unix-shell-book.html)拷贝过来的
+
+```
+sed '1,3d' file //删除1-3行
+sed '/[Aa]bc/p' file //打印包含Abc或者abc的行
+sed '/ABC/d' //删除包含ABC的行
+sed '/ABC/!d' //不删除包含ABC的行
+sed '5,$d' //从第五行到最后一行全部删除
+sed 1q  //显示第一行
+sed 's/$/.../g' //每行的最后面添加 ...
+sed 's/d.(sk)/1&/g' //满足d*sk的单词,在单词前添加sk
+sed 's/<[^>]*>//g' //去除html标签
+sed '/ABC/a123' //在包含ABC的行后面添加一行数值为123的行
+sed '/ABC/i123' //跟a不同的是i是插入当前行的前面
+sed '/ABC/c123' //包含ABC的行将更改为123
+sed '/ABC/{n;s/123/ABC/g}' //精确匹配包含ABC的下一行,将123全部替换成ABC
+sed '/ABC/{s/A/a/}' //在包含ABC的行将A替换成a
+sed -e '/ABC/h' -e '$g' //将包含ABC的行复制,在最后一行添加.
+sed -e '/ABC/{h;d}' -e '/123/G' //将包含ABC的行复制并删除,在包含123的行后添加.
+g等于在当前行覆盖,G是在符合条件的行后新增加一行.
+sed 's/^/ /g' //每行前面增加一个空格
+sed 's/.(.)$/*1/' //将倒数第二位换成*
+sed '/ABC/!s/1/*/g' //在不包含ABC的行里,将所有的1替换成*
+sed 's/1|2|3/*/g' //在GNU里将不管是1或2或者是3替换成*
+```
+
+还有这个
+[http://henter.me/post/sed-notes.html](http://henter.me/post/sed-notes.html)
+[http://blog.csdn.net/hepeng597/article/details/11269387](http://blog.csdn.net/hepeng597/article/details/11269387)
+
+
+
+
+

@@ -1,0 +1,46 @@
+---
+layout: post
+title: "判断两个字符串的相似度(js)"
+date: 2012-09-19 20:48:00 +0800
+comments: true
+categories:
+- javascript
+tags:
+- javascript
+---
+
+问题来源于 http://weibo.com/1748374882/yavpCkc31
+
+问题：有两个字符串 A 和 B，如何简单高效的判断 A 和 B 的相似度？A 和 B 完全一样，相似度为 100, A 和 B 完全不一样，相似度为 0. A 和 B 中有一半文字相同，相似度为 50. 依此类推。文字中包含中英文，空白字符也算。哪位用 JS 挑战下？性能第一，代码长短无所谓。
+
+```js
+function compare(x, y) {
+	var z = 0;
+	var s = x.length + y.length;;
+
+	x.sort();
+	y.sort();
+	var a = x.shift();
+	var b = y.shift();
+
+	while(a !== undefined && b !== undefined) {
+		if (a === b) {
+			z++;
+			a = x.shift();
+			b = y.shift();
+		} else if (a < b) {
+			a = x.shift();
+		} else if (a > b) {
+			b = y.shift();
+		}
+	}
+	return z/s * 200;
+}
+
+console.log(compare(['123', '中文', 'hello'], ['123', '中文', 'hello']))
+console.log(compare(['123', '中文', 'hello'], ['123', '中文', 'hello'].sort()))
+console.log(compare(['123', '中文', 'hello'], ['123', '中文', 'hello'].reverse()))
+console.log(compare(['123', '中文', 'hello','中2文'], ['12', '中2文', '123','中文3']))
+console.log(compare(['123', '中文', 'hello'], ['中文', 'world', '456']))
+console.log(compare(['123', '中3文', 'hello'], ['中文', 'world', '汉字']))
+```

@@ -1,0 +1,316 @@
+---
+layout: post
+title: "mini javascript loader"
+date: 2012-06-07 00:56:00 +0800
+comments: true
+categories:
+- javascript
+tags:
+- javascript loader
+---
+
+[size=medium]
+自己写的一个mini 且 simple 的 javascript loader
+
+功能特点
+
+*  异步并行载入js, 每个js只加载一次
+*  支持模块依赖, 未检测循环依赖
+*  支持别名
+*  兼容ie6+ , firefox, chrome ...
+*  API :  
+    define.alias['modName'] = 'http://path/to/mods/root/dir'
+    define(deps, callback)   其中 callback(dep1, dep2, dep3...)
+    require(deps, callback)   其中 callback(dep1, dep2, dep3...)
+
+
+
+```js
+
+define = (function() {
+	
+	var modules = {};
+	var modulesCallbacks = {};
+	var alias = window.alias || {};
+
+	function map(arr, callback) {
+		var ret = [];
+		for(var i = 0; i < arr.length; i++) {
+			ret.push(callback(arr[i], i, arr));
+		}
+		return ret;
+	}
+	function isString(obj) {
+		return typeof(obj) == 'string';
+	}
+	function isArray(obj) {
+		return Object.prototype.toString.call(obj) == '[object Array]';
+	}
+	function isFunction(obj) {
+		return typeof(obj) == 'function';
+	}
+	function mix(src, dst) {
+		for(var key in dst) {
+			src[key] = dst[key];
+		}
+	}
+	function getScript(url, callback) {
+		var node = document.createElement("script");
+		node.async = true;
+		if (document.addEventListener) {
+			node.addEventListener('load', callback);
+		} else {
+			node.onreadystatechange = function () {
+				if(node.readyState == 'loaded' || node.readyState == 'complete') {
+					callback && callback();
+				}
+			}
+		}
+		node.src = url;
+
+		var head = document.head || document.getElementsByTagName('head')[0] || document.documentElement;
+		head.insertBefore(node, head.firstChild);
+		return node;
+	}
+
+	function getCurrentScript() {
+		
+		//firefox4 and opera
+		if (document.currentScript) {
+			return document.currentScript;
+		} else if (document.attachEvent) {
+			//ie6-9 得到当前正在执行的script标签
+			var scripts = document.getElementsByTagName('script');
+			for (var i = scripts.length - 1; i > -1; i--) {
+				if (scripts[i].readyState === 'interactive') {
+					return scripts[i];
+				}
+			}
+		} else {
+			// 参考 https://github.com/samyk/jiagra/blob/master/jiagra.js
+			// chrome and firefox4以前的版本
+			var stack;
+			try {
+				makeReferenceError
+			} catch (e) {
+				stack = e.stack;
+			}
+			if (!stack)
+				return undefined;
+			// chrome uses at, ff uses @
+
+			var e = stack.indexOf(' at ') !== -1 ? ' at ' : '@';
+			while (stack.indexOf(e) !== -1) {
+				stack = stack.substring(stack.indexOf(e) + e.length);
+			}
+			stack = stack.replace(/:\d+:\d+$/ig, "");
+
+			var scripts = document.getElementsByTagName('script');
+			for (var i = scripts.length - 1; i > -1; i--) {
+				if (scripts[i].src === stack) {
+					return scripts[i];
+				}
+			}
+		}
+	}
+
+	function getScriptWithCache(url, callback) {
+		var scripts = this._scripts = this._scripts || {};
+		var cache = scripts;
+		if (cache === true) {
+			callback && callback();
+			return ;
+		} else if (isArray(cache)) {
+			cache.push(callback);
+			return ;
+		} else {
+			scripts = [callback];
+		}
+
+		getScript(url, function() {
+			var callbacks = scripts || [];
+			scripts = true;
+			for(var i = 0; i < callbacks.length; i++) {
+				callbacks[i] && callbacks[i]();
+			}
+		});		
+	}
+
+	function getModule(mod, callback) {
+		if (!modules[mod]) {
+			modulesCallbacks[mod] = modulesCallbacks[mod] || [];
+			modulesCallbacks[mod].push(callback);
+
+			getScriptWithCache(mod);
+		} else {
+			callback && callback(modules[mod]);
+		}
+	}
+
+	function getModules(mods, callback) {
+		if (mods == undefined || mods.length == 0) {
+			callback && callback();
+			return ;
+		}
+		var c = 0;
+
+		var ret = [];
+		map(mods, function(mod, i) {
+			getModule(mod, function(obj) {
+				ret[i] = obj;
+
+				if (++c == mods.length) {
+					callback && callback(ret);
+				}
+			});
+		});
+	}
+
+	function define(deps, callback) {
+		var container = this;
+
+		if (!isString(deps) && !isArray(deps)) {
+			callback = deps;
+			deps = [];
+		}
+		var current = getCurrentScript();
+		var url = current && current.src;
+
+		deps = deps || [];
+		if (isString(deps)) {
+			deps = deps.split(',');
+		}
+		var allDeps = map(deps, tran);				//全部转换映射
+
+		getModules(allDeps, function(mods) {
+			var ret = isFunction(callback) ? callback.apply(undefined, mods||[]) : callback;
+			modules = modules || {}
+			mix(modules, ret);
+
+			container != window && (mix(container, ret));
+
+			if (modulesCallbacks) {
+				for(var i = 0; i < modulesCallbacks.length; i++) {
+					modulesCallbacks[i](ret);
+				}
+			}
+		});
+
+		return container;
+	}
+
+	function tran(dep) {
+		for(var key in alias) {
+			dep = dep.replace(new RegExp('^' + key), alias[key]);		//TODO
+		}
+		return dep + '.js';
+	}
+
+	define.alias = alias;
+	return define;
+})();
+
+```
+
+
+
+
+
+
+
+测试用例
+
+//上述代码保存为 http://localhost/loader/loader.js
+
+```htm
+
+<!-- index.htm -->
+<script src="loader.js"></script>
+
+<script>
+define.alias['ok'] = 'http://localhost/loader/';
+define(['ok/mod1', 'ok/mod2'], function(Mod1, Mod2) {
+	console.log('execute index ', Mod1, Mod2);
+});
+</script>
+
+```
+
+
+
+```js
+
+//   http://localhost/loader/mod1.js
+require(['ok/mod2'], function(Mod2) {
+	console.log('mod1 index ', Mod2);
+
+	return {
+		mod1: 'this is mod1'
+	}
+});
+
+```
+
+```js
+
+//   http://localhost/loader/mod2.js
+define(function() {
+	console.log('mod2 index ');
+
+	return {
+		'hello' : 'world'
+	}
+});
+
+```
+
+
+
+
+补: 其它用法
+
+```js
+//mod3.js
+//功能模块1
+define({
+    sayHello : function() {
+       console.log('hello');
+    }
+});
+
+//功能模块2, 模块2没支持!!!
+define(function() {
+    return {
+        sayWorld : function() {
+           console.log('world');
+        }
+    }
+});
+
+
+
+```
+```
+
+App = {define : define, require: define};
+App.define.alias['ok'] = 'http://lhj/loader';
+App.define({
+      showMsg : function(msg) {
+          console.log(msg);
+      }
+});
+
+App.define(function(Mod3) {
+      return {
+          say : function() {
+				App.require('ok/Mod3', function(Mod3) {
+	                  return Mod3.sayHello() + ' ' + '';//Mod3.sayWorld();
+				});
+          }
+      }
+});
+
+App.showMsg(123);
+App.say();
+
+```

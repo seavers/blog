@@ -1,0 +1,9 @@
+<section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    {% for category in site.categories %}
+	{% capture category_path %}{{ site['jekyll-archives']['permalinks']['category'] | replace: ':name',category[0] }}{% endcapture %}
+        <li class='category'><a href="{{ site.baseurl }}{{ category_path }}">{{ category[0] }} ({{ category[1] | size }})</a></li>
+    {% endfor %}
+  </ul>
+</section>

@@ -1,0 +1,85 @@
+---
+layout: post
+title: "with语句的本质"
+date: 2011-10-01 23:41:00 +0800
+comments: true
+categories:
+- javascript
+tags:
+- with
+---
+
+通过测试及debug后, 得出结论, 仅代表个人意见:
+
+with的本质, 就是构造一个作用域, 将with的对象的所有key, 声明为局部变量
+
+
+```
+
+var inner = '123';
+var outer = {inner : 'hello world', another: 'hello with'};
+window.obj = {outer: outer};
+
+with(outer) {
+	alert(inner);
+	alert(another);
+	alert(outer.inner);
+	alert(window.obj.outer.inner);
+	show();
+}
+
+
+function show() {
+	alert(inner);
+
+}
+```
+
+等同于以下代码
+
+```
+
+var inner = '123';
+var outer = {inner : 'hello world', another: 'hello with'};
+window.obj = {outer: outer};
+
+(function(inner, another) {
+	alert(inner);
+	alert(another);
+	alert(outer.inner);
+	alert(window.obj.outer.inner);
+	show();
+})(outer.inner, outer.another);
+
+
+function show() {
+	alert(inner);
+
+}
+
+```
+
+
+
+
+再看看下面这个常见的问题, 一目了然
+
+```
+var root = { 
+    branch: { 
+        node: 1 
+    } 
+}; 
+
+with(root.branch) { 
+    root.branch = { 
+        node: 0 
+    }; 
+    // 显示 1, 错误! 
+    alert(node); 
+} 
+// 显示 0, 正确! 
+alert(root.branch.node); 
+```
+
+

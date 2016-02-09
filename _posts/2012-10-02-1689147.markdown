@@ -1,0 +1,71 @@
+---
+layout: post
+title: "maven jetty 配置"
+date: 2012-10-02 10:48:00 +0800
+comments: true
+categories:
+- maven
+tags:
+- maven
+-  jetty
+-  热部署
+-  PermGen space
+---
+
+*jetty的maven插件配置(pom.xml)*
+
+
+*  scanIntervalSeconds 配置扫描时间时间, 如果有文件变动, 如pom.xml,web.xml或classes, 则jetty会重新加载应用, 相当方便
+*  contextPath 配置ROOT, 即将web的上下文路径, 改为 /
+*  将jetty默认的uri编码, 改为GBK   (jetty默认是utf8)
+
+```xml
+<plugin> 
+    <groupId>org.mortbay.jetty</groupId> 
+    <artifactId>maven-jetty-plugin</artifactId>
+    <configuration>    
+        <contextPath>/</contextPath>    
+        <connectors>    
+            <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                <port>8080</port>    
+            </connector>    
+        </connectors>    
+        <reload>automatic</reload>  
+        <scanIntervalSeconds>3</scanIntervalSeconds>
+        <systemProperties>
+            <systemProperty>
+	        <name>org.mortbay.util.URI.charset</name>
+	        <value>GBK</value>
+	    </systemProperty>
+	 </systemProperties>
+     </configuration> 
+</plugin>
+```
+
+
+*jetty的另一段配置*(修改web.xml)
+用于解决使用jetty后无法修改文件问题(错误描述:请求的操作无法在使用用户映射区域打开的文件上执行)
+
+```xml
+<servlet>
+    <servlet-name>default</servlet-name>
+    <servlet-class>org.mortbay.jetty.servlet.DefaultServlet</servlet-class>
+    <init-param>
+        <param-name>useFileMappedBuffer</param-name>
+        <param-value>false</param-value>
+    </init-param>
+    <load-on-startup>0</load-on-startup>
+</servlet>
+```
+
+
+*修改mvn时的java运行时参数* (解决 PermGen space问题)
+
+```
+set MAVEN_OPTS=-XX:MaxPermSize=128M
+mvn jetty:run
+```
+
+
+
+
