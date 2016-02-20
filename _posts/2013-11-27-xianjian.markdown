@@ -15,7 +15,7 @@ categories:
 
 今天心血来潮, 在服务器上重新部署了一套, 欢迎试用 (图片点击右键, 新窗口打开)
 
-[![xianjian](/uploads/xianjian.png)](http://xianjian.u.qiniudn.com/)
+[![xianjian]({{site.baseurl}}/uploads/xianjian.png)](http://xianjian.u.qiniudn.com/)
 
 刚开始下载时, 速度有点慢, 请耐心等待, 后续再更改算法, 如果本地玩, 可以git clone哦~~
 

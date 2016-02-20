@@ -16,7 +16,7 @@ loop {
   puts 'OK'
 
   system('git pull')
-  system('jekyll build -d public')
+  system('jekyll build -d _deploy')
   puts ''
 }
 
