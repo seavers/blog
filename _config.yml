@@ -1,8 +1,8 @@
 # Site settings   http://jekyll.bootcss.com/docs/configuration/
-title: seavers的博客
+title: 大海Online的博客
 subtitle: Looking for Interest
-email: seavers@163.com
-author: seavers
+email: lianghaijun@163.com
+author: lianghaijun
 #simple_search: http://google.com/search
 description: > # this means to ignore newlines until "baseurl:"
   Looking for Interest
@@ -13,7 +13,7 @@ permalink: /:year-:month-:day-:title.html
 
 date_format: "ordinal"
 #twitter_username: seavers
-github_username:  seavers
+#github_username:  seavers
 
 exclude: ['Gemfile', 'Gemfile.lock']
 
