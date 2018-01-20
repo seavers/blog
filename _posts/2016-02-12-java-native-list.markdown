@@ -101,7 +101,8 @@ java.lang.reflect.Proxy.defineClass0(ClassLoader, String, byte[], int, int);
 
 
 其实看native源代码是最直观的了, 点击 [http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/file/tip/src/share/native/java/lang/](http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/file/tip/src/share/native/java/lang/)
-
+或
+[https://github.com/dmlloyd/openjdk/tree/jdk7u/jdk7u/jdk/src/share/native/java/lang](https://github.com/dmlloyd/openjdk/tree/jdk7u/jdk7u/jdk/src/share/native/java/lang)
 
 
 
