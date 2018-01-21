@@ -15,7 +15,7 @@ date_format: "ordinal"
 #twitter_username: seavers
 #github_username:  seavers
 
-exclude: ['Gemfile', 'Gemfile.lock']
+exclude: ['Gemfile', 'Gemfile.lock', 'nohup.out']
 
 # Build settings
 markdown: MyKramdown  ## maruku|rdiscount|redcarpet|kramdown
