@@ -13,27 +13,29 @@ tags:
 
 今天遇到了maven创建archetype多模块工程时的很多问题, 记录一下
 
-archetype工程的创建可以参考: 
+#### archetype工程的创建可以参考: 
 
   * [官方入口](http://maven.apache.org/archetype/maven-archetype-plugin/index.html)
   * [官方文档](http://maven.apache.org/archetype/maven-archetype-plugin/examples/create-multi-module-project.html)
 
 
-问题如下:
+#### 问题如下:
 
-1. 多模块时生成archetype-metadata.xml的问题
-  a. 单模块工程时, 可以直接写archetype-metadata.xml文件
-  b. 多模块工程时, 不可以写archetype-metadata.xml, 因为外层工程没有src目录
-  c. 解决方案: 多模块工程可以配置出archetype-metadata.xml, 参考 [这里](http://maven.apache.org/archetype/maven-archetype-plugin/examples/create-with-property-file.html)
+* 多模块时生成archetype-metadata.xml的问题
 
-2. 无法拷贝.gitignore文件的问题
-  a. 参考[这里](https://stackoverflow.com/questions/7981060/maven-archetype-plugin-doesnt-let-resources-in-archetype-resources-through)的解决方案
+  * 单模块工程时, 可以直接写archetype-metadata.xml文件
+  * 多模块工程时, 不可以写archetype-metadata.xml, 因为外层工程没有src目录
+  * 解决方案: 多模块工程可以配置出archetype-metadata.xml, 参考 [这里](http://maven.apache.org/archetype/maven-archetype-plugin/examples/create-with-property-file.html)
+
+* 无法拷贝.gitignore文件的问题
+
+  * 参考[这里](https://stackoverflow.com/questions/7981060/maven-archetype-plugin-doesnt-let-resources-in-archetype-resources-through)的解决方案
 
 
-所以整体解决方案如下:
+#### 解决方案如下:
 
-1. 将.gitignore改名为__gitignore__
-2. 创建archetype.properties文件
+* 将.gitignore改名为__gitignore__
+* 创建archetype.properties文件
 
 ```
 ## generate for archetype-metadata.xml
@@ -44,7 +46,7 @@ excludePatterns=archetype.properties,*.iml,.idea/,.idea/libraries,logs/,build.sh
 gitignore=.gitignore
 ```
 
-3. 修改pom文件, 多模块工程最外层的pom文件
+* 修改pom文件, 多模块工程最外层的pom文件
 
 ```
     <build>
