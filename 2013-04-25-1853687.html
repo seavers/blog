@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>maven 多环境配置 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      maven 多环境配置
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+maven多环境配置
+
+比较常见的maven的多环境配置
+
+&lt;build&gt;
+  &lt;resources&gt;...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-04-25-1853687.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">maven 多环境配置</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-25T17:29:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>maven多环境配置</p>
+
+<p>比较常见的maven的多环境配置</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;build&gt;
+  &lt;resources&gt;
+     &lt;resource&gt;
+       &lt;directory&gt;src/main/resources&lt;/directory&gt;
+         &lt;filtering&gt;true&lt;/filtering&gt;
+     &lt;/resource&gt;
+  &lt;/resources&gt;
+  &lt;profiles&gt;
+    &lt;profile&gt;
+      &lt;id&gt;development&lt;/id&gt;
+      &lt;activation&gt;
+        &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+      &lt;/activation&gt;
+      &lt;filters&gt;
+        &lt;filter&gt;src/main/resources/profile/development.properties&lt;/filter&gt;
+      &lt;/filters&gt;
+    &lt;/profile&gt;
+    &lt;profile&gt;
+      &lt;id&gt;production&lt;/id&gt;
+      &lt;filters&gt;
+        &lt;filter&gt;src/main/resources/profile/production.properties&lt;/filter&gt;
+      &lt;/filters&gt;
+     &lt;/profile&gt;
+  &lt;/profiles&gt;
+&lt;/build&gt;
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    mvn jetty:run
+    mvn jetty:run -Pproduction
+</code></pre>
+</div>
+
+<p>当没有写P参数时，采用development的profile,若指定，则使用指定的profile</p>
+
+<p>另外一种写，个人认为比较优化</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;properties&gt;
+  &lt;env&gt;development&lt;/env&gt;
+&lt;build&gt;
+  &lt;filters&gt;
+    &lt;filter&gt;src/main/resources/profile/${env}.properties&lt;/filter&gt;
+  &lt;/filters&gt;
+  &lt;resources&gt;
+     &lt;resource&gt;
+       &lt;directory&gt;src/main/resources&lt;/directory&gt;
+         &lt;filtering&gt;true&lt;/filtering&gt;
+     &lt;/resource&gt;
+  &lt;/resources&gt;
+&lt;/build&gt;
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>   mvn jetty:run
+   mvn jetty:run -Denv=production
+</code></pre>
+</div>
+
+<p>默认的采用properties中的配置，不同的环境采用指定的参数</p>
+
+<hr />
+
+<p>多环境需要注意的点：
+1. 在切换环境时，不能改动源代码，如操作系统，线上线下，切换数据库等
+2. 源代码独立于环境配置，或配置文件独立，或切换环境名称
+3. 环境所有配置独立，需独立server管理
+4. 环境名称切换，则可扩展性不强，但适应性强，管理方便</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-25T17:29:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/maven/'>maven</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-04-20-1850803.html" title="Previous Post: raspberry 网络设置">&laquo; raspberry 网络设置</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-04-26-1855578.html" title="Next Post: java rsa code">java rsa code &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

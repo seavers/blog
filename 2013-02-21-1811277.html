@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ubuntu 与 windows 的互联与共享 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      ubuntu 与 windows 的互联与共享
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+windows访问ubuntu
+
+
+  ubuntu 安装 samba
+
+
+sudo apt-get ...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-02-21-1811277.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ubuntu 与 windows 的互联与共享</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-21T18:23:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>windows访问ubuntu</p>
+
+<ol>
+  <li>ubuntu 安装 samba</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get install samba
+</code></pre>
+</div>
+
+<ol>
+  <li>修改 /etc/samba/smb.conf文件</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+[global]
+   workgroup = WORKGROUP
+   server string = %h server (Samba, Ubuntu)
+;   wins support = no
+   wins server =  (用ipconfig /all里看， 或者直接填网关ip)
+   dns proxy = no
+   name resolve order = lmhosts host wins bcast
+
+   security = share
+   usershare allow guests = yes
+[share]
+      path = /home/ubuntu/
+      available = yes
+      browseable = yes
+      public = yes
+      writable = yes
+
+</code></pre>
+</div>
+
+<ol>
+  <li>重启服务
+<code class="highlighter-rouge">
+sudo restart smbd
+sudo restart nmbd
+</code></li>
+</ol>
+
+<ul>
+  <li>smbd 是 samba 的文件共享服务</li>
+  <li>nmbd 是 windows name 解析服务</li>
+</ul>
+
+<ol>
+  <li>OK
+这样，windows 就可以ping 通,且能查看unbutu的共享文件</li>
+</ol>
+
+<hr />
+
+<p>ubuntu 访问windows</p>
+
+<ol>
+  <li>
+    <p>安装服务
+<code class="highlighter-rouge">
+sudo apt-get install cifs
+</code></p>
+  </li>
+  <li>
+    <p>mount
+<code class="highlighter-rouge">
+sudo mount -t cifs //hostname/share  /mnt/path/to/name -o username=user
+</code></p>
+  </li>
+</ol>
+
+<hr />
+
+<p>补： 上述是通过samba即cifs实现，也可通过ftp, webdav 等等其它协议实现互相访问</p>
+
+<p>其它问题</p>
+
+<ol>
+  <li>ubuntu ping 的时候速度很慢，ping taobao.com 也慢
+http://forum.ubuntu.org.cn/viewtopic.php?f=116&amp;t=345288</li>
+  <li>ping <hostname> 默认会解析全域名
+可以在 /etc/resolv.conf 中进行修改，将 search 修改为 正确的域后缀</hostname></li>
+</ol>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-21T18:23:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-02-17-1801066.html" title="Previous Post: git的本质">&laquo; git的本质</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-02-28-1817854.html" title="Next Post: chrome  support for sass">chrome  support for sass &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

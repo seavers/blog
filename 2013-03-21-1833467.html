@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>sunxi-bsp 脚本分析 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      sunxi-bsp 脚本分析
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+cubieboard刷sd卡时, 使用了下面的脚本
+https://github.com/linux-sunxi/sun...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-03-21-1833467.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">sunxi-bsp 脚本分析</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-21T15:36:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>cubieboard刷sd卡时, 使用了下面的脚本
+https://github.com/linux-sunxi/sunxi-bsp/blob/master/scripts/sunxi-media-create.sh</p>
+
+<p>命令如下:
+./script/sunxi-media-create.sh /dev/sdb 引导文件 操作系统文件</p>
+
+<p>####分析如下:</p>
+
+<ul>
+  <li>umount sd</li>
+  <li>sd卡前1M的字节,全部清0</li>
+  <li>sfdisk命令写分区表</li>
+  <li>两个分区分别格式化成vfat与ext4文件系统</li>
+  <li>解压两个文件到临时目录</li>
+  <li>/bootloader/sunxi-spl.bin 写至sd卡8K处, (第二引导系统处)</li>
+  <li>/bootloader/u-boot.bin 写至32K处        (真正的引导模块)</li>
+  <li>两个分区mount至文件系统</li>
+  <li>拷贝文件 /kernel/uImage =&gt; 第一分区</li>
+  <li>拷贝文件 /kernel/*.bin  =&gt; 第一分区</li>
+  <li>拷贝文件 /kernel/*.scr  =&gt; 第一分区</li>
+  <li>拷贝文件 操作系统文件/*   =&gt; 第二分区</li>
+  <li>拷贝文件 /rootfs/*      =&gt; 第二分区</li>
+</ul>
+
+<p>####总结如下:</p>
+
+<ul>
+  <li>脚本主要是分区,格式化,拷贝文件</li>
+  <li>分成两个区,两个文件解压后,拷贝至分区内</li>
+</ul>
+
+<p>####关于源码
+源码的github上,有几多很特别的目录, 是打不开的, 很怪~~~
+更详细的可参考:
+http://linux-sunxi.org/Main_Page/zh_cn#.E8.BD.AF.E4.BB.B6</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-21T15:36:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cubieboard/'>cubieboard</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-03-20-1832923.html" title="Previous Post: cubieboard上手">&laquo; cubieboard上手</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-03-22-1834993.html" title="Next Post: maven常用技巧">maven常用技巧 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

@@ -1,0 +1,871 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+  
+  
+    
+    
+      
+  
+    
+      wget 整站下载
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+  下载整站
+
+wget -r -nv --restrict-file-names=noco...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/page/3/">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-11-26-1980761.html">wget 整站下载</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-26T10:22:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>下载整站
+<code class="highlighter-rouge">
+wget -r -nv --restrict-file-names=nocontrol http://seavers.iteye.com/
+</code></p>
+
+<p>下载时可以加 -np, 不下载父目录
+<code class="highlighter-rouge">
+wget -r -nv --restrict-file-names=nocontrol -np http://seavers.iteye.com/blog/
+</code></p>
+
+<p>下载时, 加入断点续传
+<code class="highlighter-rouge">
+wget -r -nv -c --restrict-file-names=nocontrol http://seavers.iteye.com/
+</code></p>
+
+<ul>
+  <li>
+    <p>–restrict-file-names=nocontrol 用来解决中文乱码问题</p>
+  </li>
+  <li>http://aotee.com/using-wget-recursive-download-the-entire-station</li>
+  <li>http://www.cnblogs.com/lybeta/archive/2012/05/23/2514759.html</li>
+  <li>http://blog.csdn.net/flyskywhy/article/details/7777972</li>
+  <li>http://www.butian.org/knowledge/linux/254.html</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-11-06-1972028.html">ubuntu ipconfig</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-06T13:45:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>sudo vi /sbin/ipconfig</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#! /bin/bash</span>
+<span class="k">for </span>word <span class="k">in</span> <span class="sb">`</span>ifconfig eth0 | grep <span class="s2">"inet addr"</span> | sed  <span class="s1">'s/          inet addr/addr/g'</span><span class="sb">`</span>; <span class="k">do </span><span class="nb">echo</span> <span class="nv">$word</span> | sed <span class="s1">'s/:/\t/g'</span>; <span class="k">done
+</span>route -n | awk <span class="s1">'/UG/ {printf "gateway    %-21s %s\n", $2,$8}'</span> ;
+grep nameserver /etc/resolv.conf ;
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo chmod +x /sbin/ipconfig
+
+ipconfig
+
+</code></pre>
+</div>
+
+<hr />
+<p>待改进</p>
+
+<ul>
+  <li>支持eth0 与 wlan0</li>
+  <li>支持dnsmasq</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-11-06-1972001.html">ubuntu 注册 wins</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-06T12:17:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>以下是为了让ubuntu进入windows网络,实现互ping,互连</p>
+
+<ol>
+  <li>ubuntu进入windows网络,必须安装samba
+<code class="highlighter-rouge">
+sudo apt-get install samba
+</code></li>
+  <li>修改/etc/samba/smb.conf, 将wins server修改为正确的ip
+   可以在windows上, 敲入ipconfig /all得到具体ip</li>
+  <li>重启服务
+<code class="highlighter-rouge">
+sudo service nmbd restart
+</code></li>
+  <li>验证下
+<code class="highlighter-rouge">
+nmblookup -R -U &lt;wins_server_ip&gt; &lt;hostname&gt;
+</code></li>
+  <li>这时windows就可访问ubuntu,可以直接ping通</li>
+  <li>ubuntu互ping, 需要设置search domain
+<code class="highlighter-rouge">
+echo 'search abc.com' &gt;&gt; /etc/resolv.conf
+</code></li>
+</ol>
+
+<hr />
+
+<ol>
+  <li>如果IP改变后, wins_server的缓存的ip不正确了,
+可以删除以下两个文件
+/var/cache/samba/wins.dat
+/var/cache/samba/browse.dat 
+然后重启 nmbd 即可</li>
+  <li>如果ubuntu ping 时, ip仍然不正确, 检查下dns server
+   (这块还没有搞清楚, 试试换备用server, 或者等等dns同步)</li>
+  <li></li>
+</ol>
+
+<hr />
+
+<p>如果只是为了互连互通,只需要 nmbd 服务即可
+如果还需要windows共享文件的服务, 需启动smbd</p>
+
+<p>===========================================================</p>
+
+<p>nsswitch.conf是SUN公司开发的一种扩充（name services switch）</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code># /etc/nsswitch.conf
+#
+# Example configuration of GNU Name Service Switch functionality.
+# If you have the `glibc-doc-reference' and `info' packages installed, try:
+# `info libc "Name Service Switch"' for information about this file.
+
+aliases:    邮件别名, sendmail(8) 使用该文件. 
+ethers:     以太网号. 
+group:      用户组, getgrent(3) 函数使用该文件. 
+hosts:      主机名和主机号, gethostbyname(3) 以及类似的函数使用了该文件. 
+netgroup:   网络内主机及其用户的列表, 访问规则使用该文件. 
+network:    网络名及网络号, getnetent(3) 函数使用该文件. 
+passwd:     用户口令, getpwent(3) 函数使用该文件. 
+protocols:  网络协议, getprotoent(3) 函数使用该文件. 
+publickey:  NIS+及NFS 所使用的secure_rpc的公开密匙. 
+rpc:        远程过程调用名及调用号, getrpcbyname(3) 及类似函数使用该文件. 
+services:   网络服务, getservent(3) 函数使用该文件. 
+shadow:     shadow用户口令, getspnam(3) 函数使用该文件.
+</code></pre>
+</div>
+
+<p>=====================</p>
+
+<p>hosts: files mdns4_minimal [NOTFOUND=return] dns mdns4</p>
+
+<ul>
+  <li>files:  /etc/hosts</li>
+  <li>mdns :  dnsmasq  avahi-daemon</li>
+  <li>dns  :  dns server</li>
+</ul>
+
+<p>===================</p>
+
+<p>dnsmasq</p>
+
+<p>Dnsmasq is a lightweight, easy to configure DNS forwarder and DHCP server. 
+https://wiki.archlinux.org/index.php/Dnsmasq_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)</p>
+
+<p>stop dnsmasq:
+1. sudo vi /etc/NetworkManager/NetworkManager.conf
+2. comment  dns=dnsmasq
+3. sudo service network-manager restart</p>
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-11-04-1969731.html">ubuntu 五笔</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-04T15:36:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ubuntu 使用五笔输入法
+ubuntu 13.10 测试通过</p>
+
+<ul>
+  <li>sudo apt-get install ibus-table-wubi</li>
+  <li>ibus-daemon -x -r -d</li>
+  <li>选择五笔输入,生效</li>
+</ul>
+
+<p>使用SHIFT+SPACE切换全半角
+使用SHIFT切换中英文输入</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-10-17-1959997.html">pycompile not found</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-10-17T16:10:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>sudo apt-get remove python 后, 出现了很多错误, 导致后续的无法进行</p>
+
+<p>pycompile not found
+解决方案: 删掉 /usr/bin/pycompile, 然后继续apt-get -f install / remove</p>
+
+<p>gconf2 not found 错误
+sudo dpkg-reconfigure gconf2
+sudo apt-get –purge remove gconf2</p>
+
+<p>gconf2安装时 gconf-schemas not found
+因安装gconf2时,需执行脚本,脚本中需要python,而python需要gconf2
+导致了这个地方的问题</p>
+
+<p>解决方案: 注掉报错的脚本中的那几行命令,然后重新执行
+或:  如果已经安装了python的话, ln -s 下python即可</p>
+
+<p>==============================</p>
+
+<p>ubuntu从13.04升级至13.10时,报/usr/bin/python错误,不知原因
+修改/usr/bin/python链接位置时,也无法通过
+故直接remove python python3, 然后就出现上面的错误了
+修复后, 可以执行do-release-upgrade了</p>
+
+<p>ubuntu的包管理,要赞一下</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-09-22-1944892.html">maven的全局去除依赖</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-09-22T15:01:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们在maven中有时候希望将某个依赖包彻底去除</p>
+
+<p>如我们的系统使用的是spring3.1.2, 但是依赖的二方包中, 总是或多或少依赖了spring2.5.6, 希望有个方法, 能全局去除掉</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;!-- globally exclusion --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+	&lt;artifactId&gt;spring&lt;/artifactId&gt;
+	&lt;version&gt;2.5.6.SEC03&lt;/version&gt;
+	&lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+</div>
+
+<p>以上方式, 有个弊端, 就是eclipse中, 还是会依赖, 且容易用混</p>
+
+<p>有三个方案(建议使用第三种)
+```</p>
+<dependency>
+	<groupid>org.springframework</groupid>
+	<artifactid>spring</artifactid>
+	<version>99.0-does-not-exist</version>
+	<scope>provided</scope>
+</dependency>
+<div class="highlighter-rouge"><pre class="highlight"><code>
+</code></pre>
+</div>
+<dependency>
+	<groupid>org.springframework</groupid>
+	<artifactid>spring</artifactid>
+	<version>2.5.6</version>
+	<scope>system</scope>
+	<systempath>${basedir}/lib/empty.jar</systempath>
+</dependency>
+<div class="highlighter-rouge"><pre class="highlight"><code>
+</code></pre>
+</div>
+<div class="highlighter-rouge"><pre class="highlight"><code>		&lt;plugin&gt;
+			&lt;artifactId&gt;maven-eclipse-plugin&lt;/artifactId&gt;
+			&lt;configuration&gt;
+				&lt;downloadSources&gt;true&lt;/downloadSources&gt;
+				&lt;downloadJavadocs&gt;true&lt;/downloadJavadocs&gt;
+				&lt;classpathContainers&gt;
+					&lt;classpathContainer&gt;org.eclipse.jdt.launching.JRE_CONTAINER&lt;/classpathContainer&gt;
+				&lt;/classpathContainers&gt;
+				&lt;excludes&gt;
+					&lt;exclude&gt;org.springframework:spring&lt;/exclude&gt;
+				&lt;/excludes&gt;
+			&lt;/configuration&gt;
+		&lt;/plugin&gt; ```
+</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-08-13-1923887.html">Class.forName 返回 String[].class</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-08-13T11:38:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>A: 如何通过Class.forName 返回 String[].class
+Q: Class.forName(“[Ljava.lang.String;”)</p>
+
+<p>因为 String[].class.getName() =&gt; “[Ljava.lang.String;”
+经测试, 反过来, 也成立</p>
+
+<p>因此: 
+在sqlmap-config.xml可以这样写</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;typeHandler javaType="[Ljava.util.String;" callback="xxxxxx.StringArrayTypeHandler" /&gt;
+</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-08-09-1922745.html">ibatis typehandler</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-08-09T18:57:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天配置typehandler时碰到一个问题</p>
+
+<p>主要解决的问题是
+java.sql.SQLException: Cannot convert value ‘0000-00-00 00:00:00’ from column 18 to TIMESTAMP</p>
+
+<p>解决方案: 替换掉系统默认的 typehandler, 抛出异常时,改为null</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="GBK"?&gt;</span>
+<span class="cp">&lt;!DOCTYPE sqlMapConfig
+ PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
+ "http://www.ibatis.com/dtd/sql-map-config-2.dtd"&gt;</span>
+<span class="nt">&lt;sqlMapConfig&gt;</span>
+	<span class="nt">&lt;settings</span> 
+		<span class="na">cacheModelsEnabled=</span><span class="s">"true"</span> 
+	<span class="nt">/&gt;</span>
+	<span class="nt">&lt;typeHandler</span> <span class="na">javaType=</span><span class="s">"java.util.Date"</span> <span class="na">callback=</span><span class="s">"xxxxxxxxx.CustomDateTypeHandler"</span> <span class="nt">/&gt;</span>
+	
+	<span class="nt">&lt;sqlMap</span> <span class="na">resource=</span><span class="s">"sqlmap/sqlmap-price.xml"</span> <span class="nt">/&gt;</span>	
+<span class="nt">&lt;/sqlMapConfig&gt;</span>
+
+</code></pre>
+</div>
+
+<p>这里需要注意的是</p>
+
+<ol>
+  <li>typeHandler 中的 jdbcType 取值应为 null, DATE, TIME, 这里用的null</li>
+  <li>typehandler 必须要在 sqlmap 前面, 否则sqlmap中的类型handler就会用默认的</li>
+</ol>
+
+<p>下面是自定义的datetypehandler</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>package xxxxxxxxx;
+
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.ibatis.sqlmap.engine.type.DateTypeHandler;
+
+public class CustomDateTypeHandler extends DateTypeHandler {
+
+
+	@Override
+	public Object getResult(ResultSet rs, String columnName) throws SQLException {
+		try {
+			return super.getResult(rs, columnName);
+		} catch(SQLException e) {
+			if("S1009".equals(e.getSQLState())) {
+				return null;
+			}
+			throw e;
+		}
+	}
+
+	@Override
+	public Object getResult(ResultSet rs, int columnIndex) throws SQLException {
+		try {
+			return super.getResult(rs, columnIndex);
+		} catch(SQLException e) {
+			if("S1009".equals(e.getSQLState())) {
+				return null;
+			}
+			throw e;
+		}
+	}
+
+	@Override
+	public Object getResult(CallableStatement cs, int columnIndex) throws SQLException {
+		try {
+			return super.getResult(cs, columnIndex);
+		} catch(SQLException e) {
+			if("S1009".equals(e.getSQLState())) {
+				return null;
+			}
+			throw e;
+		}
+	}
+
+}
+</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-07-15-1906461.html">下列签名无效： NODATA 1 NODATA 2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-07-15T11:42:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ubuntu下 apt-get update 时,报错
+下列签名无效： NODATA 1 NODATA 2</p>
+
+<p>原因是: 网络连接出错了, 对应的网址连不上去</p>
+
+<p>比如: archive.ubuntu.com,   连接不上, 可换成 cn.archive.ubuntu.com
+或者: 网络有代理, 什么的被拦截了</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-06-28-1895665.html">ubuntu安装maven3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-06-28T13:39:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ubuntu 安装 maven3的方法就是</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  sudo apt-get install maven
+</code></pre>
+</div>
+
+<p>一直以来, 以为 install maven安装的是 maven1.x
+而 install maven2 安装的是 maven2.x
+而看到某些论坛说安装maven3, 要使用 ppa ,
+后来才知道错了</p>
+
+<p>install maven 安装的就是最新版本的maven</p>
+
+<p>在  12.04, 13.04 测试通过</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/4">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/2">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>大牛博客</h1>
+  <ul>
+    <li>
+      <a href="http://ithans.com/">ithans</a>
+    </li>
+  </ul>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

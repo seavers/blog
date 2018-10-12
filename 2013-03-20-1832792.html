@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ubuntu 下使用 tf 卡 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      ubuntu 下使用 tf 卡
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+记录下,在ubuntu下使用tf卡的问题
+
+在ubuntu使用了下tf卡,在windows下使用读卡器正常, 在ubu...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-03-20-1832792.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ubuntu 下使用 tf 卡</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-20T16:45:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>记录下,在ubuntu下使用tf卡的问题</p>
+
+<p>在ubuntu使用了下tf卡,在windows下使用读卡器正常, 在ubuntu下就变成63M了</p>
+
+<p>使用
+<code class="highlighter-rouge">
+sudo fdisk /dev/sdb
+</code>
+之后为交互式的命令行操作</p>
+
+<ul>
+  <li>使用p显示当前分区情况</li>
+  <li>使用d命令删除了所有的分区</li>
+  <li>使用o命令改为兼容的分区表结构 或 用c,没有研究</li>
+  <li>使用a命令,增加可引导标识</li>
+  <li>使用w命令,保存退出</li>
+  <li>使用q命令,不保存退出</li>
+</ul>
+
+<p>中间操作时,会遇到一些error(如设备忙),请尝试以下办法
+* 操作完一个命令,如o后,先w保存退出,然后重新fdisk进命令后,再操作
+* 使用d删除完全后,w保存后,再重新进入操作
+* 分区后,还要再格式化为某个文件系统, 关键词 mkfs
+* /dev/sdb为tf卡, /dev/sdb1为第一个分区, /dev/sdb2为第二个分区</p>
+
+<p>fdisk后, ubuntu与windows就都正常了, 没试过U盘,改天看看~~</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-20T16:45:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-03-07-1825519.html" title="Previous Post: 使用符号链接提高工作效率">&laquo; 使用符号链接提高工作效率</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-03-20-1832923.html" title="Next Post: cubieboard上手">cubieboard上手 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

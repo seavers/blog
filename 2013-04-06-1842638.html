@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ubuntu下的apache - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      ubuntu下的apache
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+最近仔细的研究了下ubuntu的apache
+
+ubuntu下的apache跟其它操作系统下的apache, 有很大的区...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-04-06-1842638.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ubuntu下的apache</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-06T15:06:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近仔细的研究了下ubuntu的apache</p>
+
+<p>ubuntu下的apache跟其它操作系统下的apache, 有很大的区别</p>
+
+<p>ubuntu下安装apache
+<code class="highlighter-rouge">
+    sudo apt-get install apache2
+</code>
+ubuntu下启用apache的模块
+<code class="highlighter-rouge">
+   sudo a2enmod &lt;modname&gt;
+</code></p>
+
+<p>ubuntu下的apache的设计, 有很大程度上, 是帮助程序员尽量的减少conf的改动
+比如:
+1. 让apache启用一个模块
+     a) 我们可以看到apache下的模块,是以文件的形式存在的, mods-enables下, 多一个模块的引用, 就表示启用一个模块, 而全部的模块, 是保存在 mods-available中的
+     b) 这样设计的原因, 就在于, 启用以及停用模块, 简化为文件的操作
+     c) 这样, apt-get,a2enmod这样的命令行,会更方便的执行命令, 否则要用正则匹配conf文件, 复杂麻烦,易出错, 而且耦合在了一起, 不利于apache的conf版本升级
+2. 让apache启用一个站点
+       同上面的设计一样,  站点也是使用 sites-available 以及 sites-enables 来管理的
+3. conf.d 的设计
+       a) 使用 conf.d 目录的设计, 让增加以及修改 apache2.conf 文件的方式, 改为了文件操作
+       b) 比如支持一个proxy的, 或者 Redirect 类的, 可以简化增加一个文件配置
+4. 利用别名的技术
+       a)  增加一个 phpmyadmin
+<code class="highlighter-rouge">
+     sudo ln -s  /usr/share/phpmyadmin  /var/www/phpmyadmin
+</code>
+      b)  或者自定义的代码库
+<code class="highlighter-rouge">
+     sudo ln -s  /home/admin/workspace  /var/www/workspace
+</code>
+<code class="highlighter-rouge">
+     sudo ln -s  /home/admin/.m2/repository      /var/www/maven2
+</code>
+5. 使用 .htaccess
+        将 .htaccess 打包在代码库里, 统一使用上面的别名部署, 统一代码管理, 减少与 apache 的相关配置文件的耦合
+6.  使用 .htpasswd
+        这其实也是一个不错的实践</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-06T15:06:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-04-01-1840440.html" title="Previous Post: ubuntu下安装phpmyadmin">&laquo; ubuntu下安装phpmyadmin</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-04-20-1850803.html" title="Next Post: raspberry 网络设置">raspberry 网络设置 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

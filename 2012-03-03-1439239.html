@@ -1,0 +1,246 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>inline元素上支持的css属性 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      inline元素上支持的css属性
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+今天在测试时,意外发现inline元素是可以设置background与border的, 之前有所误解, 故对其它的...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2012-03-03-1439239.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">inline元素上支持的css属性</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-03T22:39:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>今天在测试时,意外发现inline元素是可以设置background与border的, 之前有所误解, 故对其它的css属性重新回顾了下</p>
+
+<p>随手写了一个demo:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;h3&gt;</span>inline测试<span class="nt">&lt;/h3&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"width:110px"</span><span class="nt">&gt;</span><span class="ni">&amp;nbsp;</span>
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">style=</span><span class="s">"
+    background: #ccc;
+    padding: 11px;
+    margin-left: 80px;
+    line-height: 70px;
+    border: 1px solid blue;
+"</span><span class="nt">&gt;</span>display<span class="nt">&lt;/a&gt;</span>
+
+<span class="nt">&lt;i</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">style=</span><span class="s">"
+    background: #ccc;
+    padding: 11px;
+    margin-left: 80px;
+    line-height: 70px;
+    border: 1px solid blue;
+    min-width: 10px;
+    min-height: 10px;
+    overflow: hidden;
+    max-width: 10px;
+    max-height: 10px;.;
+    resize: both;
+"</span><span class="nt">&gt;</span>inline<span class="nt">&lt;/i&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+</code></pre>
+</div>
+
+<p>经测试
+1. inline元素, 有效的: background, margin-left, margin-right, padding, border
+2. inline元素, 无效的: width, height, margin-top, margin-bottom
+3. 因width, height无效, 因此下列属性也无效: text-align, text-indent, min|max-width|height, overflow
+4. 原文字相关的依然有效, 如word-spacing,  word-wrap,  white-space, letter-spacing
+5. 下面两个有效, line-height, vertical-align, box-shadow
+6. float,position及与之相关top,left, 不考虑, 已经不是inline了</p>
+
+<p>其中 border, line-height, 这两个可以多多利用</p>
+
+<p><em>思考:</em>
+1. inline元素的宽高是不能定义, 即宽高度是由inline元素inline内容的元素决定的,(ie6,ie7下高度会受inline-block元素的影响)
+2. 即宽高完全是自适应而得出的, 因此也不存在overflow的问题, min|max-width|height也没有影响
+3. margin四个属性, left|right 与 top|bottom 有不同的待遇
+4. margin-top, margin-bottom, 可以用line-height模拟, 但有很大不同, 与inline-block也不兼容,  另 margin:0 auto的居中效果, 也没有作用</p>
+
+<p>*其次: *
+1. div元素, 使用 display:inline 以上几条也成立
+2. button元素, 使用display:inline, 样式没有变化, 等于于inline-block</p>
+
+<p>*最后: *
+mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
+
+<ul>
+  <li>b, big, i, small, tt</li>
+  <li>abbr, acronym, cite, code, dfn, em, kbd, strong, samp, var</li>
+  <li>a, bdo, br, img, map, object, q, script, span, sub, sup</li>
+  <li>button, input, label, select, textarea</li>
+</ul>
+
+<p>其中img, button, input, label, select, textarea 并没有以上的特征, 测试了一下, 设置inline与inline-block, 效果是一样的, 没有变化, 都等同于设置了inline-block</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2012-03-03T22:39:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/css/'>css</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-02-21-1416013.html" title="Previous Post: 利用bat反编译jar包生成源码jar包">&laquo; 利用bat反编译jar包生成源码jar包</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012-06-07-1553882.html" title="Next Post: mini javascript loader">mini javascript loader &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

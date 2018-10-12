@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>sed - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      sed
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+sed是基于行进行文本替换的神器, 这里记录一些自己常用的功能
+
+
+
+直接替换
+
+  cat data.txt | sed 's/abc/de...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-11-28-sed.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">sed</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-28T16:50:01+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>sed是基于行进行文本替换的神器, 这里记录一些自己常用的功能</p>
+
+<!--more-->
+
+<p>直接替换
+<code class="highlighter-rouge">
+  cat data.txt | sed 's/abc/def/g'
+</code></p>
+
+<p>删掉空行
+<code class="highlighter-rouge">
+  cat data.txt | sed '/^$/d'
+</code></p>
+
+<p>删除掉第一行
+<code class="highlighter-rouge">
+  cat data.txt | sed '1d'
+</code></p>
+
+<p>删除掉每行的第一个字符
+<code class="highlighter-rouge">
+  cat data.txt | sed 's/^.//g'
+</code></p>
+
+<p>还有一些从<a href="http://baiqiuyi.com/linux/review-sed-command-for-unix-shell-book.html">其它地方</a>拷贝过来的</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sed '1,3d' file //删除1-3行
+sed '/[Aa]bc/p' file //打印包含Abc或者abc的行
+sed '/ABC/d' //删除包含ABC的行
+sed '/ABC/!d' //不删除包含ABC的行
+sed '5,$d' //从第五行到最后一行全部删除
+sed 1q  //显示第一行
+sed 's/$/.../g' //每行的最后面添加 ...
+sed 's/d.(sk)/1&amp;/g' //满足d*sk的单词,在单词前添加sk
+sed 's/&lt;[^&gt;]*&gt;//g' //去除html标签
+sed '/ABC/a123' //在包含ABC的行后面添加一行数值为123的行
+sed '/ABC/i123' //跟a不同的是i是插入当前行的前面
+sed '/ABC/c123' //包含ABC的行将更改为123
+sed '/ABC/{n;s/123/ABC/g}' //精确匹配包含ABC的下一行,将123全部替换成ABC
+sed '/ABC/{s/A/a/}' //在包含ABC的行将A替换成a
+sed -e '/ABC/h' -e '$g' //将包含ABC的行复制,在最后一行添加.
+sed -e '/ABC/{h;d}' -e '/123/G' //将包含ABC的行复制并删除,在包含123的行后添加.
+g等于在当前行覆盖,G是在符合条件的行后新增加一行.
+sed 's/^/ /g' //每行前面增加一个空格
+sed 's/.(.)$/*1/' //将倒数第二位换成*
+sed '/ABC/!s/1/*/g' //在不包含ABC的行里,将所有的1替换成*
+sed 's/1|2|3/*/g' //在GNU里将不管是1或2或者是3替换成*
+</code></pre>
+</div>
+
+<p>还有这个
+<a href="http://henter.me/post/sed-notes.html">http://henter.me/post/sed-notes.html</a>
+<a href="http://blog.csdn.net/hepeng597/article/details/11269387">http://blog.csdn.net/hepeng597/article/details/11269387</a></p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-28T16:50:01+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-11-27-xianjian.html" title="Previous Post: html5版仙剑">&laquo; html5版仙剑</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-11-28-octopress-deploy.html" title="Next Post: octopress 自动部署方案">octopress 自动部署方案 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

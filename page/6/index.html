@@ -1,0 +1,1249 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+  
+  
+    
+    
+      
+  
+    
+      使用符号链接提高工作效率
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+  使用符号链接提高工作效率
+
+目标
+本文主要阐述一种理念，如何使用符号链接来提高工作...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/page/6/">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-03-07-1825519.html">使用符号链接提高工作效率</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-07T14:23:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>使用符号链接提高工作效率</p>
+
+<p>目标
+本文主要阐述一种理念，如何使用符号链接来提高工作效率</p>
+
+<p>什么是符号链接
+1. windows下使用junction或者mklink /J创建的符号链接 (非快捷方式)
+2. linux下使用ln -s创建的符号链接</p>
+
+<p>让我们来先看看各种使用场景</p>
+
+<p><em>dropbox</em>
+很多网盘只支持同步单一个文件夹，容易设计，容易理解，容易使用
+但事实上会遇到很多不方便，尤其是想同步一个已经存在的目录时
+使用junction或ln -s吧，不仅同步，还不影响原来的开发环境</p>
+
+<p><em>apache</em>
+apache默认安装的时候，根目录是指向 /var/www 的
+很多人喜欢去改 apache.conf 来修改ROOT 比如改至 ~/workspace 这样的
+其实可以这样用 ln -s ~/workspace  /var/www/workpsace
+这样能解决几个问题
+a). 系统重装时，或者更换环境时， /home/xx/workspace要换成 /home/yy/workspace，因为使用 ~ ，apache可能不知所云
+b). 这时，如果想重新搭环境，改apache.conf是个问题，是从网上下载一份，还是拷贝之前，有时喜欢把这些配置放在云盘备份，但有些目录系统重装后目录就没了，或者要配置另一个环境
+c). SCM维护大量机器的时候，也是希望.conf可以统一，不统一的再用include子conf
+d). 如果使用 alias, 这不要改配置还要重启吗？ 试试符号链接吧, ls一目了然
+e). 也许会有很多不错的使用方式
+    i). 把公司统一配置的tools从共享服务器别名过来，里面已经装了dummyimage等等
+    ii). 把github目录别名过来，直接浏览器预览
+    iii). 把 ~/personal/secret 临时别名下，使用完后，马上删除别名
+f). 很多好处</p>
+
+<p><em>切换版本</em>
+比如: 
+http://backup.com/nodejs/lastest/index.html
+http://backup.com/nodejs/v8.0.16/index.html
+http://backup.com/nodejs/v8.0.22/index.html
+这里的lastest目录，就使用符号链接吧</p>
+
+<p>http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/latest/
+这里的lastest，也应该是某个版本的符号链接吧
+难道每发布一次版本，改下apache.conf，再重启，用符号链接</p>
+
+<p>你经常在python2 与 python3 之间切换，这些路径在很多地方都配置过，在shell,在历史维护任务，在很多django工程中，你新找到一个python3的运行统计工具，你想尝试下，建立一个python别名，大家都指向到这里吧，随时切换</p>
+
+<p><em>mod-enabled</em>
+无意中发现ubuntu中的/etc/apache2/中的模块是这样管理的
+将增加删除一个模块，改为文件操作，不用再修改配置文件了
+如果能不改配置文件，就会有以下好处
+1. 命令行工具，帮忙调整apache配置时，可以不用去改配置文件，避名意外
+2. apt-get做插件开发时，不需要去解析修改配置文件，直接改文件就可能是一个插件了</p>
+
+<p><em>/etc/init.d/</em>
+在linux下面，有很多目录下，都是由一些别名文件组成的
+/etc/init.d/    /etc/fonts/conf.d
+这些目录大部分是相当于一个list的工作，用于收集需要进行的任务
+然后将各个任务从四面八方收集而来，这里只是一个汇总工作，不破坏各个任务的内容</p>
+
+<p><em>库</em>
+win7引入的库，其实也是一个别名，也是一个符号链接的应用</p>
+
+<p><em>你有什么想法？</em></p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-03-01-1820183.html">包管理软件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-01T22:38:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>常见的各类包管理软件对比</p>
+
+<p>包管理分类</p>
+
+<ul>
+  <li>操作系统包管理  如: yum (RHL), apt-get(ubuntu), homebrew(mac)</li>
+  <li>语言级别  如: npm(nodejs), gem(ruby),pip(python), bower(javascript), maven(java)</li>
+</ul>
+
+<p>总结</p>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>包管理几乎都有list, install, uninstall, update</td>
+          <td>upgrade, search 等功能</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>语言级别时, 因涉及到应用, 会分 local与global, 会有工程配置如package.json</li>
+  <li>maven比较特殊, 不支持install, 需要手工配置pom.xml   (需要不少插件)</li>
+</ul>
+
+<p>一些列表
+[table]
+|name   | list | install | uninstall| update | search | init|
+|apt-get| apt-cache  | install | uninstall | upgrade | apt-cache search | |
+|yum     | ||||||
+|brew    | list | install | uninstall | upgrade | search | |
+|npm     | local | -g –save  | prune  | update |  /regexp | package.json|
+|gem     | –local | local| cleanup | update | –remote | Gemfile (bundle init)|
+|pip       | freeze | install | uninstall | —- | search | |
+|bower  | list  | -g –save | cache-clean | update | search  |  component.json |
+[/table]</p>
+
+<p>心得</p>
+
+<ul>
+  <li>yum, apt-get, npm, gem 几乎是官方的, 但mac, python还是选择性较多</li>
+  <li>install 并保存至 .json 配置时, 使用 –save参数, 但gem,python不清楚,待补充</li>
+  <li>有些update是更新版本信息的, upgrade才是升级所有组件</li>
+  <li>组件的依赖版本冲突如何办, npm的方法确实不错</li>
+</ul>
+
+<p>汇总列表</p>
+
+<ul>
+  <li>apt-get(ubuntu),yum(fedora),macports(mac),homebrew(mac),pkg(solaris),emerge(Gentoo)</li>
+  <li>npm(nodejs),gem(ruby),pip(python),easy_install(python),nuget(vs),bower(javascript)</li>
+  <li>maven(java),grunt(java),gradle(java),pear(php),cpan(perl)</li>
+  <li></li>
+</ul>
+
+<p>各种镜像:
+http://ruby.taobao.org/
+http://gems.rubyforge.org/
+http://gems.github.com/</p>
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-02-28-1817854.html">chrome  support for sass</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-28T15:51:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>chrome  support for sass</p>
+
+<p>很多人说 chrome 已经支持 sass了，但是怎么个支持法，却没有提及，通过google，搜出来一些资料，共享下</p>
+
+<p>chrome开启sass
+1. chrome://flags,   启用开发者工具实验  =&gt; 点击最下方重启
+2. chrome开发者工具(F12), 右下角setttings,experiments,support for sass =&gt; 重启
+3. OK 可以了</p>
+
+<p>如何使用
+1. 使用sass –watch文件夹， 实时编译 .scss 文件至 .css
+<code class="highlighter-rouge">
+   sass --watch .:. --debug-info --line-number
+</code>
+其中冒号前后，为监视的目录
+2. chrome打开页面, 页面中的link，使用编译后的 .css
+3. 开发者工具中， 查看 .css 文件， 已经变成了 .scss文件，并可以点击过去</p>
+
+<p>注意点：
+debug调试， .scss 文件只支持 file://</p>
+
+<p>Ps: 原以为会支持实时编译，原来不是，可惜了</p>
+
+<p>参考:</p>
+
+<ul>
+  <li>http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html</li>
+  <li>http://wiki.netbeans.org/SourceMapsExampleSASS</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-02-21-1811277.html">ubuntu 与 windows 的互联与共享</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-21T18:23:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>windows访问ubuntu</p>
+
+<ol>
+  <li>ubuntu 安装 samba</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get install samba
+</code></pre>
+</div>
+
+<ol>
+  <li>修改 /etc/samba/smb.conf文件</li>
+</ol>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+[global]
+   workgroup = WORKGROUP
+   server string = %h server (Samba, Ubuntu)
+;   wins support = no
+   wins server =  (用ipconfig /all里看， 或者直接填网关ip)
+   dns proxy = no
+   name resolve order = lmhosts host wins bcast
+
+   security = share
+   usershare allow guests = yes
+[share]
+      path = /home/ubuntu/
+      available = yes
+      browseable = yes
+      public = yes
+      writable = yes
+
+</code></pre>
+</div>
+
+<ol>
+  <li>重启服务
+<code class="highlighter-rouge">
+sudo restart smbd
+sudo restart nmbd
+</code></li>
+</ol>
+
+<ul>
+  <li>smbd 是 samba 的文件共享服务</li>
+  <li>nmbd 是 windows name 解析服务</li>
+</ul>
+
+<ol>
+  <li>OK
+这样，windows 就可以ping 通,且能查看unbutu的共享文件</li>
+</ol>
+
+<hr />
+
+<p>ubuntu 访问windows</p>
+
+<ol>
+  <li>
+    <p>安装服务
+<code class="highlighter-rouge">
+sudo apt-get install cifs
+</code></p>
+  </li>
+  <li>
+    <p>mount
+<code class="highlighter-rouge">
+sudo mount -t cifs //hostname/share  /mnt/path/to/name -o username=user
+</code></p>
+  </li>
+</ol>
+
+<hr />
+
+<p>补： 上述是通过samba即cifs实现，也可通过ftp, webdav 等等其它协议实现互相访问</p>
+
+<p>其它问题</p>
+
+<ol>
+  <li>ubuntu ping 的时候速度很慢，ping taobao.com 也慢
+http://forum.ubuntu.org.cn/viewtopic.php?f=116&amp;t=345288</li>
+  <li>ping <hostname> 默认会解析全域名
+可以在 /etc/resolv.conf 中进行修改，将 search 修改为 正确的域后缀</hostname></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-02-17-1801066.html">git的本质</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-17T00:33:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>git 的本质</p>
+
+<p>配置:
+git的配置操作，本质上，都是在修改config文件 (.git/config) 
+* git config -l</p>
+
+<p>其中
+remote.origin.fetch 与 remote.origin.url 即是 remote 的配置</p>
+
+<ul>
+  <li>git remote -v 就是显示配置, git remote -v show <name> 细节</name></li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>git remote add</td>
+          <td>rm</td>
+          <td>set-url</td>
+          <td>rename 即是增删改操作</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>git prune 是与服务器同步的功能</li>
+</ul>
+
+<p>其中
+branch.master.remote 与  branch.master.merge 即是 branch的配置</p>
+
+<ul>
+  <li>git branch -v 就是显示配置</li>
+  <li>git branch <branchname>|-m|-d 就是增删改的操作</branchname></li>
+  <li>git branch –set-upstream 设置分支对应的 remote</li>
+</ul>
+
+<p>分支名:
+git 命令，使用分支时，需要一个名字， 如origin/master, refs/remotes/origin/HEAD等
+其实，可以参考 .git/refs目录， 就明白了</p>
+
+<ul>
+  <li>heads 代表本地分支</li>
+  <li>remotes 代表远程分支</li>
+  <li>tag 代表tags分支</li>
+  <li>master 与 HEAD 同义</li>
+</ul>
+
+<p>当我们需要使用分支时，语法大致是这样的  (refs/)? (heads/|remotes/|tags/)? <name>
+即，refs 或者 heads 等， 都是可以省略的， git 会遍历查询
+假如有冲突时， git报错 warngin: refname '...' is ambiguous ， 但还会执行第一个</name></p>
+
+<p>当然还有更精确及表示更多标识的方式， 即 commitId
+而 tag 只是将 commitId 取了一个容易记忆的名字
+而 分支，远程分支，可以理解为是一个 commitId 的有序列表（可变数组）</p>
+
+<p>分支操作:
+假如将远程仓库也看成是一个个本地分支的话， 就会明白了</p>
+
+<ul>
+  <li>git pull 就是  git merge origin/master</li>
+  <li>git reset <commit> 就是 还原至某分支的状态    (会根据参数，还原 文件，index, commit)</commit></li>
+  <li>git rebase 可以看作是另一种merge操作， 算法不同</li>
+</ul>
+
+<p>操作index
+* git add    追加 index
+* git rm     删除文件，以追加index
+* git mv     移动文件，并追加index
+* git reset  清除uncommit的index</p>
+
+<p>clone
+* 这个大家都知道了，就是一系列git操作的组合</p>
+
+<p>checkout
+* 就是在操作HEAD的位置</p>
+
+<p>git
+* git的所有操作，如果理解清每个命令， 是如何操作 file, index, commit, branch 的，就都理解了</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-02-01-1782749.html">关于平台</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-01T16:15:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>所谓“平台”就是能够独立运行并自主存在，为其所支撑的上层系统和应用提供运行所依赖的环境。 (来自百度百科)</p>
+
+<p>越来越多的平台出现了
+1. 操作系统层面: PC, MAC, IOS, Android, 
+2. 技术体系层面: HTML5, Flash
+3. 语言层面:  java, .net, python
+4. 业务开放平台:  webbo, qq, baidu, taobao 开放平台
+5. ….</p>
+
+<p>每个大公司都在制造自己的大平台, 各方各面的大平台
+很多程序也在不断完善着自己的产品, 在每个平台上, 推出自己的产品</p>
+
+<p>如:
+1. 很多云盘都在不断扩充自己的战线, 支持着越来越多的平台
+2. 音乐听歌软件，也是pc, mac, web, ios, mp3， 甚至不少开放平台上</p>
+
+<hr />
+
+<p>继续:
+1. 如果有着各色各样的虚拟机,模拟器, 我们就可以将另一个平台的软件迁移至新的平台
+2. 但是移植并不是那么容易的,很多软件移植时，必须作更改，甚至是界面，操作上的更改
+3. 平台的差异同时也决定着移植的难度， 如PC上软件，迁移至触摸屏上
+4. 当然：平台的迁移也有着自己的复杂度</p>
+
+<p>考虑一类迁移
+1. FC游戏机上软件的迁移，我们会统称这类软件为模拟器，我们会建立各种各样的模块器
+2. windows上的模拟器，mac上，flash的，html5版的
+3. 我们不需要，一个游戏一个游戏的迁移， 我们只需要一个模拟器就可以了</p>
+
+<hr />
+
+<p>然后：
+1. 各色各样的模拟器出现了
+2. FC的，GBA的，DOSBOX, 然后是IOS的
+3. 最重量级的， 就是虚拟机了， 直接模拟硬件，连各类操作系统也模拟了</p>
+
+<p>好了
+1. 你可以在一个终级模拟的PC上玩着，各色各样的终端的产品
+2. 现在触模的笔记本也出来，你可以模拟更多的终端了
+3.</p>
+
+<hr />
+
+<ol>
+  <li>突然想通了GOOGLE的本质，google就是想在web上，搭建着更加终极的终端，其它终端能干的事，他也要做出来，做不出来，就模拟一个终端出来</li>
+  <li>想想这个可能性：
+  a) web版linux
+  b) web版模拟器，有flash版本的，也有nacl版本的
+  c) web版远程连接，有vnc, 有RDP的，还有chrome与chrome的
+  d) web版的云盘，相当于硬盘
+  e) web版的操作系统, chromeOS
+  f) web版的。。。。</li>
+  <li>一流的企业做平台啊~~~</li>
+</ol>
+
+<hr />
+
+<ol>
+  <li>我们经常在代码中，设计一些中间层，借此来统一各类解决方案</li>
+  <li>如JDBC接口的出现，就是JAVA当年为了统一存取各种关系数据库</li>
+  <li>而这样一来，带来了相当多的好处，上层使用方面了，中间层可以各类扩展，底层也有一依据，大家都很愉快</li>
+  <li>同时，成功与失败都在于接口的设计的好与坏</li>
+  <li>类似这样的设计有很多：opengl， 各类图片视频格式，tcp/ip， 等等。。</li>
+  <li>硬件也是同理的，像USB, wifi， 都是这样的例子</li>
+</ol>
+
+<hr />
+
+<p>用于实际中
+1. 我们平时的软件开发过程中，也需要加入这样的思考
+2. 一是采用业界通入的解决方案，这样会有很多的第三方的技术，工具支持
+3. 二是从中抽象出自己的中间平台来，让别人帮你丰富起来
+4. 在中间平台上，作更多的文章</p>
+
+<hr />
+
+<p>平台的成功与失败
+1. 平台的成功有时不在于平台的技术实力，接口的完善
+2. 更多的还是在于，支持者的实力，以及平台对应工具的实力了
+3. 只有用户看到平台真正带来的好处，才会明白过来</p>
+
+<p>举例：
+1. 之前还是ant+cvs的年代的时候，并没有感觉到，会被新的maven+svn取代，但是周边工具丰富起来时，慢慢的大家也就接受了
+2. 再想想现在的git与svn，有人喜欢有人讨厌，但git支持的人多，有很多人共同努力，替代svn估计也是迟早的事情了
+3. 等到svn最后一个让你挽留的特性也被git模仿超越的时候，你就会改变你的想法了
+4. 早点尝试，多学习下，对你有好处
+5. 更多的趋势正在进行，你捕捉到了吗？ 要不要提前学习下</p>
+
+<hr />
+
+<p>有人说，变化每天都在继续，说不定，将来谁笑到最后
+而且变化那么多，哪有办法都学的过来，实在太多了
+提高自己的开发效率，从手头相关的工具，框架，平台开始吧</p>
+
+<ol>
+  <li>IDE，开发语言，编程框架，浏览器，操作系统，文件共享，版本管理，知识管理</li>
+  <li>太多的基础平台，多研究下，改进下效率吧</li>
+  <li>如果有兴趣，可以找一个方向，大胆深入底层去看看</li>
+  <li>别忘了，找志同道合的人去一起研究</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-12-18-1750012.html">组件版本管理</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-12-18T22:49:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>组件版本管理</p>
+
+<p>任何编程语言, 当组件有依赖关系+版本管理之后, 都会遇到同样的问题, 相依性地狱</p>
+
+<p>常见的问题有:
+1. 循环依赖:  A依赖于B, B依赖于C, C依赖于A, 相互循环依赖, 导致解析无法继续
+2. 版本不兼容:  A依赖于B,C1, B依赖于C2, C1与C2不兼容时, 导致系统无法运行
+3. 依赖过多:  依赖的深度与广度都比较大, 导致系统过于复杂, 能性能调试带来诸多不便</p>
+
+<p>比如:
+1. DLL,  DLL初期缺少规化, 导致当覆盖或升级系统的DLL时, 经常出现冲突的情况
+2. JAR,   百家争鸣, 经常导致版本问题, 甚至象log4j,logback,jcf之间的纠缠
+3. js,   复杂的页面交互, 历史遗留问题, 经常导致loader后的几个js不兼容,而作者可能是同一人</p>
+
+<p>同时也有一些版本库管理器
+1. APT, YUM  linux上的软件包管理
+2. npm          nodejs的软件包管理
+3. brew         mac homebrew软件
+4. sublime    编辑器中的package control也算是
+5. maven       jar包版本依赖管理
+6. eclipse-plugins  插件版本管理
+7. bundle       ios.app,  mac.app, 一种常用的app打包模式
+8. 还有很多很多</p>
+
+<p>从已有的解决方案来思考下这个问题
+1. jar包以及java类都不会因循环依赖而导致问题,  因为依赖与运行解耦合了
+    考虑js.loader中的依赖, AMD因运行后才能得到依赖的module, 导致循环依赖不得不break
+    而CMD方案, 则提前将module设定为了{}, 少了点微不足道的功能, 但解耦合了, 
+    从而可以将分析模块依赖与模块运行独立开来, 避免掉break
+2. 可以得出这样一个结论, 一个相互依赖+版本的组件库, 通常具备以下几个功能
+     a) 一个打包器, 通常由语言方制定好规范, 大家相互遵守 
+     b) 一个版本管理工具, 通常会带有命令行, 可以查看树型依赖
+     c) 依赖的组件, 有远程仓库, 通过id, 可以通过http直接下载,  有中央仓库, 而大公司也喜欢制造自己软件仓库
+     d) 敲入安装命令后, 可以自行下载元信息, 分析依赖, 下载依赖, 执行初始化
+     e)  软件本身不参与自己的版本管理
+3. 版本不兼容的问题, 通常与实际情况有关, 很难有最佳实践, 向下兼容是比较靠谱的, 通常情况下, 一但不向下兼容, 通常都会在事后遇到依赖组件冲突问题, 除非完全统一升级
+     如果无法向下兼容, 那就另起炉灶吧, 换个名字, 换个命名空间, 换个全局变量
+4. 提前定义好接口规范, 小版本号bugfix, 中版本增加功能, 大版本号表示大幅重构或变更</p>
+
+<p>因此: 
+1. 在考虑是否采用版本号时, 首先要确定好, 是否有足够的精力去制造或者寻找一个合适的版本管理工具, 一个代码中央仓库, 一个有氛围的社区
+2. 如果没有, 就还是单版本吧, 一个稳定的核心, 每个组件都尽量只依赖于核心, 独立成单独组件, 不相互依赖, 采用简单代码冗余, 代替复杂版本管理</p>
+
+<p>一句话:  要么简单,  要么复杂,  量力选择, 针对具体情况, 做出选择</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-12-07-1743767.html">insertBefore</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-12-07T15:10:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>insertBefore</p>
+
+<p>经常看到这样的写法:
+<code class="highlighter-rouge">
+if (head.firstChild) {
+	head.insertBefore(node, head.firstChild);
+} else {
+	head.appendChild(node);
+}
+</code>
+其实可以改为:
+<code class="highlighter-rouge">
+head.insertBefore(node, head.firstChild);
+</code></p>
+
+<ul>
+  <li>insertBefore的第二参数为空时, 相当于appendChild</li>
+  <li>head.firstChild为空时, insertBefore等同于appendChild</li>
+  <li>jquery中的getScript时, 就是只有一句 insertBefore</li>
+</ul>
+
+<p>另外:</p>
+
+<ul>
+  <li>IE6,IE7,IE8 下的head默认不是空的, 有一个文本空节点, head.childNodes.length === 1</li>
+  <li>IE9下面时, 如有&lt;head&gt;&lt;/head&gt;, 为1个文本节点, 内容为一个回车符</li>
+  <li>IE9下面时, 如没有head标签, 与chrome一致,  节点数为0</li>
+  <li>chrome时, &lt;head&gt;&lt;/head&gt;与没有head标签,均一致, 节点数为0</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-12-07-1743758.html">isFunction</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-12-07T15:03:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[size=xx-large]isFunction</p>
+
+<p>标准写法是:
+<code class="highlighter-rouge">
+ var isFunction = function(obj) {
+       return Object.prototype.toString.call(obj) === '[object Function]'
+ }
+</code></p>
+
+<p>深层次:</p>
+
+<ul>
+  <li>有博客说, 之前的chrome会识别 new Regexp()为function, 没有测试之前的chrome, 现在的不会了</li>
+  <li>有博客说, document.write在IE下会识别为object, 其实新的写法, 依然还是object, 不信,jquery测试下, 同理getAttribute也是一样的</li>
+  <li>jquery的isFunction注释</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    // See test/unit/core.js for details concerning isFunction.
+    // Since version 1.3, DOM methods and functions like alert
+    // aren't supported. They return false on IE (#2968).
+    isFunction: function( obj ) {
+        return jQuery.type(obj) === "function";
+    }
+</code></pre>
+</div>
+<ul>
+  <li>jquery中的 type(obj), 即是  Object.prototype.toString.call(obj)</li>
+  <li>jquery已经不支持DOM方法,以及像alert这样的方法, 因为他们在IE都返回false,无法区分</li>
+  <li>#2968 见 http://bugs.jquery.com/ticket/2968</li>
+</ul>
+
+<p>最简单的写法:
+<code class="highlighter-rouge">
+ var isFunction = function(obj) {
+       return typeof obj === 'function'
+ }
+</code></p>
+
+<ul>
+  <li>这个写法, 在jquery的isFunction测试用例中, 全部通过  https://code.google.com/p/jqueryjs/source/browse/trunk/jquery/test/unit/core.js</li>
+  <li>简单的就是最好的~~</li>
+</ul>
+
+<p>测试用例 (修改自jquery的isFunction测试用例)
+```</p>
+<body>
+<ul id="result"></ul>
+
+<script>
+var jQuery = {
+	isFunction: function(obj) {
+		return typeof obj === 'function'
+	}
+}
+
+function ok(bool, text) {
+	document.getElementById('result').innerHTML += ('<li>' + (bool ? '√':'×') + ' &nbsp; ' + text);
+}
+
+function test() {
+        // Make sure that false values return false
+        ok( !jQuery.isFunction(), "No Value" );
+        ok( !jQuery.isFunction( null ), "null Value" );
+        ok( !jQuery.isFunction( undefined ), "undefined Value" );
+        ok( !jQuery.isFunction( "" ), "Empty String Value" );
+        ok( !jQuery.isFunction( 0 ), "0 Value" );
+
+        // Check built-ins
+        // Safari uses "(Internal Function)"
+        ok( jQuery.isFunction(String), "String Function("+String+")" );
+        ok( jQuery.isFunction(Array), "Array Function("+Array+")" );
+        ok( jQuery.isFunction(Object), "Object Function("+Object+")" );
+        ok( jQuery.isFunction(Function), "Function Function("+Function+")" );
+
+        // When stringified, this could be misinterpreted
+        var mystr = "function";
+        ok( !jQuery.isFunction(mystr), "Function String" );
+
+        // When stringified, this could be misinterpreted
+        var myarr = [ "function" ];
+        ok( !jQuery.isFunction(myarr), "Function Array" );
+
+        // When stringified, this could be misinterpreted
+        var myfunction = { "function": "test" };
+        ok( !jQuery.isFunction(myfunction), "Function Object" );
+
+        // Make sure normal functions still work
+        var fn = function(){};
+        ok( jQuery.isFunction(fn), "Normal Function" );
+
+        var obj = document.createElement("object");
+
+        // Firefox says this is a function
+        ok( !jQuery.isFunction(obj), "Object Element" );
+
+        // IE says this is an object
+        // Since 1.3, this isn't supported (#2968)
+        //ok( jQuery.isFunction(obj.getAttribute), "getAttribute Function" );
+
+        var nodes = document.body.childNodes;
+
+        // Safari says this is a function
+        ok( !jQuery.isFunction(nodes), "childNodes Property" );
+
+        var first = document.body.firstChild;
+
+        // Normal elements are reported ok everywhere
+        ok( !jQuery.isFunction(first), "A normal DOM Element" );
+
+        var input = document.createElement("input");
+        input.type = "text";
+        document.body.appendChild( input );
+
+        // IE says this is an object
+        // Since 1.3, this isn't supported (#2968)
+        //ok( jQuery.isFunction(input.focus), "A default function property" );
+
+        document.body.removeChild( input );
+
+        var a = document.createElement("a");
+        a.href = "some-function";
+        document.body.appendChild( a );
+
+        // This serializes with the word 'function' in it
+        ok( !jQuery.isFunction(a), "Anchor Element" );
+
+        document.body.removeChild( a );
+
+        // Recursive function calls have lengths and array-like properties
+        function callme(callback){
+                function fn(response){
+                        callback(response);
+                }
+
+                ok( jQuery.isFunction(fn), "Recursive Function Call" );
+
+                fn({ some: "data" });
+        };
+
+        callme(function(){
+                callme(function(){});
+        });
+}
+
+test();
+
+</script>
+
+
+</body>
+
+<p>```</p>
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012-11-19-1729814.html">function 工具集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-11-19T22:09:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>function 工具集</p>
+
+<p>经常会碰到这样的问题
+1. button.click 后，只调用一次方法
+2. window.scroll触发太频繁，导致滚动加载次数太多
+3. document.keyup次数太多，导致智能提示调用次数太多</p>
+
+<p>你需要以下的方法来解决此类问题</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="nx">$</span><span class="p">(</span><span class="s1">'a.load'</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">$</span><span class="p">(</span><span class="s1">'#tabs .first'</span><span class="p">).</span><span class="nx">load</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+<span class="p">}));</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'scroll'</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">throttle</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">$</span><span class="p">(</span><span class="s1">'#rest'</span><span class="p">).</span><span class="nx">lazyload</span><span class="p">();</span>    
+<span class="p">}));</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nx">input</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="s1">'keyup'</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">debounce</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">$</span><span class="p">.</span><span class="nx">suggest</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span>
+<span class="p">}));</span>
+
+</code></pre>
+</div>
+
+<p>工具集源码如下：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nx">$</span><span class="p">.</span><span class="nx">bind</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+      <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">return</span>  <span class="nx">func</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//只调用一次</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">once</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">ran</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+	<span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">ran</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+		<span class="nx">ran</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+		<span class="nx">func</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//ms时间内只执行一次</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">throttle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+   <span class="nx">ms</span> <span class="o">=</span> <span class="nx">ms</span> <span class="o">||</span> <span class="mi">150</span><span class="p">;</span>
+
+   <span class="kd">var</span> <span class="nx">last</span> <span class="o">=</span> <span class="o">+</span><span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+   <span class="kd">var</span> <span class="nx">timer</span> <span class="p">;</span>
+    <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">now</span> <span class="o">=</span> <span class="o">+</span><span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">now</span> <span class="o">-</span> <span class="nx">last</span> <span class="o">&gt;</span> <span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+             <span class="nx">timer</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+             <span class="nx">last</span> <span class="o">=</span> <span class="nx">now</span><span class="p">;</span>
+             <span class="nx">func</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+             <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span> <span class="o">-</span> <span class="p">(</span><span class="nx">now</span><span class="o">-</span><span class="nx">last</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//缓冲ms时间后才执行</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">debounce</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+       <span class="nx">ms</span> <span class="o">=</span> <span class="nx">ms</span> <span class="o">||</span> <span class="mi">150</span><span class="p">;</span>
+
+       <span class="kd">var</span> <span class="nx">timer</span><span class="p">;</span>
+       <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+           <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+           <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span><span class="p">);</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre>
+</div>
+
+<ul>
+  <li>underscore, yui 中有throttle, debounce两个方法, jquery中没有发现</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/7">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/5">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>大牛博客</h1>
+  <ul>
+    <li>
+      <a href="http://ithans.com/">ithans</a>
+    </li>
+  </ul>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

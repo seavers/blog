@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ruby 字符串与数组 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      ruby 字符串与数组
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+ruby的字符串与数组,在API设计上,有很多的相似之处,同时方法广度上,又有所区分,这里还是有很多学问
+
+
+
+字符串在底层上...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2014-01-05-ruby-string-array.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ruby 字符串与数组</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-01-05T18:55:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>ruby的字符串与数组,在API设计上,有很多的相似之处,同时方法广度上,又有所区分,这里还是有很多学问</p>
+
+<!--more-->
+
+<p>字符串在底层上是字符的数组, 同是数组, 我们先从相同点开始</p>
+
+<h3 id="section">比较方法名</h3>
+
+<p>让我们先单纯的比较一下</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>'string'.methods.length   ### 161
+('string'.methods - Object.new.methods).length   ## 107
+
+[].methods.length         ### 167
+([].methods - Object.new.methods).length   ## 113
+
+([].methods &amp; 'string'.methods).length    ## 76
+([].methods &amp; 'string'.methods - Object.new.methods).length  ## 22
+
+[].methods &amp; 'string'.methods - Object.new.methods
+[:[], :[]=, :concat, :&lt;&lt;, :insert, :length, :size, :empty?, :index, :rindex, :reverse, :reverse!, :delete, :replace, :clear, :include?, :slice, :slice!, :+, :*, :count, :partition]
+</code></pre>
+</div>
+
+<ul>
+  <li>字符串共有161个方法,去掉继承后, 剩107个</li>
+  <li>数组共有167个方法,去掉继承后,剩113个</li>
+  <li>字符串与数组相同的方法,共有76,去掉继承的54个, 只剩22个</li>
+</ul>
+
+<p>让我们来仔细看看这22个方法</p>
+
+<ul>
+  <li>[],[]=, 下标操作</li>
+  <li>[],slice,slice! 子字符串,子数组操作</li>
+  <li>«,insert,+,*       插入操作</li>
+  <li>length,size,count,empty?   大小计算</li>
+  <li>index,rindex,include?    查找</li>
+  <li>reverse, reverse!  反转</li>
+  <li>delete,clear          删除</li>
+  <li>partition         拆分 (数组中没找到此方法????)</li>
+</ul>
+
+<p>汇总起来, 就是 增删改查, 子反转,大小</p>
+
+<h3 id="section-1">字符串</h3>
+
+<p>而字符串中去掉数组的方法, 就是真正的字符串操作了
+<code class="highlighter-rouge">
+irb(main):026:0&gt; 'string'.methods - [].methods
+=&gt; [:casecmp, :%, :bytesize, :match, :succ, :succ!, :next, :next!, :upto, :chr, :getbyte, :setbyte, :byteslice, :to_i, :to_f, :to_str, :dump, :upcase, :downcase, :capitalize, :swapcase, :upcase!, :downcase!, :capitalize!, :swapcase!, :hex, :oct, :split, :lines, :bytes, :chars, :codepoints, :prepend, :crypt, :intern, :to_sym, :ord, :start_with?, :end_with?, :scan, :ljust, :rjust, :center, :sub, :gsub, :chop, :chomp, :strip, :lstrip, :rstrip, :sub!, :gsub!, :chop!, :chomp!, :strip!, :lstrip!, :rstrip!, :tr, :tr_s, :squeeze, :tr!, :tr_s!, :delete!, :squeeze!, :each_line, :each_byte, :each_char, :each_codepoint, :sum, :rpartition, :encoding, :force_encoding, :b, :valid_encoding?, :ascii_only?, :unpack, :encode, :encode!, :to_r, :to_c, :&gt;, :&gt;=, :&lt;, :&lt;=, :between?]
+</code></p>
+
+<p>其中: getbyte,setbyte,byteslice,split,bytes,chars,codepoints,prepend,start_with?,end_with? ,sub,gsub,sub!,gsub!,delete!,each_line,each_byte,each_char,each_codepoint 等等,其实也是围绕这个概念,派生出来的方法,都是在”部分”,”全体”, 在这个概念上生成的方法</p>
+
+<p>而to_i, to_f, hex, &lt; &gt; 等, 这些是属于转换与比较的方法, 另upcase,downcase 是字符串间的转换</p>
+
+<p>除去这个概念后, 与字符串本质有关的方法, 只有encoding,force_encoding 这几个方法了</p>
+
+<p>所以字符串的方法, 我们可以归结为三类</p>
+
+<ul>
+  <li>字符数组, 数组的操作方法</li>
+  <li>转换与比较</li>
+  <li>编码相关</li>
+</ul>
+
+<h3 id="section-2">数组</h3>
+
+<p>让我们再来看看数组</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>irb(main):031:0&gt; [].methods - 'string'.methods
+=&gt; [:to_a, :to_ary, :at, :fetch, :first, :last, :push, :pop, :shift, :unshift, :each, :each_index, :reverse_each, :find_index, :join, :rotate, :rotate!, :sort, :sort!, :sort_by!, :collect, :collect!, :map, :map!, :select, :select!, :keep_if, :values_at, :delete_at, :delete_if, :reject, :reject!, :zip, :transpose, :fill, :assoc, :rassoc, :-, :&amp;, :|, :uniq, :uniq!, :compact, :compact!, :flatten, :flatten!, :shuffle!, :shuffle, :sample, :cycle, :permutation, :combination, :repeated_permutation, :repeated_combination, :product, :take, :take_while, :drop, :drop_while, :bsearch, :pack, :entries, :sort_by, :grep, :find, :detect, :find_all, :flat_map, :collect_concat, :inject, :reduce, :group_by, :all?, :any?, :one?, :none?, :min, :max, :minmax, :min_by, :max_by, :minmax_by, :member?, :each_with_index, :each_entry, :each_slice, :each_cons, :each_with_object, :chunk, :slice_before, :lazy]
+</code></pre>
+</div>
+
+<p>我们再来分下组</p>
+
+<ul>
+  <li>常用的增删改查, 子反转,大小</li>
+  <li>同样的转换与比较  to_a</li>
+  <li>单项相关,   at,first,last,pop,min,max,take</li>
+  <li>遍历,     each,each_index, collect, map,select, take_while,drop_while,grep,find,find_all,reduce,all?,any?,one?, each_*</li>
+</ul>
+
+<h3 id="section-3">后续</h3>
+
+<p>我们可以看出,在数组中有很多方法,并没有在字符串中体现,字符串中部分数组的方法,必定是最常用</p>
+
+<p>假如,数组里所有的方法,都放在字符串中,虽然行得通,但并不好,相反不好理解, 比如string.grep,实际意义不大</p>
+
+<p>所以我们现在可以理解, 为什么 String 不是直接继承自 Array 了, 因为Array并不是String的核心, String中最核心的应该是别的, 比如字符与编码</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-01-05T18:55:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014-01-04-ruby-study-notes.html" title="Previous Post: ruby 学习笔记">&laquo; ruby 学习笔记</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014-01-12-ruby-enumerable.html" title="Next Post: ruby Enumerator">ruby Enumerator &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

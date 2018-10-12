@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>isFunction - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      isFunction
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+[size=xx-large]isFunction
+
+标准写法是:
+
+ var isFunction = function(ob...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2012-12-07-1743758.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">isFunction</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-12-07T15:03:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>[size=xx-large]isFunction</p>
+
+<p>标准写法是:
+<code class="highlighter-rouge">
+ var isFunction = function(obj) {
+       return Object.prototype.toString.call(obj) === '[object Function]'
+ }
+</code></p>
+
+<p>深层次:</p>
+
+<ul>
+  <li>有博客说, 之前的chrome会识别 new Regexp()为function, 没有测试之前的chrome, 现在的不会了</li>
+  <li>有博客说, document.write在IE下会识别为object, 其实新的写法, 依然还是object, 不信,jquery测试下, 同理getAttribute也是一样的</li>
+  <li>jquery的isFunction注释</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>    // See test/unit/core.js for details concerning isFunction.
+    // Since version 1.3, DOM methods and functions like alert
+    // aren't supported. They return false on IE (#2968).
+    isFunction: function( obj ) {
+        return jQuery.type(obj) === "function";
+    }
+</code></pre>
+</div>
+<ul>
+  <li>jquery中的 type(obj), 即是  Object.prototype.toString.call(obj)</li>
+  <li>jquery已经不支持DOM方法,以及像alert这样的方法, 因为他们在IE都返回false,无法区分</li>
+  <li>#2968 见 http://bugs.jquery.com/ticket/2968</li>
+</ul>
+
+<p>最简单的写法:
+<code class="highlighter-rouge">
+ var isFunction = function(obj) {
+       return typeof obj === 'function'
+ }
+</code></p>
+
+<ul>
+  <li>这个写法, 在jquery的isFunction测试用例中, 全部通过  https://code.google.com/p/jqueryjs/source/browse/trunk/jquery/test/unit/core.js</li>
+  <li>简单的就是最好的~~</li>
+</ul>
+
+<p>测试用例 (修改自jquery的isFunction测试用例)
+```</p>
+<body>
+<ul id="result"></ul>
+
+<script>
+var jQuery = {
+	isFunction: function(obj) {
+		return typeof obj === 'function'
+	}
+}
+
+function ok(bool, text) {
+	document.getElementById('result').innerHTML += ('<li>' + (bool ? '√':'×') + ' &nbsp; ' + text);
+}
+
+function test() {
+        // Make sure that false values return false
+        ok( !jQuery.isFunction(), "No Value" );
+        ok( !jQuery.isFunction( null ), "null Value" );
+        ok( !jQuery.isFunction( undefined ), "undefined Value" );
+        ok( !jQuery.isFunction( "" ), "Empty String Value" );
+        ok( !jQuery.isFunction( 0 ), "0 Value" );
+
+        // Check built-ins
+        // Safari uses "(Internal Function)"
+        ok( jQuery.isFunction(String), "String Function("+String+")" );
+        ok( jQuery.isFunction(Array), "Array Function("+Array+")" );
+        ok( jQuery.isFunction(Object), "Object Function("+Object+")" );
+        ok( jQuery.isFunction(Function), "Function Function("+Function+")" );
+
+        // When stringified, this could be misinterpreted
+        var mystr = "function";
+        ok( !jQuery.isFunction(mystr), "Function String" );
+
+        // When stringified, this could be misinterpreted
+        var myarr = [ "function" ];
+        ok( !jQuery.isFunction(myarr), "Function Array" );
+
+        // When stringified, this could be misinterpreted
+        var myfunction = { "function": "test" };
+        ok( !jQuery.isFunction(myfunction), "Function Object" );
+
+        // Make sure normal functions still work
+        var fn = function(){};
+        ok( jQuery.isFunction(fn), "Normal Function" );
+
+        var obj = document.createElement("object");
+
+        // Firefox says this is a function
+        ok( !jQuery.isFunction(obj), "Object Element" );
+
+        // IE says this is an object
+        // Since 1.3, this isn't supported (#2968)
+        //ok( jQuery.isFunction(obj.getAttribute), "getAttribute Function" );
+
+        var nodes = document.body.childNodes;
+
+        // Safari says this is a function
+        ok( !jQuery.isFunction(nodes), "childNodes Property" );
+
+        var first = document.body.firstChild;
+
+        // Normal elements are reported ok everywhere
+        ok( !jQuery.isFunction(first), "A normal DOM Element" );
+
+        var input = document.createElement("input");
+        input.type = "text";
+        document.body.appendChild( input );
+
+        // IE says this is an object
+        // Since 1.3, this isn't supported (#2968)
+        //ok( jQuery.isFunction(input.focus), "A default function property" );
+
+        document.body.removeChild( input );
+
+        var a = document.createElement("a");
+        a.href = "some-function";
+        document.body.appendChild( a );
+
+        // This serializes with the word 'function' in it
+        ok( !jQuery.isFunction(a), "Anchor Element" );
+
+        document.body.removeChild( a );
+
+        // Recursive function calls have lengths and array-like properties
+        function callme(callback){
+                function fn(response){
+                        callback(response);
+                }
+
+                ok( jQuery.isFunction(fn), "Recursive Function Call" );
+
+                fn({ some: "data" });
+        };
+
+        callme(function(){
+                callme(function(){});
+        });
+}
+
+test();
+
+</script>
+
+
+</body>
+
+<p>```</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2012-12-07T15:03:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/javascript/'>javascript</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-11-19-1729814.html" title="Previous Post: function 工具集">&laquo; function 工具集</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012-12-07-1743767.html" title="Next Post: insertBefore">insertBefore &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

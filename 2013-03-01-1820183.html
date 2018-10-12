@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>包管理软件 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      包管理软件
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+常见的各类包管理软件对比
+
+包管理分类
+
+
+  操作系统包管理  如: yum (RHL), apt-get(ubuntu), homeb...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-03-01-1820183.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">包管理软件</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-01T22:38:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>常见的各类包管理软件对比</p>
+
+<p>包管理分类</p>
+
+<ul>
+  <li>操作系统包管理  如: yum (RHL), apt-get(ubuntu), homebrew(mac)</li>
+  <li>语言级别  如: npm(nodejs), gem(ruby),pip(python), bower(javascript), maven(java)</li>
+</ul>
+
+<p>总结</p>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>包管理几乎都有list, install, uninstall, update</td>
+          <td>upgrade, search 等功能</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>语言级别时, 因涉及到应用, 会分 local与global, 会有工程配置如package.json</li>
+  <li>maven比较特殊, 不支持install, 需要手工配置pom.xml   (需要不少插件)</li>
+</ul>
+
+<p>一些列表
+[table]
+|name   | list | install | uninstall| update | search | init|
+|apt-get| apt-cache  | install | uninstall | upgrade | apt-cache search | |
+|yum     | ||||||
+|brew    | list | install | uninstall | upgrade | search | |
+|npm     | local | -g –save  | prune  | update |  /regexp | package.json|
+|gem     | –local | local| cleanup | update | –remote | Gemfile (bundle init)|
+|pip       | freeze | install | uninstall | —- | search | |
+|bower  | list  | -g –save | cache-clean | update | search  |  component.json |
+[/table]</p>
+
+<p>心得</p>
+
+<ul>
+  <li>yum, apt-get, npm, gem 几乎是官方的, 但mac, python还是选择性较多</li>
+  <li>install 并保存至 .json 配置时, 使用 –save参数, 但gem,python不清楚,待补充</li>
+  <li>有些update是更新版本信息的, upgrade才是升级所有组件</li>
+  <li>组件的依赖版本冲突如何办, npm的方法确实不错</li>
+</ul>
+
+<p>汇总列表</p>
+
+<ul>
+  <li>apt-get(ubuntu),yum(fedora),macports(mac),homebrew(mac),pkg(solaris),emerge(Gentoo)</li>
+  <li>npm(nodejs),gem(ruby),pip(python),easy_install(python),nuget(vs),bower(javascript)</li>
+  <li>maven(java),grunt(java),gradle(java),pear(php),cpan(perl)</li>
+  <li></li>
+</ul>
+
+<p>各种镜像:
+http://ruby.taobao.org/
+http://gems.rubyforge.org/
+http://gems.github.com/</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-01T22:38:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/思考/'>思考</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-02-28-1817854.html" title="Previous Post: chrome  support for sass">&laquo; chrome  support for sass</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-03-07-1825519.html" title="Next Post: 使用符号链接提高工作效率">使用符号链接提高工作效率 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

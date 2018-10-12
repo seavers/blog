@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>mybatis 动态扫描xml - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      mybatis 动态扫描xml
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+之前在java工程中引入mybatis, 在配置xml时总是这样子的
+
+	&lt;bean id="userMappe...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">mybatis 动态扫描xml</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-11-25T08:34:29+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>之前在java工程中引入mybatis, 在配置xml时总是这样子的</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>	<span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"userMapper"</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperFactoryBean"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"mapperInterface"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper.auth.UserMapper"</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;/bean&gt;</span>
+	
+	<span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"permissionMapper"</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperFactoryBean"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"mapperInterface"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper.auth.PermissionMapper"</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;/bean&gt;</span>
+	
+	<span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"roleMapper"</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperFactoryBean"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"mapperInterface"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper.auth.RoleMapper"</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;/bean&gt;</span>
+</code></pre>
+</div>
+
+<p>系统每增加一个mapper都要去配置一个bean, 这样不仅繁锁,而且多人编辑文件时,容易引起代码冲突</p>
+
+<p>其实可以使用自动扫描的方式去加载所有的mapper文件,方法如下:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>	<span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperScannerConfigurer"</span><span class="nt">&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"basePackage"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper"</span> <span class="nt">/&gt;</span>
+		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
+	<span class="nt">&lt;/bean&gt;</span>
+</code></pre>
+</div>
+
+<p>这个MapperScannerConfigurer是在mybatis-spring包中定义的
+引入方法为</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>	<span class="nt">&lt;dependency&gt;</span>
+		<span class="nt">&lt;groupId&gt;</span>org.mybatis<span class="nt">&lt;/groupId&gt;</span>
+		<span class="nt">&lt;artifactId&gt;</span>mybatis-spring<span class="nt">&lt;/artifactId&gt;</span>
+		<span class="nt">&lt;version&gt;</span>1.1.1<span class="nt">&lt;/version&gt;</span>
+	<span class="nt">&lt;/dependency&gt;</span>
+</code></pre>
+</div>
+
+<p>如果是 MyBatis-Spring 1.2.0 以上, 还有一种更简单的方法, <mybatis:scan></mybatis:scan>
+见http://mybatis.github.io/spring/mappers.html    (英文)
+或http://mybatis.github.io/spring/zh/mappers.html (中文)</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-11-25T08:34:29+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/mybatis/'>mybatis</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014-01-19-ruby-multiple-return.html" title="Previous Post: ruby语法糖 - 多返回值">&laquo; ruby语法糖 - 多返回值</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016-02-07-jekyll-update.html" title="Next Post: 升级jekyll">升级jekyll &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

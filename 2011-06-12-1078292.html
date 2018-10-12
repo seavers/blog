@@ -1,0 +1,287 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>javascript模拟html5新增特性 - placeholder属性 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      javascript模拟html5新增特性 - placeholder属性
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+placeholder属性是html5的新增属性,当输入框为空时, 可以提...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2011-06-12-1078292.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">javascript模拟html5新增特性 - placeholder属性</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2011-06-12T00:11:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>placeholder属性是html5的新增属性,当输入框为空时, 可以提示一些信息, 非常不错的功能</p>
+
+<ol>
+  <li>
+    <p>placeholder支持情况:
+  a) 已经支持: ie 9+  firefox 4.0+  chrome等
+  b) 需要模拟 :  ie6 ie7 ie8 firefox3.6</p>
+  </li>
+  <li>
+    <p>placeholder
+  a) 内容为空时, 内容显示为placeholder内容, 样式为color:#999 , 且垂直居中显示
+  b) 内容不为空, 无特殊变化, 原有placeholder样式, 需清除</p>
+  </li>
+  <li>
+    <p>模拟placeholder, 要求满足( 只考虑 input)
+  a) 当页面显示后, 如果数据为空, 则显示为placeholder状态
+  b) 当点击input后, 清除placeholder,样式恢复文本样式
+  c) 当input离开焦点后, 根据内容来显示placeholder状态
+  d) 当placeholder状态时,刷新页面后, 也应该是placeholder状态
+  e) 当有js执行脚本后, 且变更input值后, 重置placeholder状态
+  f) 当表单reset后, 也需要重置placeholder状态
+  g) 当表单提交后, 当为placeholder状态时,提交的参数应该为空</p>
+  </li>
+  <li>
+    <p>注意点
+  a) firefox 3.6 ,需考虑 3.d)点, 需监停 window.onunload
+  b) ie下, 第3.e)点,需监控 onpropertychange事件,比较复杂
+  c) firefox , 需监控 oninput 事件, 也比较复杂
+  d) form.reset事件, onreset是在修改input值前调用的, 也比较难重置状态</p>
+  </li>
+  <li>判断浏览器是否原生支持placeholder :  “placeholder” in document.createElement(“input”)</li>
+  <li>简单实现, 可以监停focus/blur(focusin/focusout), submit/unload事件</li>
+  <li>本文发表在http://seavers.iteye.com/ 本文未经同意,谢绝转载</li>
+</ol>
+
+<p>例:</p>
+
+<p>KISSY 实现:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>input.placeholder {color:#999}
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;script src="http://a.tbcdn.cn/s/kissy/1.1.6/kissy-min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+//本代码发布在 http://seavers.iteye.com/ , 未经同意,谢绝转载
+//模拟了placeholder 80%的功能
+(function() {
+	var S=KISSY, Dom = S.DOM, Event = S.Event;
+
+	S.namespace("HTML5");
+	S.HTML5.placeholder = {
+		support  : "placeholder" in document.createElement("input"), 
+		activate : (function() {
+			function _showPlaceholder(el, className, value) {
+				if (!Dom.hasClass(el, className) &amp;&amp; !el.value) {
+					el.value = value;
+					Dom.addClass(el, className);
+				}
+			}
+			
+			function _hidePlaceholder(el, className, value) {
+				if (Dom.hasClass(el, className)) {
+					el.value = value;
+					Dom.removeClass(el, className);
+				}
+			}
+			
+			function _activatePlaceholder(selector) {
+				var ATTR = "placeholder", CLASS = "placeholder";
+				
+				S.each(S.query(selector), function(el){
+					var TIP = el.getAttribute(ATTR);
+					if (!TIP) return ;
+					
+					Event.on(el.form, 'submit', function(ev) {
+						_hidePlaceholder(el, CLASS, "");
+					});
+					Event.on(window, 'unload', function(ev) {	//解决firefox3.6刷新问题
+						_hidePlaceholder(el, CLASS, "");
+					});
+					Event.on(el, 'focusin', function(ev){
+						_hidePlaceholder(el, CLASS, "");
+					});
+					Event.on(el, 'focusout', function(ev){
+						_showPlaceholder(el, CLASS, TIP);
+					});
+					_showPlaceholder(el, CLASS, TIP);
+				});
+			}
+			
+			return _activatePlaceholder;
+		})()
+	};
+	
+	//如果有原生的placeholder，使用原生，否则使用模拟的
+	if (!S.HTML5.placeholder.support) {
+		S.HTML5.placeholder.activate('INPUT');
+	}
+})();
+
+&lt;/script&gt;
+</code></pre>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2011-06-12T00:11:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/javascript/'>javascript</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011-02-11-904122.html" title="Previous Post: version compare">&laquo; version compare</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011-06-23-1982081.html" title="Next Post: 手机游戏 cat physics 分数记录">手机游戏 cat physics 分数记录 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ruby Enumerator - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      ruby Enumerator
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+之前看到这样的API文档
+
+关于数组Array的
+
+map { |item| block } → new_ary cl...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2014-01-12-ruby-enumerable.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ruby Enumerator</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2014-01-12T17:33:56+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>之前看到这样的API文档</p>
+
+<p>关于数组Array的</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>map { |item| block } → new_ary click to toggle source
+map → Enumerator
+Invokes the given block once for each element of self.
+
+Creates a new array containing the values returned by the block.
+
+See also Enumerable#collect.
+
+If no block is given, an Enumerator is returned instead.
+</code></pre>
+</div>
+
+<p>当时不明白, Array的map方法不带参数时返回 Enumerator, 而Array已经支持各类迭代操作了, 为什么还要返回Enumerator, 与数组的操作有什么区别呢, 当时没有细究, 今天知道了</p>
+
+<!--more-->
+
+<p>我们知道数组是继承自Enumerable的</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>irb(main):077:0&gt; [].class.ancestors
+=&gt; [Array, Enumerable, Object, Kernel, BasicObject]
+</code></pre>
+</div>
+
+<p>数组中的方法, 会比Enumerable多一些数组特色的方法, 如insert,push,pop,fist,last</p>
+
+<p>而Enumerable调用map时, 有一些常用的方法, 无法满足, 比如</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>	[2,3,5,7,9,11].map {|item,index| item+index}
+</code></pre>
+</div>
+
+<p>map时, 参数中的第一个参数, 为item, 但是不支持索引位置</p>
+
+<p>而像select, count, reject 等方法时, 同样也不支持索引位置</p>
+
+<p>于是Enumerator发挥作用了, 注意这里不是Enumerable</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>irb(main):071:0&gt; [].map.methods - [].methods
+=&gt; [:with_index, :with_object, :next_values, :peek_values, :next, :peek, :feed, :rewind]
+</code></pre>
+</div>
+
+<p>所以
+<code class="highlighter-rouge">
+irb(main):109:0&gt; [2,3,5,7,9,11].map.with_index {|item,index| item+index}
+=&gt; [2, 4, 7, 10, 13, 16]
+</code></p>
+
+<p>结论: Array中map,select,count,reject时, 如果不带闭包参数, 将返回Enumerator, 这时可继续使用索引参数</p>
+
+<p>这里是ruby的官方文档, <a href="http://ruby-doc.org/core-1.9.3/Enumerator.html">Enumerator的API</a></p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2014-01-12T17:33:56+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ruby/'>ruby</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014-01-05-ruby-string-array.html" title="Previous Post: ruby 字符串与数组">&laquo; ruby 字符串与数组</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014-01-19-ruby-multiple-return.html" title="Next Post: ruby语法糖 - 多返回值">ruby语法糖 - 多返回值 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ubuntu name server - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      ubuntu name server
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+我们在ubuntu下经常会遇到以下问题
+
+
+  windows下ping ubuntu的机器名ping不到
+  ...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-03-23-1835389.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">ubuntu name server</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-23T14:47:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>我们在ubuntu下经常会遇到以下问题</p>
+
+<ol>
+  <li>windows下ping ubuntu的机器名ping不到</li>
+  <li>ubuntu下ping windows下的机器名 ping 不到</li>
+  <li>ubuntu下ping ubuntu下的机器名ping不到</li>
+</ol>
+
+<p>以上就是碰到了name server的问题了</p>
+
+<p>首先, 我们要理清楚以下几个问题</p>
+
+<ol>
+  <li>windows是如何根据name寻找ip的</li>
+  <li>ubuntu是如何根据name寻找ip的</li>
+  <li>mac呢</li>
+</ol>
+
+<p>name到ip的映射有以下几个方式
+1. /etc/hosts的方式, 用户自行配置的, 优先级最高
+2. wins  windows用于解析名字的服务
+3. mdns 是apple发明的, ubuntu下也可以使用
+4. dns服务, 通常由ISP提供,  一般局域网搜不到, 就要去外网搜了
+另外:
+wins 的服务, 有时会有域服务器来提供服务</p>
+
+<p>由此: windows 与 ubuntu 下互通name, 需要敲定要走 wins还是mdns
+1. windows 下默认支持 wins 服务, 有服务器,也有客户端支持
+2. ubuntu下走wins,  可以安装 samba , 由 nmbd服务器提供服务端
+3. ubuntu 下 ping wins, 可以在 smb.conf 下配置 wins server
+4. windows 下走 mdns 服务, 可以安装apple的itunes, 由bonjour提供服务端
+5. ubuntu 下安装 mdns服务, 可使用 avahi-demon 来提供 mdns 服务
+6. ubuntu 下解析 mdns, 可以在 /etc/resolv.conf 中配置, 由 dnsmasq 来提供解析
+7. mac 上默认提供了 mdns 与 wins</p>
+
+<p>因此, 不动 windows, 可以在 ubuntu 中安装以下服务
+```
+sudo apt-get install samba
+sudo apt-get install avahi-daemon
+sudo apt-get install libnss-mdns             ##necessary?</p>
+
+<p>sudo vi /etc/nsswitch.conf   (hosts:          files mdns4_minimal dns)
+sudo vi /etc/samba/smb.conf</p>
+
+<p>sudo service smbd restart
+sudo service nmbd restart
+//sudo service avahi-daemon restart
+sudo dnsmasq</p>
+
+<p>sudo service networking restart
+```</p>
+
+<p>如果ubuntu一直ping不通mac.local or ipad.local,请尝试重启
+这样, 在 windows, ubuntu, mac 下互相ping hostname就OK了
+补: mdns 的ping时, 要加 .local</p>
+
+<p>相关的命令有:  ping nslookup host dig nbtscan nmblookup nmap
+sudo netstat -ntp
+sudo ss -nlt</p>
+
+<p>相关的文件有:
+/etc/resolv.conf
+/etc/nsswitch.conf
+/etc/NetworkManager/NetworkManager.conf
+https://wiki.archlinux.org/index.php/Avahi</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-23T14:47:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-03-22-1834993.html" title="Previous Post: maven常用技巧">&laquo; maven常用技巧</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-03-26-1836490.html" title="Next Post: ubuntu 支持无线网卡">ubuntu 支持无线网卡 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

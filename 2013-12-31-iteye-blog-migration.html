@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>iteye 博客迁移 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      iteye 博客迁移
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+之前一直是在iteye上写博客的, 后来建立了本博客系统后, 就希望将博客从iteye上迁移过来
+
+然而iteye上博客的文章太...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-12-31-iteye-blog-migration.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">iteye 博客迁移</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-12-31T15:16:16+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>之前一直是在iteye上写博客的, 后来建立了本博客系统后, 就希望将博客从iteye上迁移过来</p>
+
+<p>然而iteye上博客的文章太多了, 手动一篇一篇拷贝很不现实, 所以写了个工具来辅助迁移</p>
+
+<p>iteye2markdown是一款博客迁移工具,可以将博客从iteye迁移至octopress</p>
+
+<ul>
+  <li>此工具会自动下载iteye博客上的所有文章</li>
+  <li>接着会将博客中的bbcode代码转换成markdown</li>
+  <li>下载转换后的markdown可用于octopress,迁移至自己的博客系统上</li>
+</ul>
+
+<!--more-->
+
+<p>使用方式:</p>
+
+<ul>
+  <li>修改download.rb中的cookie配置, cookie将用于连接iteye.com的后台系统, 下载博客内容</li>
+  <li>修改download.rb中的博客地址</li>
+  <li>使用以下命令
+<code class="highlighter-rouge">
+ruby download.rb
+</code>
+执行下载转换, 结果保存于blog目录中</li>
+</ul>
+
+<p>源代码见:  <a href="https://github.com/seavers/iteye2markdown">github</a></p>
+
+<p>核心代码如下:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>re 'open-uri'
+require 'nokogiri'
+
+def process(id, date)
+	host = 'http://seavers.iteye.com'
+	cookie = ''      #IO.read('cookie.txt')
+	agent = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.14 Safari/537.36'
+
+	html = open(host + '/admin/blogs/' + id + '/edit', 'User-Agent'=&gt;agent, 'Cookie'=&gt;cookie).read
+	doc = Nokogiri::HTML(html)
+
+	title = doc.search('#blog_title').attr('value').to_s
+	text = doc.search('#editor_body').text
+	category = doc.search('#blog_category_list').attr('value').to_s
+	tag = doc.search('#blog_tag_list').attr('value').to_s
+	
+
+	content = text
+		.gsub('[size=xx-large]', '#')
+		.gsub('[size=x-large]', '##')
+		.gsub('[size=large]', '###')
+		.gsub('[size=medium]', '####')
+		.gsub('[size=small]', '')
+		.gsub('[size=x-small]', '')
+		.gsub('[size=xx-small]', '')
+		.gsub('[/size]', '')
+		.gsub(/\[url=(.*)\](.*)\[\/url\]/, '[\2](\1)')
+		.gsub('[url]', '').gsub('[/url]', '')
+		.gsub('[b]', '*').gsub('[/b]', '*')
+		.gsub('[list]', '').gsub('[/list]', '')
+		.gsub('[b]', '*').gsub('[/b]', '*')
+		.gsub('[*]', '* ')
+		.gsub('[code]', '```').gsub('[ne/code]', '```')
+		.gsub(/\[code="(.*)"\]/, '```')
+
+
+	filename = date[0..9] + '-' + id + '.markdown'
+	File.open('blog/' + filename, 'w') { |file|
+		file.puts '---'
+		file.puts 'layout: post'
+		file.puts 'title: "' + title.to_s + '"'
+		file.puts 'date: ' + date + ':00 +0800'
+		file.puts 'comments: true'
+		file.puts 'categories:'
+		file.puts '- ' + category.to_s
+		file.puts 'tags:'
+		tag.split(',').each {|x|
+			file.puts '- ' + x
+		}
+		file.puts '---'
+
+		file.puts ''
+		file.puts content 
+	}
+
+end
+
+def spider(page)
+	agent = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.14 Safari/537.36'
+
+	url = 'http://seavers.iteye.com/?page='+page.to_s
+	html = open(url, 'User-Agent'=&gt;agent)
+
+	doc = Nokogiri::HTML(html)
+	doc.search('.blog_main').each {|x|
+		id = x.search('h3 a').attr('href').text[/[0-9]+/, 0]
+		date = x.search('.blog_bottom .date').text
+		puts id + "\t" + date
+		process(id, date)
+	}
+
+	return doc.search('.pagination a.next_page').length == 0
+end
+
+##process('1416013', '2013-12-31 14:01')
+(1..100).each {|page|
+	break if spider(page)
+}
+
+</code></pre>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-12-31T15:16:16+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/octopress/'>octopress</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-12-23-ruby-spider.html" title="Previous Post: ruby spider">&laquo; ruby spider</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2014-01-04-ruby-study-notes.html" title="Next Post: ruby 学习笔记">ruby 学习笔记 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

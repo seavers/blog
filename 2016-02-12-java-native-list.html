@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>java native方法列表 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      java native方法列表
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+想了解一下JDK里有多少方法是用navtive实现的, 所以统计了下
+
+
+java.lang.Object.regis...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2016-02-12-java-native-list.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">java native方法列表</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2016-02-12T12:40:08+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>想了解一下JDK里有多少方法是用navtive实现的, 所以统计了下</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">hashCode</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">notifyAll</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">wait</span><span class="o">(</span><span class="kt">long</span> <span class="n">timeout</span><span class="o">);</span>
+
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">intern</span><span class="o">();</span>
+
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Throwable</span><span class="o">.</span><span class="na">fillInStackTrace</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Throwable</span><span class="o">.</span><span class="na">getStackTraceDepth</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Throwable</span><span class="o">.</span><span class="na">getStackTraceElement</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">);</span>
+
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">forName0</span><span class="o">(</span><span class="n">String</span> <span class="kd">native</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">initialize</span><span class="o">,</span> <span class="n">ClassLoader</span> <span class="n">loader</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isInstance</span><span class="o">(</span><span class="n">Object</span> <span class="n">obj</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="n">Class</span><span class="o">&lt;?&gt;</span> <span class="n">cls</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isInterface</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isArray</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isPrimitive</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">getName0</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">getClassLoader0</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">getSuperclass</span><span class="o">();</span>
+<span class="c1">//.......</span>
+
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">setIn0</span><span class="o">(</span><span class="n">InputStream</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">setOut0</span><span class="o">(</span><span class="n">PrintStream</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">setErr0</span><span class="o">(</span><span class="n">PrintStream</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="n">Object</span><span class="o">,</span> <span class="kt">int</span><span class="o">,</span> <span class="n">Object</span><span class="o">,</span> <span class="kt">int</span><span class="o">,</span> <span class="kt">int</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">identityHashCode</span><span class="o">(</span><span class="n">Object</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">initProperties</span><span class="o">(</span><span class="n">Properties</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">mapLibraryName</span><span class="o">(</span><span class="n">String</span><span class="o">);</span>
+
+
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="kt">long</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">start0</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">(</span><span class="kt">boolean</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">isAlive</span><span class="o">();</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">holdsLock</span><span class="o">(</span><span class="n">Object</span><span class="o">);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">dumpThreads</span><span class="o">(</span><span class="n">Thread</span><span class="o">[]);</span>
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">getThreads</span><span class="o">();</span>
+<span class="c1">//......</span>
+
+<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">reflect</span><span class="o">.</span><span class="na">Proxy</span><span class="o">.</span><span class="na">defineClass0</span><span class="o">(</span><span class="n">ClassLoader</span><span class="o">,</span> <span class="n">String</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[],</span> <span class="kt">int</span><span class="o">,</span> <span class="kt">int</span><span class="o">);</span>
+
+</code></pre>
+</div>
+
+<p>得出以下结论:</p>
+
+<ul>
+  <li>这里的Object,Class,Throwable,System,Thread 都是比较底层的功能,都有native的方法</li>
+  <li>直接依赖了包装了native的类, 如
+    <ul>
+      <li>Math -&gt; StrictMath</li>
+      <li>File -&gt; FileSystem</li>
+      <li>Socket -&gt; PlainSocketImpl</li>
+    </ul>
+  </li>
+  <li>java.lang.reflect包里的多数是Pojo, 都是从Class获取到的Pojo, 然后是纯内存操作, 但 Array 比较例外</li>
+  <li>有很多纯内存计算, 没有使用native方法了, 如
+    <ul>
+      <li>String里编码转换</li>
+      <li>Date的api</li>
+      <li>ArrayList, HashMap的API</li>
+      <li>对象的序列化</li>
+      <li>BigInteger, BigDecimal数字运算</li>
+      <li>字符串格式化</li>
+    </ul>
+  </li>
+  <li>System, Thread, Runtime, Process都是系统核心紧密的, 几乎都需要调用至native方法的</li>
+  <li>Class, Object则是语言相关的, 需要操作至字节码, 也几乎都是调用至native方法的</li>
+  <li>还有比较特殊的 sun.misc.Unsafe 类, 主要是互斥锁类的API, 用于concurrent包</li>
+</ul>
+
+<p>而jdk之上, 几乎就很少有native了, 如以下</p>
+
+<ul>
+  <li>http的实现</li>
+  <li>sql,jdbc,log的实现</li>
+  <li>各类app应用</li>
+</ul>
+
+<p>所以总结了下, 涉及native的共几类</p>
+
+<ul>
+  <li>系统相关的 System, Runtime, Process, Thread, Unsafe, File, Socket</li>
+  <li>语言相关的 Object, Class, Array, ClassLoader</li>
+  <li>计算密集型的 StrictMath</li>
+</ul>
+
+<p>其实看native源代码是最直观的了, 点击 <a href="http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/file/tip/src/share/native/java/lang/">http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/file/tip/src/share/native/java/lang/</a>
+或
+<a href="https://github.com/dmlloyd/openjdk/tree/jdk7u/jdk7u/jdk/src/share/native/java/lang">https://github.com/dmlloyd/openjdk/tree/jdk7u/jdk7u/jdk/src/share/native/java/lang</a></p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2016-02-12T12:40:08+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016-02-07-jekyll-update.html" title="Previous Post: 升级jekyll">&laquo; 升级jekyll</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2018-09-18-maven-archetype-multimodule.html" title="Next Post: maven构建archetype多模块工程模板的问题">maven构建archetype多模块工程模板的问题 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

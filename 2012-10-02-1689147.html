@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>maven jetty 配置 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      maven jetty 配置
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+jetty的maven插件配置(pom.xml)
+
+
+  scanIntervalSeconds 配置扫描时间时间, 如...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2012-10-02-1689147.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">maven jetty 配置</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-10-02T10:48:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><em>jetty的maven插件配置(pom.xml)</em></p>
+
+<ul>
+  <li>scanIntervalSeconds 配置扫描时间时间, 如果有文件变动, 如pom.xml,web.xml或classes, 则jetty会重新加载应用, 相当方便</li>
+  <li>contextPath 配置ROOT, 即将web的上下文路径, 改为 /</li>
+  <li>将jetty默认的uri编码, 改为GBK   (jetty默认是utf8)</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span> 
+    <span class="nt">&lt;groupId&gt;</span>org.mortbay.jetty<span class="nt">&lt;/groupId&gt;</span> 
+    <span class="nt">&lt;artifactId&gt;</span>maven-jetty-plugin<span class="nt">&lt;/artifactId&gt;</span>
+    <span class="nt">&lt;configuration&gt;</span>    
+        <span class="nt">&lt;contextPath&gt;</span>/<span class="nt">&lt;/contextPath&gt;</span>    
+        <span class="nt">&lt;connectors&gt;</span>    
+            <span class="nt">&lt;connector</span> <span class="na">implementation=</span><span class="s">"org.mortbay.jetty.nio.SelectChannelConnector"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;port&gt;</span>8080<span class="nt">&lt;/port&gt;</span>    
+            <span class="nt">&lt;/connector&gt;</span>    
+        <span class="nt">&lt;/connectors&gt;</span>    
+        <span class="nt">&lt;reload&gt;</span>automatic<span class="nt">&lt;/reload&gt;</span>  
+        <span class="nt">&lt;scanIntervalSeconds&gt;</span>3<span class="nt">&lt;/scanIntervalSeconds&gt;</span>
+        <span class="nt">&lt;systemProperties&gt;</span>
+            <span class="nt">&lt;systemProperty&gt;</span>
+	        <span class="nt">&lt;name&gt;</span>org.mortbay.util.URI.charset<span class="nt">&lt;/name&gt;</span>
+	        <span class="nt">&lt;value&gt;</span>GBK<span class="nt">&lt;/value&gt;</span>
+	    <span class="nt">&lt;/systemProperty&gt;</span>
+	 <span class="nt">&lt;/systemProperties&gt;</span>
+     <span class="nt">&lt;/configuration&gt;</span> 
+<span class="nt">&lt;/plugin&gt;</span>
+</code></pre>
+</div>
+
+<p><em>jetty的另一段配置</em>(修改web.xml)
+用于解决使用jetty后无法修改文件问题(错误描述:请求的操作无法在使用用户映射区域打开的文件上执行)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;servlet&gt;</span>
+    <span class="nt">&lt;servlet-name&gt;</span>default<span class="nt">&lt;/servlet-name&gt;</span>
+    <span class="nt">&lt;servlet-class&gt;</span>org.mortbay.jetty.servlet.DefaultServlet<span class="nt">&lt;/servlet-class&gt;</span>
+    <span class="nt">&lt;init-param&gt;</span>
+        <span class="nt">&lt;param-name&gt;</span>useFileMappedBuffer<span class="nt">&lt;/param-name&gt;</span>
+        <span class="nt">&lt;param-value&gt;</span>false<span class="nt">&lt;/param-value&gt;</span>
+    <span class="nt">&lt;/init-param&gt;</span>
+    <span class="nt">&lt;load-on-startup&gt;</span>0<span class="nt">&lt;/load-on-startup&gt;</span>
+<span class="nt">&lt;/servlet&gt;</span>
+</code></pre>
+</div>
+
+<p><em>修改mvn时的java运行时参数</em> (解决 PermGen space问题)</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>set MAVEN_OPTS=-XX:MaxPermSize=128M
+mvn jetty:run
+</code></pre>
+</div>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2012-10-02T10:48:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/maven/'>maven</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012-09-19-1681794.html" title="Previous Post: 判断两个字符串的相似度(js)">&laquo; 判断两个字符串的相似度(js)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012-11-19-1729814.html" title="Next Post: function 工具集">function 工具集 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

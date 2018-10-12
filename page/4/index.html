@@ -1,0 +1,869 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+  
+  
+    
+    
+      
+  
+    
+      git 与 svn 同步
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+  svn 与 git 保持同步
+
+
+  先svn checkout url 把svn...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/page/4/">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-06-26-1894735.html">git 与 svn 同步</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-06-26T15:44:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>svn 与 git 保持同步</p>
+
+<ul>
+  <li>先svn checkout url 把svn上的代码checkout下来</li>
+  <li>进入工程目录</li>
+  <li>git init</li>
+  <li>git remote add origin git@github.com:username/project.git</li>
+  <li>git pull</li>
+  <li>git branch –set-upstream master origin/master</li>
+  <li>git reset</li>
+  <li>git status</li>
+  <li>git commit -a -m “update”</li>
+  <li>git push</li>
+</ul>
+
+<p>其中 git reset 不好处理,可以
+  git reset –hard
+  svn -R revert .</p>
+
+<p>另外:</p>
+
+<ul>
+  <li>svn propget svn:ignore .</li>
+  <li>svn propset svn:ignore . -Fingore.txt</li>
+</ul>
+
+<p>ignore.txt 中 加入  .git .gitignore
+.gitignore 中 加入  .svn</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>.svn
+bin
+target
+.settings
+.project
+.classpath
+
+/assets/node_modules
+</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-06-22-1892343.html">nginx expires 绝对过期时间</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-06-22T00:09:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>nginx expires 绝对过期时间</p>
+
+<p>参考: http://wiki.nginx.org/HttpHeadersModule</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>  expires       24h;
+  expires       modified +24h;
+  expires       @15h30m;
+  expires       0;
+  expires       -1;
+  expires       epoch;
+</code></pre>
+</div>
+
+<p>@time 表示绝对过期时间, 基于一天的某个时间点来过期</p>
+
+<p>@15h30m, 这里的意思是每天15点30分的时候,请求过期</p>
+
+<p>举例, 比如
+访问时间为  08:00, 则过期时间为 15:30
+访问时间为  21:33, 则过期时间为 第二天的15:30分</p>
+
+<p>原文中的解释:
+Times written with an @ prefix represent an absolute time-of-day expiry, written in either the form Hh or Hh:Mm, where H ranges from 0 to 24, and M ranges from 0 to 59 (available from versions 0.7.9 &amp; 0.6.34).</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-06-21-1892316.html">curlftpfs</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-06-21T22:06:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>多数curlftpfs的例子是这样的</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo curlftpfs –o rw,allow_other ftp://username:password@192.168.1.111 /ftp
+</code></pre>
+</div>
+
+<p>这种写法,有一个缺点,就是,当mount查看时, 会显示出密码</p>
+
+<p>换成另一种写法吧:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo curlftpfs -o rw,allow_other,user=username:password ftp://192.168.1.111 /ftp
+</code></pre>
+</div>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-06-21-1891105.html">umount</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-06-21T13:53:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>mount nfs后,　如果遇到服务器修改 /etc/exports 等原因时,经常会遇到
+<code class="highlighter-rouge">
+umount2: Stale NFS file handle
+umount: htdocs: Stale NFS file handle
+</code>
+或者
+<code class="highlighter-rouge">
+/var/www/html was not found in /proc/mounts
+</code>
+等问题</p>
+
+<p>解决方案:</p>
+
+<ul>
+  <li>找到使用目录的进程, kill掉</li>
+  <li>sudo umount -f /directory</li>
+  <li>sudo umount -i -f /directory</li>
+  <li>sudo umount -i -d -r -n -v -f  /directory</li>
+</ul>
+
+<p>用umount的各种参数,　总是有办法 unmount的</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-06-03-1881714.html">思考方法论</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-06-03T19:56:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ol>
+  <li>客户是谁？客户细分？</li>
+  <li>客户需要我们解决的问题？</li>
+  <li>什么情况和标志出现才体现我们解决了客户的问题？</li>
+  <li>独特卖点？与众不同的引起客户关注的是什么？</li>
+  <li>为解决客户的问题，我们需要聚焦的突破点和瓶颈是什么？</li>
+  <li>客户现有的能力即制或习惯是什么？</li>
+  <li>解决方案</li>
+  <li>产品最重要的三个功能？</li>
+  <li>客户参与的动力在哪？</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-05-08-1863348.html">ubuntu 无法载入支持的服务器方式列表  请检查您的gvfs安装</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-05-08T11:10:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ubuntu “无法载入支持的服务器方式列表  请检查您的gvfs安装” 的解决方案</p>
+
+<p>碰到两次这个错误了,记录下解决方案</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get remove gvfs
+sudo apt-get install ubuntu-desktop
+</code></pre>
+</div>
+
+<p>原因不明,重装解决问题</p>
+
+<p>补: 如果有些ubuntu底层的组件,类似gvfs, libgtk2.0等被卸载掉,又不想重装系统,直接install ubuntu-desktop就可以了</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-05-02-1858898.html">批量转换GBK到UTF-8</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-05-02T18:58:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>批量转换GBK到UTF-8</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>find src | grep ".java" | grep -v ".svn" | xargs -I% echo "iconv -f GBK -t UTF-8 % &gt; %.temp " | bash
+find src | grep ".java" | grep -v ".svn" | grep -v ".temp" | xargs -I% echo "cp %.temp %" | bash
+find src | grep ".java" | grep -v ".svn" | grep ".temp" | xargs -I% echo "rm %" | bash
+</code></pre>
+</div>
+
+<p>注意, 如果直接用
+<code class="highlighter-rouge">
+iconv -f GBK -t UTF-8 filename &gt; filename
+</code>
+会挂掉的, 导致filename清空,所以用的.temp</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-04-30-1857184.html">android 整合 maven 环境</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-30T14:33:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们再先整理一下思路:</p>
+
+<p>使用eclipse:</p>
+
+<ol>
+  <li>创建:  adt自带的android创建插件  New -&gt; android application project</li>
+  <li>引入:  import -&gt; existing project into workspace</li>
+  <li>打包:  run as -&gt;  android application</li>
+</ol>
+
+<p>使用maven:</p>
+
+<ol>
+  <li>创建: maven archetype:generate (99: de.akquinet.android.archetypes:android-quickstart)
+   https://github.com/akquinet/android-archetypes</li>
+  <li>运行: maven clean package android:deploy android:run    (android-maven-plugin)</li>
+  <li>引入eclipse:
+    a).  mvn eclipse:eclipse
+    b).  import -&gt; android -&gt; existing android code into workspace
+    c).  注意, 要选中 copy projects into workspace , 否则会有 overlaps 问题
+    d).  下次,已经存在.project .classpath, 直接导入已存在的java工程即可</li>
+  <li>打包同上~~~</li>
+</ol>
+
+<hr />
+
+<p>用maven编译android并部署
+<code class="highlighter-rouge">
+  export ANDROID_HOME=~/android/sdk/
+  mvn clean package android:deploy android:run
+</code></p>
+
+<p>其中package中使用了 android-maven-plugin中的</p>
+
+<ul>
+  <li>android-maven-plugin:3.5.0:generate-sources</li>
+  <li>android-maven-plugin:3.5.0:proguard</li>
+  <li>android-maven-plugin:3.5.0:emma</li>
+  <li>android-maven-plugin:3.5.0:dex</li>
+  <li>android-maven-plugin:3.5.0:apk</li>
+</ul>
+
+<p>这四个mvn指令,穿插在了package正常打包过程中
+这四个mvn指令,均是直接调用了android.sdk中的platform-tools中的某个指令或java调用</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>&lt;plugin&gt;
+    &lt;groupId&gt;com.jayway.maven.plugins.android.generation2&lt;/groupId&gt;
+    &lt;artifactId&gt;android-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;3.1.1&lt;/version&gt;
+    &lt;extensions&gt;true&lt;/extensions&gt;
+    &lt;configuration&gt;
+     &lt;sdk&gt;
+      &lt;platform&gt;16&lt;/platform&gt;
+     &lt;/sdk&gt;
+    &lt;/configuration&gt;
+   &lt;/plugin&gt;
+
+</code></pre>
+</div>
+
+<p>maven.android的eclipse常用插件是 m2e-android 插件
+可以认为m2e-android也是同样的道理,</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-04-29-1857067.html">android开发环境</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-29T23:06:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>android 开发环境搭建</p>
+
+<p>刚接触android开发, 前辈们都说现在的android开发环境比以前容易搭建了~~~</p>
+
+<p>搭建方式如下:</p>
+
+<ol>
+  <li>下载android sdk
+http://developer.android.com/sdk/index.html
+下载后的sdk, 包括了 eclipse 以及 sdk</li>
+  <li>解压, 并切换至 eclipse 目录, 打开 eclipse</li>
+  <li>eclipse打开菜单window-android SDK Manager下载SDK sources</li>
+  <li>安装m2e-android 用于maven工程    (当然没有使用maven就算了)
+web: http://rgladwell.github.com/m2e-android/
+update: http://rgladwell.github.com/m2e-android/updates/</li>
+  <li>import导入 maven版的android工程</li>
+</ol>
+
+<p>另外:</p>
+
+<p>由于android自带的eclipse不支持eclipse marketplace
+你也可以下载最新版eclipse
+然后从插件市场中下载 android sdk, m2e-android</p>
+
+<p>入门必备,存档留念</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-04-26-1855578.html">java rsa code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-26T23:08:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="highlighter-rouge"><pre class="highlight"><code>package rsa;
+import java.security.Key;  
+import java.security.KeyFactory;  
+import java.security.KeyPair;  
+import java.security.KeyPairGenerator;  
+import java.security.PrivateKey;  
+import java.security.PublicKey;  
+import java.security.interfaces.RSAPrivateKey;  
+import java.security.interfaces.RSAPublicKey;  
+import java.security.spec.PKCS8EncodedKeySpec;  
+import java.security.spec.X509EncodedKeySpec;  
+   
+import javax.crypto.Cipher;  
+
+import sun.misc.BASE64Decoder;  
+import sun.misc.BASE64Encoder;  
+   
+   
+public class RSAUtil {
+	public static String[] initKey() throws Exception {
+		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");  
+        //密钥位数  
+        keyPairGen.initialize(1024);  
+        //密钥对  
+        KeyPair keyPair = keyPairGen.generateKeyPair();  
+
+        // 公钥  
+        PublicKey publicKey = (RSAPublicKey) keyPair.getPublic();  
+
+        // 私钥  
+        PrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();  
+
+        String publicKeyString = getKeyString(publicKey);  
+        System.out.println("public:\n" + publicKeyString);  
+
+        String privateKeyString = getKeyString(privateKey);  
+        System.out.println("private:\n" + privateKeyString);  
+        return new String[]{publicKeyString, privateKeyString};
+	}
+	
+	public static String encode(String data, String publicKey) throws Exception {
+        //加解密类  
+        Cipher cipher = Cipher.getInstance("RSA");//Cipher.getInstance("RSA/ECB/PKCS1Padding");  
+        cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(publicKey));  
+
+        //加密  
+        byte[] enBytes = cipher.doFinal(data.getBytes("UTF-8"));  
+        return new BASE64Encoder().encode(enBytes);
+	}
+	
+	public static String decode(String data, String privateKey) throws Exception {
+        //加解密类  
+        Cipher cipher = Cipher.getInstance("RSA");//Cipher.getInstance("RSA/ECB/PKCS1Padding");  
+        cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(privateKey));  
+
+        //加密  
+        byte[] deBytes = new BASE64Decoder().decodeBuffer(data);
+        byte[] enBytes = cipher.doFinal(deBytes);  
+        return new String(enBytes, "UTF-8");
+	}	
+	
+   
+      /** 
+       * 得到公钥 
+       * @param key 密钥字符串（经过base64编码） 
+       * @throws Exception 
+       */  
+      private static PublicKey getPublicKey(String key) throws Exception {  
+            byte[] keyBytes;  
+            keyBytes = (new BASE64Decoder()).decodeBuffer(key);  
+   
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);  
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");  
+            PublicKey publicKey = keyFactory.generatePublic(keySpec);  
+            return publicKey;  
+      }  
+      /** 
+       * 得到私钥 
+       * @param key 密钥字符串（经过base64编码） 
+       * @throws Exception 
+       */  
+      private static PrivateKey getPrivateKey(String key) throws Exception {  
+            byte[] keyBytes;  
+            keyBytes = (new BASE64Decoder()).decodeBuffer(key);  
+   
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);  
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");  
+            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);  
+            return privateKey;  
+      }  
+   
+      /** 
+       * 得到密钥字符串（经过base64编码） 
+       * @return 
+       */  
+      private static String getKeyString(Key key) throws Exception {  
+            byte[] keyBytes = key.getEncoded();  
+            String s = (new BASE64Encoder()).encode(keyBytes);  
+            return s;  
+      }  
+   
+   
+      public static void main(String[] args) throws Exception {  
+          //明文  
+          String plainText = "很好！hello world";  
+          String[] keys = initKey();
+          
+          System.out.println(encode(plainText, keys[0]));
+          System.out.println(decode(encode(plainText, keys[0]), keys[1]));
+   
+      }  
+   
+}  
+</code></pre>
+</div>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/5">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/3">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>大牛博客</h1>
+  <ul>
+    <li>
+      <a href="http://ithans.com/">ithans</a>
+    </li>
+  </ul>
+</section>
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

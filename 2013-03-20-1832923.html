@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>cubieboard上手 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      cubieboard上手
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+最近刚买了cubieboard, 入手到玩转后的各个过程记录下
+
+购买链接: http://item.taobao.com/...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-03-20-1832923.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">cubieboard上手</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-20T20:19:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>最近刚买了cubieboard, 入手到玩转后的各个过程记录下</p>
+
+<p>购买链接: http://item.taobao.com/item.htm?id=18271795262
+已有装备: 笔记本, 无线路由器
+入手装备: cubieboard, 带电源,ttl2usb线等
+关键问题: 无显示器与电视
+超市购物: 读卡器+网线,  (从手机上拿的TF卡)</p>
+
+<p>Q: 没有显示器与电视, 如何连接</p>
+
+<ul>
+  <li>板子预装的android, 启动后, 可以直连至无线路由器, 但无法ssh或telnet上</li>
+  <li>使用TTL线进行连接 http://linux-sunxi.org/Cubieboard/TTL</li>
+  <li>然后使用windows/putty连接  方式:serial COM3 速率:115200</li>
+  <li>然后接上电源就可以看到输出信息了, 这时就可以敲shell命令了 (如ls)</li>
+  <li>没有找到命令行下载与安装软件的方式, 后续考虑</li>
+</ul>
+
+<p>Q: 在tf卡上安装ubuntu</p>
+
+<ul>
+  <li>用读卡器装tf卡连接到了ubuntu笔记本上</li>
+  <li>刚开始时, 容量有问题, 只有64M, 用fdisk命令解决了, 见前一博文</li>
+  <li>刷tf方法见:   http://blog.sina.com.cn/s/blog_5459f60d0101h0j3.html
+http://cn.cubieboard.org/forum.php?mod=viewthread&amp;tid=55&amp;extra=page%3D1
+(precise在镜像上已经失效了,换quantal(即v12.10))</li>
+  <li>装上tf卡, 拔电源重启, 就可在ttl上看到, 已经连接到ubuntu上, 并且可以敲命令了</li>
+  <li>在/etc/resolv.conf配置nameserver, 就可以ping通baidu.com了</li>
+  <li>apt-get install openssh-server, 然后就可以拔掉ttl线了,</li>
+  <li>买上无线网卡, 就可拔掉网线, 连接线, 只剩下电源线了</li>
+</ul>
+
+<p>Q: 刷nand</p>
+
+<ul>
+  <li>可使用官网提供的方式刷系统</li>
+  <li>也可以用tf卡的ubuntu, 直接写系统至 /dev/nand</li>
+  <li>拔掉tf卡, 用nand上的系统启动</li>
+</ul>
+
+<p>接下来, 就可以搜索各种有趣的玩法了~~~</p>
+
+<hr />
+<p>sd卡刷ubuntu/linaro, (来源见前面描述)
+<code class="highlighter-rouge">
+git clone https://github.com/linux-sunxi/sunxi-bsp/ 
+cd sunxi-bsp 
+wget http://dl.linux-sunxi.org/amery/sunxi-3.0/latest/cubieboard_hwpack.tar.xz
+wget http://releases.linaro.org/latest/ubuntu/quantal-images/alip/linaro-quantal-alip-20121124-519.tar.gz
+./scripts/sunxi-media-create.sh /dev/sdb cubieboard_hwpack.tar.xz linaro-quantal-alip-20121124-519.tar.gz
+</code></p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-03-20T20:19:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cubieboard/'>cubieboard</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-03-20-1832792.html" title="Previous Post: ubuntu 下使用 tf 卡">&laquo; ubuntu 下使用 tf 卡</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-03-21-1833467.html" title="Next Post: sunxi-bsp 脚本分析">sunxi-bsp 脚本分析 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>git的本质 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      git的本质
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+git 的本质
+
+配置:
+git的配置操作，本质上，都是在修改config文件 (.git/config) 
+* git config ...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2013-02-17-1801066.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">git的本质</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-17T00:33:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>git 的本质</p>
+
+<p>配置:
+git的配置操作，本质上，都是在修改config文件 (.git/config) 
+* git config -l</p>
+
+<p>其中
+remote.origin.fetch 与 remote.origin.url 即是 remote 的配置</p>
+
+<ul>
+  <li>git remote -v 就是显示配置, git remote -v show <name> 细节</name></li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>git remote add</td>
+          <td>rm</td>
+          <td>set-url</td>
+          <td>rename 即是增删改操作</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>git prune 是与服务器同步的功能</li>
+</ul>
+
+<p>其中
+branch.master.remote 与  branch.master.merge 即是 branch的配置</p>
+
+<ul>
+  <li>git branch -v 就是显示配置</li>
+  <li>git branch <branchname>|-m|-d 就是增删改的操作</branchname></li>
+  <li>git branch –set-upstream 设置分支对应的 remote</li>
+</ul>
+
+<p>分支名:
+git 命令，使用分支时，需要一个名字， 如origin/master, refs/remotes/origin/HEAD等
+其实，可以参考 .git/refs目录， 就明白了</p>
+
+<ul>
+  <li>heads 代表本地分支</li>
+  <li>remotes 代表远程分支</li>
+  <li>tag 代表tags分支</li>
+  <li>master 与 HEAD 同义</li>
+</ul>
+
+<p>当我们需要使用分支时，语法大致是这样的  (refs/)? (heads/|remotes/|tags/)? <name>
+即，refs 或者 heads 等， 都是可以省略的， git 会遍历查询
+假如有冲突时， git报错 warngin: refname '...' is ambiguous ， 但还会执行第一个</name></p>
+
+<p>当然还有更精确及表示更多标识的方式， 即 commitId
+而 tag 只是将 commitId 取了一个容易记忆的名字
+而 分支，远程分支，可以理解为是一个 commitId 的有序列表（可变数组）</p>
+
+<p>分支操作:
+假如将远程仓库也看成是一个个本地分支的话， 就会明白了</p>
+
+<ul>
+  <li>git pull 就是  git merge origin/master</li>
+  <li>git reset <commit> 就是 还原至某分支的状态    (会根据参数，还原 文件，index, commit)</commit></li>
+  <li>git rebase 可以看作是另一种merge操作， 算法不同</li>
+</ul>
+
+<p>操作index
+* git add    追加 index
+* git rm     删除文件，以追加index
+* git mv     移动文件，并追加index
+* git reset  清除uncommit的index</p>
+
+<p>clone
+* 这个大家都知道了，就是一系列git操作的组合</p>
+
+<p>checkout
+* 就是在操作HEAD的位置</p>
+
+<p>git
+* git的所有操作，如果理解清每个命令， 是如何操作 file, index, commit, branch 的，就都理解了</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2013-02-17T00:33:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/git/'>git</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013-02-01-1782749.html" title="Previous Post: 关于平台">&laquo; 关于平台</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2013-02-21-1811277.html" title="Next Post: ubuntu 与 windows 的互联与共享">ubuntu 与 windows 的互联与共享 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title=""></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"lianghaijun"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END -->
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>
