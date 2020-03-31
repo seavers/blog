@@ -32,7 +32,7 @@ kramdown:
      wrap: div
 
 
-gems:
+plugins:
   - jekyll-archives
   - jekyll-paginate
 

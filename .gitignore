@@ -13,3 +13,4 @@ vendor
 node_modules
 nohup.out
 _site
+.jekyll-cache
