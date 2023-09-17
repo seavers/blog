@@ -69,5 +69,5 @@ post_asides: []
 
 
 # duoshuo comments
-duoshuo_comments: true
+duoshuo_comments: false
 duoshuo_short_name: lianghaijun
