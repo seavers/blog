@@ -4,7 +4,7 @@ title: About lianghaijun
 footer: false
 ---
 
-![](http://www.lianghaijun.com/uploads/20131229/9488_1.png)
+![]({{site.baseurl}}/uploads/20131229/9488_1.png)
 
 博客开张了, 又是一个新的起点!
 
