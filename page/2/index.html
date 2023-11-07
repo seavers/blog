@@ -15,7 +15,7 @@
       
   
     
-      全屏图片查看器 fullscreen picture viewer
+      ruby spider
     
     
       
@@ -35,8 +35,9 @@
   
 
 
-  全屏图片查看器是一个chrome扩展
-可...">
+  最近开始喜欢上研究ruby了,正好手头有一些抓取的需求,正好练练手
+
+在写爬虫时,我...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,6 +78,83 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013-12-23-ruby-spider.html">ruby spider</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-12-23T21:19:09+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近开始喜欢上研究ruby了,正好手头有一些抓取的需求,正好练练手</p>
+
+<p>在写爬虫时,我们总希望能方便的实现以下功能</p>
+
+<ul>
+  <li>类似curl的下载模块,提供URL即可获取下载内容</li>
+  <li>方便的网页分析工具,最好能提供类似css selector的元素选择器</li>
+  <li>简单方便的数据处理模块</li>
+</ul>
+
+<!--more-->
+
+<p>写个简单的例子</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#encoding:utf-8
+require 'open-uri'
+require 'nokogiri'
+
+def spide
+    url = "http://home.photo.qq.com/index.php?mod=activity&amp;act=detail&amp;category_id=1"
+
+    html = open(url).read
+    doc = Nokogiri::HTML(html)
+
+    list = doc.search('.photo-list li img')
+    list.each { |x|
+        src = x.attr('src')
+        puts src.gsub(/400/, '800');
+    }
+end
+
+spide
+
+</code></pre></div></div>
+
+<p>其中:</p>
+
+<ol>
+  <li>open-uri模块用于实现curl的功能, open后read即可</li>
+  <li>Nokogiri为html分析模块,支持css selector式的元素选择</li>
+  <li>而ruby本身的特点, 则可快速处理数据</li>
+</ol>
+
+<p>抓到图片URL后,剩下的就容易多了,都下载下来吧~~</p>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013-12-16-fullscreen-picture-viewer.html">全屏图片查看器 fullscreen picture viewer</a></h1>
     
     
@@ -97,12 +175,12 @@
   </header>
 
 
-  <div class="entry-content"><h2 id="chrome">全屏图片查看器是一个chrome扩展</h2>
+  <div class="entry-content"><h2 id="全屏图片查看器是一个chrome扩展">全屏图片查看器是一个chrome扩展</h2>
 <p>可以用于全屏查看图片,当查看网页时,按f键后,会隐藏掉网页里的其它内容,只留下大图</p>
 
 <!--more-->
 
-<h2 id="section">举一些实际的使用场景</h2>
+<h2 id="举一些实际的使用场景">举一些实际的使用场景</h2>
 
 <ul>
   <li>看一些图片时,发现旁边全是广告,直接屏蔽掉,只显示中间的大图</li>
@@ -110,7 +188,7 @@
   <li>查看所有的图片,直接寻找兴趣点</li>
 </ul>
 
-<h2 id="section-1">使用方式</h2>
+<h2 id="使用方式">使用方式</h2>
 <ul>
   <li>双击网页内的空白区</li>
   <li>按f键 (fullscreen的缩写)</li>
@@ -120,7 +198,7 @@
 <p>扩展下载: <a href="http://www.lianghaijun.com/download/fullscreen.crx">fullscreen.crx</a>
 源码浏览: <a href="https://github.com/seavers/fullscreen">github</a></p>
 
-<h2 id="section-2">试用</h2>
+<h2 id="试用">试用</h2>
 <ul>
   <li>图片大小的默认阀值是350px</li>
   <li>可以随便找个有大图的页面,按下f键体验一下</li>
@@ -164,7 +242,7 @@
 
 <p>建表</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>create external table hive_table (
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>create external table hive_table (
 	id int,
 	name string,
 	category string,
@@ -174,40 +252,36 @@ PARTITIONED BY (pt string)
 ROW FORMAT DELIMITED
    FIELDS TERMINATED BY ',' 
 STORED AS TEXTFILE
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>分组统计</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>select id,name,count(*),
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select id,name,count(*),
 	count(distinct category),collect_set(category),
 	count(distinct tag),collect_set(tag)
 from hive_table
 where pt='20131213'
 group by id,name
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>拆分多行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>select id,name,category_id
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select id,name,category_id
 from hive_table
 lateral view explode(split(category, ',')) category_table as category_id
 where pt='20131213'
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>过滤某些行</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>select h.*
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>select h.*
 from hive_table h
 left semi join
 girl_names g
 on h.name = g.name
 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -245,11 +319,10 @@ on h.name = g.name
 
 <!--more-->
 
-<div class="highlighter-rouge"><pre class="highlight"><code>	vi ~/.bash_aliases
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	vi ~/.bash_aliases
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>repeat() {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>repeat() {
     n=100
     s=1
 
@@ -273,21 +346,18 @@ on h.name = g.name
         sleep $s
     done
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>	source ~/.bash_aliases
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	source ~/.bash_aliases
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>	repeat ls -l
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	repeat ls -l
 	repeat date
 	repeat iostat
 	repeat -n 3 curl 'http://www.lianghaijun.com'
 	repeat -n 3 -s 300 curl 'http://www.lianghaijun.com'
 	repeat -n 3 -s 0.5 sh -c "curl -I -s 'http://www.lianghaijun.com' | head -1"
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -333,36 +403,32 @@ on h.name = g.name
 
 <!--more-->
 
-<h2 id="section">基础</h2>
+<h2 id="基础">基础</h2>
 
 <ul>
   <li>每个用户都有一个主分组, 以及多个次分组, 即一个用户可以属于多个分组</li>
 </ul>
 
-<h2 id="section-1">常用命令</h2>
+<h2 id="常用命令">常用命令</h2>
 
 <p>分组常用的几个操作</p>
 
-<p>查看自己的分组
-<code class="highlighter-rouge">
-seavers@seavers:/home/admin$ id
+<p>查看自己的分组</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>seavers@seavers:/home/admin$ id
 uid=1000(seavers) gid=1000(seavers) groups=1000(seavers),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),109(lpadmin),124(sambashare)
-</code></p>
+</code></pre></div></div>
 
-<p>查看所有的分组
-<code class="highlighter-rouge">
-	cat /etc/group
-</code></p>
+<p>查看所有的分组</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	cat /etc/group
+</code></pre></div></div>
 
-<p>查看某个用户所在的分组
-<code class="highlighter-rouge">
-	groups seavers
-</code></p>
+<p>查看某个用户所在的分组</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	groups seavers
+</code></pre></div></div>
 
-<p>增加用户到某个分组
-<code class="highlighter-rouge">
-	usermod seavers -a -G admin 
-</code></p>
+<p>增加用户到某个分组</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	usermod seavers -a -G admin 
+</code></pre></div></div>
 
 </div>
   
@@ -408,14 +474,13 @@ uid=1000(seavers) gid=1000(seavers) groups=1000(seavers),4(adm),24(cdrom),27(sud
 <p>实现之前, 参考了下这篇, <a href="http://imxylz.com/blog/2013/11/27/build-octopress-with-github-hook/">监听github，自动编译octopress博客</a>, 写的蛮不错的
 不过, 我的方案, 有些不同的地方</p>
 
-<h2 id="section">钩子</h2>
-<p>在github的项目设置的Service Hooks中添加一个WebHook URLs的钩子
-<code class="highlighter-rouge">
-	http://&lt;host&gt;:&lt;port&gt;/blog-update
-</code>
-而github钩子, 我采用的是ruby, 命名为hook.rb</p>
+<h2 id="钩子">钩子</h2>
+<p>在github的项目设置的Service Hooks中添加一个WebHook URLs的钩子</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	http://&lt;host&gt;:&lt;port&gt;/blog-update
+</code></pre></div></div>
+<p>而github钩子, 我采用的是ruby, 命名为hook.rb</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'socket'</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'socket'</span>
 
 <span class="n">server</span> <span class="o">=</span> <span class="no">TCPServer</span><span class="p">.</span><span class="nf">open</span> <span class="mi">4001</span>
 <span class="nb">puts</span> <span class="s2">"Listening on port "</span> <span class="o">+</span> <span class="n">server</span><span class="p">.</span><span class="nf">addr</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="nf">to_s</span>
@@ -435,38 +500,32 @@ uid=1000(seavers) gid=1000(seavers) groups=1000(seavers),4(adm),24(cdrom),27(sud
   <span class="c1">##system('rake deploy')</span>
   <span class="nb">puts</span> <span class="s1">''</span>
 <span class="p">}</span>
-</code></pre>
-</div>
-<p>然后启动为后台进程
-<code class="highlighter-rouge">
-   nohup ruby hook.rb &amp;
-</code>
-当github更新时,会触发hook时, 服务器运行ruby代码,执行shell脚本 
-<code class="highlighter-rouge">
-	git pull
+</code></pre></div></div>
+<p>然后启动为后台进程</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   nohup ruby hook.rb &amp;
+</code></pre></div></div>
+<p>当github更新时,会触发hook时, 服务器运行ruby代码,执行shell脚本</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	git pull
 	rake generate
-</code></p>
+</code></pre></div></div>
 
-<h2 id="section-1">部署</h2>
-<p>那服务器上如何来更新呢, 部署的时候, 是有两种方案的,一种是
-<code class="highlighter-rouge">
-	rake preview
-</code>
-然后nginx代理转发至preview的端口</p>
+<h2 id="部署">部署</h2>
+<p>那服务器上如何来更新呢, 部署的时候, 是有两种方案的,一种是</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	rake preview
+</code></pre></div></div>
+<p>然后nginx代理转发至preview的端口</p>
 
-<p>另一种方案是, nginx直接请求 _deploy 目录
-<code class="highlighter-rouge">
-	location /blog/ {
+<p>另一种方案是, nginx直接请求 _deploy 目录</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	location /blog/ {
 		alias ~/octopress/public/;
 	}
-</code></p>
+</code></pre></div></div>
 
-<h2 id="github">部署在github上</h2>
-<p>当然, 如果想在github.io上部署, 需要再同步至github.io, 如在刚才在hook.rb里修改
-<code class="highlighter-rouge">
-	rake deploy
-</code>
-这里要小心,这样改会死循环的. 
+<h2 id="部署在github上">部署在github上</h2>
+<p>当然, 如果想在github.io上部署, 需要再同步至github.io, 如在刚才在hook.rb里修改</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	rake deploy
+</code></pre></div></div>
+<p>这里要小心,这样改会死循环的. 
 deploy会触发git commit, commit再触发hook, hook里再deploy,再commit, 如此死循环
 所以需要在hook里判断是master还是source</p>
 
@@ -509,29 +568,25 @@ deploy会触发git commit, commit再触发hook, hook里再deploy,再commit, 如�
 
 <!--more-->
 
-<p>直接替换
-<code class="highlighter-rouge">
-  cat data.txt | sed 's/abc/def/g'
-</code></p>
+<p>直接替换</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  cat data.txt | sed 's/abc/def/g'
+</code></pre></div></div>
 
-<p>删掉空行
-<code class="highlighter-rouge">
-  cat data.txt | sed '/^$/d'
-</code></p>
+<p>删掉空行</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  cat data.txt | sed '/^$/d'
+</code></pre></div></div>
 
-<p>删除掉第一行
-<code class="highlighter-rouge">
-  cat data.txt | sed '1d'
-</code></p>
+<p>删除掉第一行</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  cat data.txt | sed '1d'
+</code></pre></div></div>
 
-<p>删除掉每行的第一个字符
-<code class="highlighter-rouge">
-  cat data.txt | sed 's/^.//g'
-</code></p>
+<p>删除掉每行的第一个字符</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  cat data.txt | sed 's/^.//g'
+</code></pre></div></div>
 
 <p>还有一些从<a href="http://baiqiuyi.com/linux/review-sed-command-for-unix-shell-book.html">其它地方</a>拷贝过来的</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sed '1,3d' file //删除1-3行
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sed '1,3d' file //删除1-3行
 sed '/[Aa]bc/p' file //打印包含Abc或者abc的行
 sed '/ABC/d' //删除包含ABC的行
 sed '/ABC/!d' //不删除包含ABC的行
@@ -552,8 +607,7 @@ sed 's/^/ /g' //每行前面增加一个空格
 sed 's/.(.)$/*1/' //将倒数第二位换成*
 sed '/ABC/!s/1/*/g' //在不包含ABC的行里,将所有的1替换成*
 sed 's/1|2|3/*/g' //在GNU里将不管是1或2或者是3替换成*
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>还有这个
 <a href="http://henter.me/post/sed-notes.html">http://henter.me/post/sed-notes.html</a>
@@ -652,13 +706,12 @@ sed 's/1|2|3/*/g' //在GNU里将不管是1或2或者是3替换成*
 
 <p>发现 octopress 是基于ruby 写的, 还是挺好用的</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>rake --help
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rake --help
 rake --tasks
 rake new_post[title]
 rake generate
 rake deploy
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>后续试试自动化, 外加git同步, 自动部署至服务器</p>
 </div>
@@ -696,50 +749,6 @@ rake deploy
   <div class="entry-content"><p>hello octopress</p>
 
 <p>2013-11-27</p>
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013-11-26-1981188.html">小清新网站标准</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-11-26T23:19:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><em>小清新网站标准</em>        纯属YY</p>
-
-<ul>
-  <li>采用微博登录</li>
-  <li>提供iphone,android,html5版本</li>
-  <li>采用小新清设计原则:  色块背景, 图文混排, 配色明亮, 合适留白</li>
-  <li>新删改采用ajax请求, 支持滚动式翻页</li>
-  <li>restful url</li>
-  <li>icon式文字, 文字式按钮</li>
-  <li>赞, 评论, 分享, 收藏, 加关注</li>
-</ul>
-
 </div>
   
   
@@ -823,11 +832,18 @@ rake deploy
 	
         <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
     
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
   </ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
@@ -845,18 +861,6 @@ rake deploy
         <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
-  <h1>大牛博客</h1>
-  <ul>
-    <li>
-      <a href="http://ithans.com/">ithans</a>
-    </li>
   </ul>
 </section>
 
@@ -866,13 +870,14 @@ rake deploy
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right">  <a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备13034675号-1 </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

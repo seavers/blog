@@ -15,7 +15,7 @@
       
   
     
-      wget 整站下载
+      小清新网站标准
     
     
       
@@ -35,9 +35,11 @@
   
 
 
-  下载整站
+  小清新网站标准        纯属YY
 
-wget -r -nv --restrict-file-names=noco...">
+
+  采用微博登录
+  提供iphone,andr...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -78,6 +80,50 @@ wget -r -nv --restrict-file-names=noco...">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013-11-26-1981188.html">小清新网站标准</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-11-26T23:19:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><em>小清新网站标准</em>        纯属YY</p>
+
+<ul>
+  <li>采用微博登录</li>
+  <li>提供iphone,android,html5版本</li>
+  <li>采用小新清设计原则:  色块背景, 图文混排, 配色明亮, 合适留白</li>
+  <li>新删改采用ajax请求, 支持滚动式翻页</li>
+  <li>restful url</li>
+  <li>icon式文字, 文字式按钮</li>
+  <li>赞, 评论, 分享, 收藏, 加关注</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013-11-26-1980761.html">wget 整站下载</a></h1>
     
     
@@ -98,20 +144,17 @@ wget -r -nv --restrict-file-names=noco...">
   </header>
 
 
-  <div class="entry-content"><p>下载整站
-<code class="highlighter-rouge">
-wget -r -nv --restrict-file-names=nocontrol http://seavers.iteye.com/
-</code></p>
+  <div class="entry-content"><p>下载整站</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -r -nv --restrict-file-names=nocontrol http://seavers.iteye.com/
+</code></pre></div></div>
 
-<p>下载时可以加 -np, 不下载父目录
-<code class="highlighter-rouge">
-wget -r -nv --restrict-file-names=nocontrol -np http://seavers.iteye.com/blog/
-</code></p>
+<p>下载时可以加 -np, 不下载父目录</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -r -nv --restrict-file-names=nocontrol -np http://seavers.iteye.com/blog/
+</code></pre></div></div>
 
-<p>下载时, 加入断点续传
-<code class="highlighter-rouge">
-wget -r -nv -c --restrict-file-names=nocontrol http://seavers.iteye.com/
-</code></p>
+<p>下载时, 加入断点续传</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wget -r -nv -c --restrict-file-names=nocontrol http://seavers.iteye.com/
+</code></pre></div></div>
 
 <ul>
   <li>
@@ -157,19 +200,17 @@ wget -r -nv -c --restrict-file-names=nocontrol http://seavers.iteye.com/
 
   <div class="entry-content"><p>sudo vi /sbin/ipconfig</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c">#! /bin/bash</span>
-<span class="k">for </span>word <span class="k">in</span> <span class="sb">`</span>ifconfig eth0 | grep <span class="s2">"inet addr"</span> | sed  <span class="s1">'s/          inet addr/addr/g'</span><span class="sb">`</span>; <span class="k">do </span><span class="nb">echo</span> <span class="nv">$word</span> | sed <span class="s1">'s/:/\t/g'</span>; <span class="k">done
-</span>route -n | awk <span class="s1">'/UG/ {printf "gateway    %-21s %s\n", $2,$8}'</span> ;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#! /bin/bash
+for word in `ifconfig eth0 | grep "inet addr" | sed  's/          inet addr/addr/g'`; do echo $word | sed 's/:/\t/g'; done
+route -n | awk '/UG/ {printf "gateway    %-21s %s\n", $2,$8}' ;
 grep nameserver /etc/resolv.conf ;
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sudo chmod +x /sbin/ipconfig
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo chmod +x /sbin/ipconfig
 
 ipconfig
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <hr />
 <p>待改进</p>
@@ -215,24 +256,24 @@ ipconfig
 
 <ol>
   <li>ubuntu进入windows网络,必须安装samba
-<code class="highlighter-rouge">
-sudo apt-get install samba
-</code></li>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install samba
+</code></pre></div>    </div>
+  </li>
   <li>修改/etc/samba/smb.conf, 将wins server修改为正确的ip
    可以在windows上, 敲入ipconfig /all得到具体ip</li>
   <li>重启服务
-<code class="highlighter-rouge">
-sudo service nmbd restart
-</code></li>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo service nmbd restart
+</code></pre></div>    </div>
+  </li>
   <li>验证下
-<code class="highlighter-rouge">
-nmblookup -R -U &lt;wins_server_ip&gt; &lt;hostname&gt;
-</code></li>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nmblookup -R -U &lt;wins_server_ip&gt; &lt;hostname&gt;
+</code></pre></div>    </div>
+  </li>
   <li>这时windows就可访问ubuntu,可以直接ping通</li>
   <li>ubuntu互ping, 需要设置search domain
-<code class="highlighter-rouge">
-echo 'search abc.com' &gt;&gt; /etc/resolv.conf
-</code></li>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>echo 'search abc.com' &gt;&gt; /etc/resolv.conf
+</code></pre></div>    </div>
+  </li>
 </ol>
 
 <hr />
@@ -257,7 +298,7 @@ echo 'search abc.com' &gt;&gt; /etc/resolv.conf
 
 <p>nsswitch.conf是SUN公司开发的一种扩充（name services switch）</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code># /etc/nsswitch.conf
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># /etc/nsswitch.conf
 #
 # Example configuration of GNU Name Service Switch functionality.
 # If you have the `glibc-doc-reference' and `info' packages installed, try:
@@ -275,8 +316,7 @@ publickey:  NIS+及NFS 所使用的secure_rpc的公开密匙.
 rpc:        远程过程调用名及调用号, getrpcbyname(3) 及类似函数使用该文件. 
 services:   网络服务, getservent(3) 函数使用该文件. 
 shadow:     shadow用户口令, getspnam(3) 函数使用该文件.
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>=====================</p>
 
@@ -295,10 +335,12 @@ shadow:     shadow用户口令, getspnam(3) 函数使用该文件.
 <p>Dnsmasq is a lightweight, easy to configure DNS forwarder and DHCP server. 
 https://wiki.archlinux.org/index.php/Dnsmasq_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)</p>
 
-<p>stop dnsmasq:
-1. sudo vi /etc/NetworkManager/NetworkManager.conf
-2. comment  dns=dnsmasq
-3. sudo service network-manager restart</p>
+<p>stop dnsmasq:</p>
+<ol>
+  <li>sudo vi /etc/NetworkManager/NetworkManager.conf</li>
+  <li>comment  dns=dnsmasq</li>
+  <li>sudo service network-manager restart</li>
+</ol>
 </div>
   
   
@@ -436,54 +478,49 @@ sudo apt-get –purge remove gconf2</p>
 
 <p>如我们的系统使用的是spring3.1.2, 但是依赖的二方包中, 总是或多或少依赖了spring2.5.6, 希望有个方法, 能全局去除掉</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;!-- globally exclusion --&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;!-- globally exclusion --&gt;
 &lt;dependency&gt;
 	&lt;groupId&gt;org.springframework&lt;/groupId&gt;
 	&lt;artifactId&gt;spring&lt;/artifactId&gt;
 	&lt;version&gt;2.5.6.SEC03&lt;/version&gt;
 	&lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>以上方式, 有个弊端, 就是eclipse中, 还是会依赖, 且容易用混</p>
 
-<p>有三个方案(建议使用第三种)
-```</p>
-<dependency>
-	<groupid>org.springframework</groupid>
-	<artifactid>spring</artifactid>
-	<version>99.0-does-not-exist</version>
-	<scope>provided</scope>
-</dependency>
-<div class="highlighter-rouge"><pre class="highlight"><code>
-</code></pre>
-</div>
-<dependency>
-	<groupid>org.springframework</groupid>
-	<artifactid>spring</artifactid>
-	<version>2.5.6</version>
-	<scope>system</scope>
-	<systempath>${basedir}/lib/empty.jar</systempath>
-</dependency>
-<div class="highlighter-rouge"><pre class="highlight"><code>
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>		&lt;plugin&gt;
-			&lt;artifactId&gt;maven-eclipse-plugin&lt;/artifactId&gt;
-			&lt;configuration&gt;
-				&lt;downloadSources&gt;true&lt;/downloadSources&gt;
-				&lt;downloadJavadocs&gt;true&lt;/downloadJavadocs&gt;
-				&lt;classpathContainers&gt;
-					&lt;classpathContainer&gt;org.eclipse.jdt.launching.JRE_CONTAINER&lt;/classpathContainer&gt;
-				&lt;/classpathContainers&gt;
-				&lt;excludes&gt;
-					&lt;exclude&gt;org.springframework:spring&lt;/exclude&gt;
-				&lt;/excludes&gt;
-			&lt;/configuration&gt;
-		&lt;/plugin&gt; ```
-</code></pre>
-</div>
+<p>有三个方案(建议使用第三种)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+	&lt;artifactId&gt;spring&lt;/artifactId&gt;
+	&lt;version&gt;99.0-does-not-exist&lt;/version&gt;
+	&lt;scope&gt;provided&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework&lt;/groupId&gt;
+	&lt;artifactId&gt;spring&lt;/artifactId&gt;
+	&lt;version&gt;2.5.6&lt;/version&gt;
+	&lt;scope&gt;system&lt;/scope&gt;
+	&lt;systemPath&gt;${basedir}/lib/empty.jar&lt;/systemPath&gt;
+&lt;/dependency&gt;
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>			&lt;plugin&gt;
+				&lt;artifactId&gt;maven-eclipse-plugin&lt;/artifactId&gt;
+				&lt;configuration&gt;
+					&lt;downloadSources&gt;true&lt;/downloadSources&gt;
+					&lt;downloadJavadocs&gt;true&lt;/downloadJavadocs&gt;
+					&lt;classpathContainers&gt;
+						&lt;classpathContainer&gt;org.eclipse.jdt.launching.JRE_CONTAINER&lt;/classpathContainer&gt;
+					&lt;/classpathContainers&gt;
+					&lt;excludes&gt;
+						&lt;exclude&gt;org.springframework:spring&lt;/exclude&gt;
+					&lt;/excludes&gt;
+				&lt;/configuration&gt;
+			&lt;/plugin&gt;
+</code></pre></div></div>
 
 </div>
   
@@ -526,9 +563,8 @@ Q: Class.forName(“[Ljava.lang.String;”)</p>
 <p>因此: 
 在sqlmap-config.xml可以这样写</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;typeHandler javaType="[Ljava.util.String;" callback="xxxxxx.StringArrayTypeHandler" /&gt;
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;typeHandler javaType="[Ljava.util.String;" callback="xxxxxx.StringArrayTypeHandler" /&gt;
+</code></pre></div></div>
 
 </div>
   
@@ -569,21 +605,20 @@ java.sql.SQLException: Cannot convert value ‘0000-00-00 00:00:00’ from colum
 
 <p>解决方案: 替换掉系统默认的 typehandler, 抛出异常时,改为null</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="GBK"?&gt;</span>
-<span class="cp">&lt;!DOCTYPE sqlMapConfig
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;?xml version="1.0" encoding="GBK"?&gt;
+&lt;!DOCTYPE sqlMapConfig
  PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN"
- "http://www.ibatis.com/dtd/sql-map-config-2.dtd"&gt;</span>
-<span class="nt">&lt;sqlMapConfig&gt;</span>
-	<span class="nt">&lt;settings</span> 
-		<span class="na">cacheModelsEnabled=</span><span class="s">"true"</span> 
-	<span class="nt">/&gt;</span>
-	<span class="nt">&lt;typeHandler</span> <span class="na">javaType=</span><span class="s">"java.util.Date"</span> <span class="na">callback=</span><span class="s">"xxxxxxxxx.CustomDateTypeHandler"</span> <span class="nt">/&gt;</span>
+ "http://www.ibatis.com/dtd/sql-map-config-2.dtd"&gt;
+&lt;sqlMapConfig&gt;
+	&lt;settings 
+		cacheModelsEnabled="true" 
+	/&gt;
+	&lt;typeHandler javaType="java.util.Date" callback="xxxxxxxxx.CustomDateTypeHandler" /&gt;
 	
-	<span class="nt">&lt;sqlMap</span> <span class="na">resource=</span><span class="s">"sqlmap/sqlmap-price.xml"</span> <span class="nt">/&gt;</span>	
-<span class="nt">&lt;/sqlMapConfig&gt;</span>
+	&lt;sqlMap resource="sqlmap/sqlmap-price.xml" /&gt;	
+&lt;/sqlMapConfig&gt;
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>这里需要注意的是</p>
 
@@ -594,7 +629,7 @@ java.sql.SQLException: Cannot convert value ‘0000-00-00 00:00:00’ from colum
 
 <p>下面是自定义的datetypehandler</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>package xxxxxxxxx;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>package xxxxxxxxx;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -642,8 +677,7 @@ public class CustomDateTypeHandler extends DateTypeHandler {
 	}
 
 }
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -684,53 +718,6 @@ public class CustomDateTypeHandler extends DateTypeHandler {
 
 <p>比如: archive.ubuntu.com,   连接不上, 可换成 cn.archive.ubuntu.com
 或者: 网络有代理, 什么的被拦截了</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013-06-28-1895665.html">ubuntu安装maven3</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-06-28T13:39:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ubuntu 安装 maven3的方法就是</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>  sudo apt-get install maven
-</code></pre>
-</div>
-
-<p>一直以来, 以为 install maven安装的是 maven1.x
-而 install maven2 安装的是 maven2.x
-而看到某些论坛说安装maven3, 要使用 ppa ,
-后来才知道错了</p>
-
-<p>install maven 安装的就是最新版本的maven</p>
-
-<p>在  12.04, 13.04 测试通过</p>
 
 </div>
   
@@ -815,11 +802,18 @@ public class CustomDateTypeHandler extends DateTypeHandler {
 	
         <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
     
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
   </ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
@@ -837,18 +831,6 @@ public class CustomDateTypeHandler extends DateTypeHandler {
         <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
-  <h1>大牛博客</h1>
-  <ul>
-    <li>
-      <a href="http://ithans.com/">ithans</a>
-    </li>
   </ul>
 </section>
 
@@ -858,13 +840,14 @@ public class CustomDateTypeHandler extends DateTypeHandler {
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right">  <a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备13034675号-1 </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

@@ -15,7 +15,7 @@
       
   
     
-      display, position, float 之间的关系
+      with语句的本质
     
     
       
@@ -35,8 +35,9 @@
   
 
 
-  从 css2.1 规范中翻译而来
-出处见: h...">
+  通过测试及debug后, 得出结论, 仅代表个人意见:
+
+with的本质, 就是构造一个...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -71,6 +72,104 @@
     <div id="content">
       <div class="blog-index">
   
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011-10-01-1184400.html">with语句的本质</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2011-10-01T23:41:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>通过测试及debug后, 得出结论, 仅代表个人意见:</p>
+
+<p>with的本质, 就是构造一个作用域, 将with的对象的所有key, 声明为局部变量</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+var inner = '123';
+var outer = {inner : 'hello world', another: 'hello with'};
+window.obj = {outer: outer};
+
+with(outer) {
+	alert(inner);
+	alert(another);
+	alert(outer.inner);
+	alert(window.obj.outer.inner);
+	show();
+}
+
+
+function show() {
+	alert(inner);
+
+}
+</code></pre></div></div>
+
+<p>等同于以下代码</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+var inner = '123';
+var outer = {inner : 'hello world', another: 'hello with'};
+window.obj = {outer: outer};
+
+(function(inner, another) {
+	alert(inner);
+	alert(another);
+	alert(outer.inner);
+	alert(window.obj.outer.inner);
+	show();
+})(outer.inner, outer.another);
+
+
+function show() {
+	alert(inner);
+
+}
+
+</code></pre></div></div>
+
+<p>再看看下面这个常见的问题, 一目了然</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>var root = { 
+    branch: { 
+        node: 1 
+    } 
+}; 
+
+with(root.branch) { 
+    root.branch = { 
+        node: 0 
+    }; 
+    // 显示 1, 错误! 
+    alert(node); 
+} 
+// 显示 0, 正确! 
+alert(root.branch.node); 
+</code></pre></div></div>
+
+</div>
+  
+  
+
+
+    </article>
   
     
     <article>
@@ -863,11 +962,10 @@
 
 <p>KISSY 实现:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>input.placeholder {color:#999}
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>input.placeholder {color:#999}
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;script src="http://a.tbcdn.cn/s/kissy/1.1.6/kissy-min.js"&gt;&lt;/script&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;script src="http://a.tbcdn.cn/s/kissy/1.1.6/kissy-min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 //本代码发布在 http://seavers.iteye.com/ , 未经同意,谢绝转载
 //模拟了placeholder 80%的功能
@@ -926,8 +1024,7 @@
 })();
 
 &lt;/script&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -1258,10 +1355,12 @@ cat 2011-01-05-access.log | awk ‘{print $1}’ | sort | uniq -c | sort -k1,1nr
 
 <p>————————————&gt;</p>
 
-<p>假设以下皆可实现
-1. 对数据bean操作自动保存至缓冲服务器, 根据缓冲策略刷新至数据库服务器
-2. 缓冲服务器选择性支持以下缓冲,单条缓冲,分页缓冲,TOP缓冲,分类缓冲,自增缓冲
-3. 数据bean是有版本的,服务bean,及服务bean中的每个方法也是有版本的</p>
+<p>假设以下皆可实现</p>
+<ol>
+  <li>对数据bean操作自动保存至缓冲服务器, 根据缓冲策略刷新至数据库服务器</li>
+  <li>缓冲服务器选择性支持以下缓冲,单条缓冲,分页缓冲,TOP缓冲,分类缓冲,自增缓冲</li>
+  <li>数据bean是有版本的,服务bean,及服务bean中的每个方法也是有版本的</li>
+</ol>
 
 <p>————————————&gt;</p>
 
@@ -1275,41 +1374,6 @@ cat 2011-01-05-access.log | awk ‘{print $1}’ | sort | uniq -c | sort -k1,1nr
 
 <p>未完待续…</p>
 
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010-04-06-634841.html">统计使用~~~勿入~~~~</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2010-04-06T19:27:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>更新日期    2010.04.06 19：31</p>
-
-<p>2323</p>
 </div>
   
   
@@ -1393,11 +1457,18 @@ cat 2011-01-05-access.log | awk ‘{print $1}’ | sort | uniq -c | sort -k1,1nr
 	
         <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
     
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
   </ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
@@ -1415,18 +1486,6 @@ cat 2011-01-05-access.log | awk ‘{print $1}’ | sort | uniq -c | sort -k1,1nr
         <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
-  <h1>大牛博客</h1>
-  <ul>
-    <li>
-      <a href="http://ithans.com/">ithans</a>
-    </li>
   </ul>
 </section>
 
@@ -1436,13 +1495,14 @@ cat 2011-01-05-access.log | awk ‘{print $1}’ | sort | uniq -c | sort -k1,1nr
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right">  <a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备13034675号-1 </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

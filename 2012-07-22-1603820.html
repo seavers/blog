@@ -95,29 +95,28 @@
 而链接的url中, 我们没有现成的API可以获取这些参数
 下面是一个小方法, 可以得到链接中的各种参数</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseURL</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseURL</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
 	<span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="p">{};</span>
 	<span class="nx">ret</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
 
 	<span class="kd">var</span> <span class="nx">match</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^</span><span class="se">([^\/</span><span class="sr">:</span><span class="se">]</span><span class="sr">+:</span><span class="se">)?(?:\/\/([^\/</span><span class="sr">:</span><span class="se">]</span><span class="sr">*</span><span class="se">)(?:</span><span class="sr">:</span><span class="se">([\d]</span><span class="sr">+</span><span class="se">))?)?(\/?[^\?</span><span class="sr">#</span><span class="se">]</span><span class="sr">*</span><span class="se">)?(\?[^\#]</span><span class="sr">*</span><span class="se">)?(</span><span class="sr">#.*</span><span class="se">)?</span><span class="sr">$/i</span><span class="p">);</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">match</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">ret</span><span class="p">.</span><span class="nx">isValid</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="p">?</span> <span class="s1">':'</span> <span class="p">:</span> <span class="s1">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">||</span> <span class="s2">"/"</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">origin</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="p">?</span> <span class="s1">'//'</span> <span class="p">:</span> <span class="s1">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">search</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">hash</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">:</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">||</span> <span class="dl">"</span><span class="s2">/</span><span class="dl">"</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">origin</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">//</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">search</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">hash</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
 	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 		<span class="nx">ret</span><span class="p">.</span><span class="nx">isValid</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 		<span class="nx">ret</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
 
@@ -142,7 +141,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/javascript/'>javascript</a>
+    javascript
   
 </span>
 
@@ -167,30 +166,106 @@
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -198,13 +273,14 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

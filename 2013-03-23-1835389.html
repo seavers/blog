@@ -112,39 +112,42 @@
   <li>mac呢</li>
 </ol>
 
-<p>name到ip的映射有以下几个方式
-1. /etc/hosts的方式, 用户自行配置的, 优先级最高
-2. wins  windows用于解析名字的服务
-3. mdns 是apple发明的, ubuntu下也可以使用
-4. dns服务, 通常由ISP提供,  一般局域网搜不到, 就要去外网搜了
+<p>name到ip的映射有以下几个方式</p>
+<ol>
+  <li>/etc/hosts的方式, 用户自行配置的, 优先级最高</li>
+  <li>wins  windows用于解析名字的服务</li>
+  <li>mdns 是apple发明的, ubuntu下也可以使用</li>
+  <li>dns服务, 通常由ISP提供,  一般局域网搜不到, 就要去外网搜了
 另外:
-wins 的服务, 有时会有域服务器来提供服务</p>
+wins 的服务, 有时会有域服务器来提供服务</li>
+</ol>
 
-<p>由此: windows 与 ubuntu 下互通name, 需要敲定要走 wins还是mdns
-1. windows 下默认支持 wins 服务, 有服务器,也有客户端支持
-2. ubuntu下走wins,  可以安装 samba , 由 nmbd服务器提供服务端
-3. ubuntu 下 ping wins, 可以在 smb.conf 下配置 wins server
-4. windows 下走 mdns 服务, 可以安装apple的itunes, 由bonjour提供服务端
-5. ubuntu 下安装 mdns服务, 可使用 avahi-demon 来提供 mdns 服务
-6. ubuntu 下解析 mdns, 可以在 /etc/resolv.conf 中配置, 由 dnsmasq 来提供解析
-7. mac 上默认提供了 mdns 与 wins</p>
+<p>由此: windows 与 ubuntu 下互通name, 需要敲定要走 wins还是mdns</p>
+<ol>
+  <li>windows 下默认支持 wins 服务, 有服务器,也有客户端支持</li>
+  <li>ubuntu下走wins,  可以安装 samba , 由 nmbd服务器提供服务端</li>
+  <li>ubuntu 下 ping wins, 可以在 smb.conf 下配置 wins server</li>
+  <li>windows 下走 mdns 服务, 可以安装apple的itunes, 由bonjour提供服务端</li>
+  <li>ubuntu 下安装 mdns服务, 可使用 avahi-demon 来提供 mdns 服务</li>
+  <li>ubuntu 下解析 mdns, 可以在 /etc/resolv.conf 中配置, 由 dnsmasq 来提供解析</li>
+  <li>mac 上默认提供了 mdns 与 wins</li>
+</ol>
 
-<p>因此, 不动 windows, 可以在 ubuntu 中安装以下服务
-```
-sudo apt-get install samba
+<p>因此, 不动 windows, 可以在 ubuntu 中安装以下服务</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install samba
 sudo apt-get install avahi-daemon
-sudo apt-get install libnss-mdns             ##necessary?</p>
+sudo apt-get install libnss-mdns             ##necessary?
 
-<p>sudo vi /etc/nsswitch.conf   (hosts:          files mdns4_minimal dns)
-sudo vi /etc/samba/smb.conf</p>
+sudo vi /etc/nsswitch.conf   (hosts:          files mdns4_minimal dns)
+sudo vi /etc/samba/smb.conf
 
-<p>sudo service smbd restart
+sudo service smbd restart
 sudo service nmbd restart
 //sudo service avahi-daemon restart
-sudo dnsmasq</p>
+sudo dnsmasq
 
-<p>sudo service networking restart
-```</p>
+sudo service networking restart
+</code></pre></div></div>
 
 <p>如果ubuntu一直ping不通mac.local or ipad.local,请尝试重启
 这样, 在 windows, ubuntu, mac 下互相ping hostname就OK了
@@ -182,7 +185,7 @@ https://wiki.archlinux.org/index.php/Avahi</p>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+    ubuntu
   
 </span>
 
@@ -207,30 +210,106 @@ https://wiki.archlinux.org/index.php/Avahi</p>
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -238,13 +317,14 @@ https://wiki.archlinux.org/index.php/Avahi</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

@@ -94,13 +94,13 @@ archetyp...">
 
 <div class="entry-content"><p>今天遇到了maven创建archetype多模块工程时的很多问题, 记录一下</p>
 
-<h4 id="archetype">archetype工程的创建可以参考:</h4>
+<h4 id="archetype工程的创建可以参考">archetype工程的创建可以参考:</h4>
 <ul>
   <li><a href="http://maven.apache.org/archetype/maven-archetype-plugin/index.html">官方入口</a></li>
   <li><a href="http://maven.apache.org/archetype/maven-archetype-plugin/examples/create-multi-module-project.html">官方文档</a></li>
 </ul>
 
-<h4 id="section">问题如下:</h4>
+<h4 id="问题如下">问题如下:</h4>
 
 <ul>
   <li>多模块时生成archetype-metadata.xml的问题
@@ -117,26 +117,25 @@ archetyp...">
   </li>
 </ul>
 
-<h4 id="section-1">解决方案如下:</h4>
+<h4 id="解决方案如下">解决方案如下:</h4>
 <ul>
   <li>将.gitignore改名为__gitignore__</li>
   <li>创建archetype.properties文件</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>## generate for archetype-metadata.xml
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## generate for archetype-metadata.xml
 excludePatterns=archetype.properties,*.iml,.idea/,.idea/libraries,logs/,build.sh
 
 
 ## generate .gitignore file
 gitignore=.gitignore
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>修改pom文件, 多模块工程最外层的pom文件</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    &lt;build&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    &lt;build&gt;
         &lt;plugins&gt;
             &lt;plugin&gt;
                 &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
@@ -156,8 +155,7 @@ gitignore=.gitignore
             &lt;/plugin&gt;
         &lt;/plugins&gt;
     &lt;/build&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>完美解决以上两个问题</p>
 </div>
@@ -183,7 +181,7 @@ gitignore=.gitignore
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/maven/'>maven</a>
+    maven
   
 </span>
 
@@ -202,34 +200,112 @@ gitignore=.gitignore
         <a class="basic-alignment left" href="/blog/2016-02-12-java-native-list.html" title="Previous Post: java native方法列表">&laquo; java native方法列表</a>
       
       
+        <a class="basic-alignment right" href="/blog/2023-09-16-cubie-rubik-using-group-theory.html" title="Next Post: 利用群论来研究魔方">利用群论来研究魔方 &raquo;</a>
+      
     </p>
   </footer>
 </article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
 
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -237,13 +313,14 @@ gitignore=.gitignore
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

@@ -35,8 +35,7 @@
 在cubieboard上测试了下无线网卡, ubuntu上也应该是适用的
 
 要求:
-
-sudo apt-get insta...">
+sudo apt-get instal...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -96,28 +95,26 @@ sudo apt-get insta...">
 
 <div class="entry-content"><p>在cubieboard上测试了下无线网卡, ubuntu上也应该是适用的</p>
 
-<p>要求:
-<code class="highlighter-rouge">
-sudo apt-get install wpasupplicant
-</code></p>
+<p>要求:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install wpasupplicant
+</code></pre></div></div>
 
 <p>插上无线网卡后, 在ifconfig里看到了wlan0</p>
 
 <p>然后在 /etc/network/interfaces 里添加四行即可, 完整的见下</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>auto lo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto lo
 iface lo inet loopback
 
 auto wlan0
 iface wlan0 inet dhcp   
 wpa-ssid  &lt;you wlan ssid&gt;
 wpa-psk   &lt;your wlan password&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>然后重启网络生效</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>//关闭再开启wlan0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//关闭再开启wlan0
 sudo ifdown wlan0
 sudo ifup wlan0
 
@@ -127,8 +124,7 @@ sudo service networking start
 
 //或者重启,有时需要执行两次, 执行时会有提示
 sudo service networking restart
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>网上说的wpa打头的各类配置经测试可以省略,  我这里是 tp-link wpa2-psk的安全配置</li>
@@ -174,7 +170,7 @@ http://www.raspberrypi.org/phpBB3/viewtopic.php?f=27&amp;t=7592</p>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+    ubuntu
   
 </span>
 
@@ -199,30 +195,106 @@ http://www.raspberrypi.org/phpBB3/viewtopic.php?f=27&amp;t=7592</p>
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -230,13 +302,14 @@ http://www.raspberrypi.org/phpBB3/viewtopic.php?f=27&amp;t=7592</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

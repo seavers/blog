@@ -107,7 +107,7 @@
  require(deps, callback)   其中 callback(dep1, dep2, dep3…)</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nx">define</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 	
 	<span class="kd">var</span> <span class="nx">modules</span> <span class="o">=</span> <span class="p">{};</span>
@@ -122,13 +122,13 @@
 		<span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">isString</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'string'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'[object Array]'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">[object Array]</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">isFunction</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'function'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">function</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">mix</span><span class="p">(</span><span class="nx">src</span><span class="p">,</span> <span class="nx">dst</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">dst</span><span class="p">)</span> <span class="p">{</span>
@@ -136,20 +136,20 @@
 		<span class="p">}</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">getScript</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">"script"</span><span class="p">);</span>
-		<span class="nx">node</span><span class="p">.</span><span class="nx">async</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+		<span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="dl">"</span><span class="s2">script</span><span class="dl">"</span><span class="p">);</span>
+		<span class="nx">node</span><span class="p">.</span><span class="k">async</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
 		<span class="k">if</span> <span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">node</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+			<span class="nx">node</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">load</span><span class="dl">'</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
 		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 			<span class="nx">node</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-				<span class="k">if</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="s1">'loaded'</span> <span class="o">||</span> <span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="s1">'complete'</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">loaded</span><span class="dl">'</span> <span class="o">||</span> <span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">complete</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
 					<span class="nx">callback</span> <span class="o">&amp;&amp;</span> <span class="nx">callback</span><span class="p">();</span>
 				<span class="p">}</span>
 			<span class="p">}</span>
 		<span class="p">}</span>
 		<span class="nx">node</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
 
-		<span class="kd">var</span> <span class="nx">head</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">head</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'head'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">;</span>
+		<span class="kd">var</span> <span class="nx">head</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">head</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="dl">'</span><span class="s1">head</span><span class="dl">'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">;</span>
 		<span class="nx">head</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">head</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
 		<span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
 	<span class="p">}</span>
@@ -161,9 +161,9 @@
 			<span class="k">return</span> <span class="nb">document</span><span class="p">.</span><span class="nx">currentScript</span><span class="p">;</span>
 		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">attachEvent</span><span class="p">)</span> <span class="p">{</span>
 			<span class="c1">//ie6-9 得到当前正在执行的script标签</span>
-			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span>
+			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="dl">'</span><span class="s1">script</span><span class="dl">'</span><span class="p">);</span>
 			<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">scripts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
-				<span class="k">if</span> <span class="p">(</span><span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">readyState</span> <span class="o">===</span> <span class="s1">'interactive'</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">readyState</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">interactive</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
 					<span class="k">return</span> <span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
 				<span class="p">}</span>
 			<span class="p">}</span>
@@ -180,13 +180,13 @@
 				<span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
 			<span class="c1">// chrome uses at, ff uses @</span>
 
-			<span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">' at '</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span> <span class="p">?</span> <span class="s1">' at '</span> <span class="p">:</span> <span class="s1">'@'</span><span class="p">;</span>
+			<span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">'</span><span class="s1"> at </span><span class="dl">'</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span> <span class="p">?</span> <span class="dl">'</span><span class="s1"> at </span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">@</span><span class="dl">'</span><span class="p">;</span>
 			<span class="k">while</span> <span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
 				<span class="nx">stack</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
 			<span class="p">}</span>
-			<span class="nx">stack</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/:</span><span class="se">\d</span><span class="sr">+:</span><span class="se">\d</span><span class="sr">+$/ig</span><span class="p">,</span> <span class="s2">""</span><span class="p">);</span>
+			<span class="nx">stack</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/:</span><span class="se">\d</span><span class="sr">+:</span><span class="se">\d</span><span class="sr">+$/ig</span><span class="p">,</span> <span class="dl">""</span><span class="p">);</span>
 
-			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span>
+			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="dl">'</span><span class="s1">script</span><span class="dl">'</span><span class="p">);</span>
 			<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">scripts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
 				<span class="k">if</span> <span class="p">(</span><span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">src</span> <span class="o">===</span> <span class="nx">stack</span><span class="p">)</span> <span class="p">{</span>
 					<span class="k">return</span> <span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
@@ -259,7 +259,7 @@
 
 		<span class="nx">deps</span> <span class="o">=</span> <span class="nx">deps</span> <span class="o">||</span> <span class="p">[];</span>
 		<span class="k">if</span> <span class="p">(</span><span class="nx">isString</span><span class="p">(</span><span class="nx">deps</span><span class="p">))</span> <span class="p">{</span>
-			<span class="nx">deps</span> <span class="o">=</span> <span class="nx">deps</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">','</span><span class="p">);</span>
+			<span class="nx">deps</span> <span class="o">=</span> <span class="nx">deps</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">);</span>
 		<span class="p">}</span>
 		<span class="kd">var</span> <span class="nx">allDeps</span> <span class="o">=</span> <span class="nx">map</span><span class="p">(</span><span class="nx">deps</span><span class="p">,</span> <span class="nx">tran</span><span class="p">);</span>				<span class="c1">//全部转换映射</span>
 
@@ -282,17 +282,16 @@
 
 	<span class="kd">function</span> <span class="nx">tran</span><span class="p">(</span><span class="nx">dep</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">alias</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">dep</span> <span class="o">=</span> <span class="nx">dep</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s1">'^'</span> <span class="o">+</span> <span class="nx">key</span><span class="p">),</span> <span class="nx">alias</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>		<span class="c1">//TODO</span>
+			<span class="nx">dep</span> <span class="o">=</span> <span class="nx">dep</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="dl">'</span><span class="s1">^</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">key</span><span class="p">),</span> <span class="nx">alias</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>		<span class="c1">//TODO</span>
 		<span class="p">}</span>
-		<span class="k">return</span> <span class="nx">dep</span> <span class="o">+</span> <span class="s1">'.js'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="nx">dep</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">.js</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 
 	<span class="nx">define</span><span class="p">.</span><span class="nx">alias</span> <span class="o">=</span> <span class="nx">alias</span><span class="p">;</span>
 	<span class="k">return</span> <span class="nx">define</span><span class="p">;</span>
 <span class="p">})();</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>测试用例</p>
 
@@ -311,39 +310,37 @@ define(['ok/mod1', 'ok/mod2'], function(Mod1, Mod2) {
 
 </code></pre>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">//   http://localhost/loader/mod1.js</span>
-<span class="nx">require</span><span class="p">([</span><span class="s1">'ok/mod2'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Mod2</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'mod1 index '</span><span class="p">,</span> <span class="nx">Mod2</span><span class="p">);</span>
+<span class="nx">require</span><span class="p">([</span><span class="dl">'</span><span class="s1">ok/mod2</span><span class="dl">'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Mod2</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">mod1 index </span><span class="dl">'</span><span class="p">,</span> <span class="nx">Mod2</span><span class="p">);</span>
 
 	<span class="k">return</span> <span class="p">{</span>
-		<span class="na">mod1</span><span class="p">:</span> <span class="s1">'this is mod1'</span>
+		<span class="na">mod1</span><span class="p">:</span> <span class="dl">'</span><span class="s1">this is mod1</span><span class="dl">'</span>
 	<span class="p">}</span>
 <span class="p">});</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">//   http://localhost/loader/mod2.js</span>
 <span class="nx">define</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'mod2 index '</span><span class="p">);</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">mod2 index </span><span class="dl">'</span><span class="p">);</span>
 
 	<span class="k">return</span> <span class="p">{</span>
-		<span class="s1">'hello'</span> <span class="p">:</span> <span class="s1">'world'</span>
+		<span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">world</span><span class="dl">'</span>
 	<span class="p">}</span>
 <span class="p">});</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>补: 其它用法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">//mod3.js</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//mod3.js</span>
 <span class="c1">//功能模块1</span>
 <span class="nx">define</span><span class="p">({</span>
     <span class="na">sayHello</span> <span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'hello'</span><span class="p">);</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">});</span>
 
@@ -351,16 +348,15 @@ define(['ok/mod1', 'ok/mod2'], function(Mod1, Mod2) {
 <span class="nx">define</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="na">sayWorld</span> <span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'world'</span><span class="p">);</span>
+           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">world</span><span class="dl">'</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">});</span>
 
 
 
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 App = {define : define, require: define};
 App.define.alias['ok'] = 'http://lhj/loader';
 App.define({
@@ -382,8 +378,7 @@ App.define(function(Mod3) {
 App.showMsg(123);
 App.say();
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
 
 
@@ -407,7 +402,7 @@ App.say();
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/javascript/'>javascript</a>
+    javascript
   
 </span>
 
@@ -432,30 +427,106 @@ App.say();
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -463,13 +534,14 @@ App.say();
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

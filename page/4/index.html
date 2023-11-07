@@ -15,7 +15,7 @@
       
   
     
-      git 与 svn 同步
+      ubuntu安装maven3
     
     
       
@@ -35,10 +35,9 @@
   
 
 
-  svn 与 git 保持同步
+  ubuntu 安装 maven3的方法就是
 
-
-  先svn checkout url 把svn...">
+  sudo apt-get i...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -73,6 +72,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+    
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013-06-28-1895665.html">ubuntu安装maven3</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-06-28T13:39:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ubuntu 安装 maven3的方法就是</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sudo apt-get install maven
+</code></pre></div></div>
+
+<p>一直以来, 以为 install maven安装的是 maven1.x
+而 install maven2 安装的是 maven2.x
+而看到某些论坛说安装maven3, 要使用 ppa ,
+后来才知道错了</p>
+
+<p>install maven 安装的就是最新版本的maven</p>
+
+<p>在  12.04, 13.04 测试通过</p>
+
+</div>
+  
+  
+
+
+    </article>
   
     
     <article>
@@ -128,7 +173,7 @@
 <p>ignore.txt 中 加入  .git .gitignore
 .gitignore 中 加入  .svn</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>.svn
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>.svn
 bin
 target
 .settings
@@ -136,8 +181,7 @@ target
 .classpath
 
 /assets/node_modules
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -175,14 +219,13 @@ target
 
 <p>参考: http://wiki.nginx.org/HttpHeadersModule</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  expires       24h;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  expires       24h;
   expires       modified +24h;
   expires       @15h30m;
   expires       0;
   expires       -1;
   expires       epoch;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>@time 表示绝对过期时间, 基于一天的某个时间点来过期</p>
 
@@ -229,17 +272,15 @@ Times written with an @ prefix represent an absolute time-of-day expiry, written
 
   <div class="entry-content"><p>多数curlftpfs的例子是这样的</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sudo curlftpfs –o rw,allow_other ftp://username:password@192.168.1.111 /ftp
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo curlftpfs –o rw,allow_other ftp://username:password@192.168.1.111 /ftp
+</code></pre></div></div>
 
 <p>这种写法,有一个缺点,就是,当mount查看时, 会显示出密码</p>
 
 <p>换成另一种写法吧:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sudo curlftpfs -o rw,allow_other,user=username:password ftp://192.168.1.111 /ftp
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo curlftpfs -o rw,allow_other,user=username:password ftp://192.168.1.111 /ftp
+</code></pre></div></div>
 
 </div>
   
@@ -273,16 +314,14 @@ Times written with an @ prefix represent an absolute time-of-day expiry, written
   </header>
 
 
-  <div class="entry-content"><p>mount nfs后,　如果遇到服务器修改 /etc/exports 等原因时,经常会遇到
-<code class="highlighter-rouge">
-umount2: Stale NFS file handle
+  <div class="entry-content"><p>mount nfs后,　如果遇到服务器修改 /etc/exports 等原因时,经常会遇到</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>umount2: Stale NFS file handle
 umount: htdocs: Stale NFS file handle
-</code>
-或者
-<code class="highlighter-rouge">
-/var/www/html was not found in /proc/mounts
-</code>
-等问题</p>
+</code></pre></div></div>
+<p>或者</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/var/www/html was not found in /proc/mounts
+</code></pre></div></div>
+<p>等问题</p>
 
 <p>解决方案:</p>
 
@@ -375,10 +414,9 @@ umount: htdocs: Stale NFS file handle
 
 <p>碰到两次这个错误了,记录下解决方案</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get remove gvfs
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get remove gvfs
 sudo apt-get install ubuntu-desktop
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>原因不明,重装解决问题</p>
 
@@ -418,17 +456,15 @@ sudo apt-get install ubuntu-desktop
 
   <div class="entry-content"><p>批量转换GBK到UTF-8</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>find src | grep ".java" | grep -v ".svn" | xargs -I% echo "iconv -f GBK -t UTF-8 % &gt; %.temp " | bash
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find src | grep ".java" | grep -v ".svn" | xargs -I% echo "iconv -f GBK -t UTF-8 % &gt; %.temp " | bash
 find src | grep ".java" | grep -v ".svn" | grep -v ".temp" | xargs -I% echo "cp %.temp %" | bash
 find src | grep ".java" | grep -v ".svn" | grep ".temp" | xargs -I% echo "rm %" | bash
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<p>注意, 如果直接用
-<code class="highlighter-rouge">
-iconv -f GBK -t UTF-8 filename &gt; filename
-</code>
-会挂掉的, 导致filename清空,所以用的.temp</p>
+<p>注意, 如果直接用</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>iconv -f GBK -t UTF-8 filename &gt; filename
+</code></pre></div></div>
+<p>会挂掉的, 导致filename清空,所以用的.temp</p>
 
 </div>
   
@@ -488,11 +524,10 @@ iconv -f GBK -t UTF-8 filename &gt; filename
 
 <hr />
 
-<p>用maven编译android并部署
-<code class="highlighter-rouge">
-  export ANDROID_HOME=~/android/sdk/
+<p>用maven编译android并部署</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  export ANDROID_HOME=~/android/sdk/
   mvn clean package android:deploy android:run
-</code></p>
+</code></pre></div></div>
 
 <p>其中package中使用了 android-maven-plugin中的</p>
 
@@ -507,7 +542,7 @@ iconv -f GBK -t UTF-8 filename &gt; filename
 <p>这四个mvn指令,穿插在了package正常打包过程中
 这四个mvn指令,均是直接调用了android.sdk中的platform-tools中的某个指令或java调用</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;plugin&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;plugin&gt;
     &lt;groupId&gt;com.jayway.maven.plugins.android.generation2&lt;/groupId&gt;
     &lt;artifactId&gt;android-maven-plugin&lt;/artifactId&gt;
     &lt;version&gt;3.1.1&lt;/version&gt;
@@ -519,8 +554,7 @@ iconv -f GBK -t UTF-8 filename &gt; filename
     &lt;/configuration&gt;
    &lt;/plugin&gt;
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>maven.android的eclipse常用插件是 m2e-android 插件
 可以认为m2e-android也是同样的道理,</p>
@@ -583,153 +617,6 @@ update: http://rgladwell.github.com/m2e-android/updates/</li>
 
 <p>入门必备,存档留念</p>
 
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013-04-26-1855578.html">java rsa code</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-04-26T23:08:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><div class="highlighter-rouge"><pre class="highlight"><code>package rsa;
-import java.security.Key;  
-import java.security.KeyFactory;  
-import java.security.KeyPair;  
-import java.security.KeyPairGenerator;  
-import java.security.PrivateKey;  
-import java.security.PublicKey;  
-import java.security.interfaces.RSAPrivateKey;  
-import java.security.interfaces.RSAPublicKey;  
-import java.security.spec.PKCS8EncodedKeySpec;  
-import java.security.spec.X509EncodedKeySpec;  
-   
-import javax.crypto.Cipher;  
-
-import sun.misc.BASE64Decoder;  
-import sun.misc.BASE64Encoder;  
-   
-   
-public class RSAUtil {
-	public static String[] initKey() throws Exception {
-		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");  
-        //密钥位数  
-        keyPairGen.initialize(1024);  
-        //密钥对  
-        KeyPair keyPair = keyPairGen.generateKeyPair();  
-
-        // 公钥  
-        PublicKey publicKey = (RSAPublicKey) keyPair.getPublic();  
-
-        // 私钥  
-        PrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();  
-
-        String publicKeyString = getKeyString(publicKey);  
-        System.out.println("public:\n" + publicKeyString);  
-
-        String privateKeyString = getKeyString(privateKey);  
-        System.out.println("private:\n" + privateKeyString);  
-        return new String[]{publicKeyString, privateKeyString};
-	}
-	
-	public static String encode(String data, String publicKey) throws Exception {
-        //加解密类  
-        Cipher cipher = Cipher.getInstance("RSA");//Cipher.getInstance("RSA/ECB/PKCS1Padding");  
-        cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(publicKey));  
-
-        //加密  
-        byte[] enBytes = cipher.doFinal(data.getBytes("UTF-8"));  
-        return new BASE64Encoder().encode(enBytes);
-	}
-	
-	public static String decode(String data, String privateKey) throws Exception {
-        //加解密类  
-        Cipher cipher = Cipher.getInstance("RSA");//Cipher.getInstance("RSA/ECB/PKCS1Padding");  
-        cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(privateKey));  
-
-        //加密  
-        byte[] deBytes = new BASE64Decoder().decodeBuffer(data);
-        byte[] enBytes = cipher.doFinal(deBytes);  
-        return new String(enBytes, "UTF-8");
-	}	
-	
-   
-      /** 
-       * 得到公钥 
-       * @param key 密钥字符串（经过base64编码） 
-       * @throws Exception 
-       */  
-      private static PublicKey getPublicKey(String key) throws Exception {  
-            byte[] keyBytes;  
-            keyBytes = (new BASE64Decoder()).decodeBuffer(key);  
-   
-            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);  
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");  
-            PublicKey publicKey = keyFactory.generatePublic(keySpec);  
-            return publicKey;  
-      }  
-      /** 
-       * 得到私钥 
-       * @param key 密钥字符串（经过base64编码） 
-       * @throws Exception 
-       */  
-      private static PrivateKey getPrivateKey(String key) throws Exception {  
-            byte[] keyBytes;  
-            keyBytes = (new BASE64Decoder()).decodeBuffer(key);  
-   
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);  
-            KeyFactory keyFactory = KeyFactory.getInstance("RSA");  
-            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);  
-            return privateKey;  
-      }  
-   
-      /** 
-       * 得到密钥字符串（经过base64编码） 
-       * @return 
-       */  
-      private static String getKeyString(Key key) throws Exception {  
-            byte[] keyBytes = key.getEncoded();  
-            String s = (new BASE64Encoder()).encode(keyBytes);  
-            return s;  
-      }  
-   
-   
-      public static void main(String[] args) throws Exception {  
-          //明文  
-          String plainText = "很好！hello world";  
-          String[] keys = initKey();
-          
-          System.out.println(encode(plainText, keys[0]));
-          System.out.println(decode(encode(plainText, keys[0]), keys[1]));
-   
-      }  
-   
-}  
-</code></pre>
-</div>
 </div>
   
   
@@ -813,11 +700,18 @@ public class RSAUtil {
 	
         <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
     
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
   </ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
@@ -835,18 +729,6 @@ public class RSAUtil {
         <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
-  <h1>大牛博客</h1>
-  <ul>
-    <li>
-      <a href="http://ithans.com/">ithans</a>
-    </li>
   </ul>
 </section>
 
@@ -856,13 +738,14 @@ public class RSAUtil {
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right">  <a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备13034675号-1 </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

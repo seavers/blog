@@ -102,34 +102,30 @@
 
 <p>安装方法如下:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    复制粘贴后面的文本为一个BAT,然后与jad.exe放在同一个目录即可(WinRAR需正确安装)
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    复制粘贴后面的文本为一个BAT,然后与jad.exe放在同一个目录即可(WinRAR需正确安装)
+</code></pre></div></div>
 
 <p>使用方法如下:   (有3种使用方法, 使用其中任意一种均可,结果是相同的)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code> 1. 双击BAT,提示输入需反编译的jar包,请输入完整的jar路径
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1. 双击BAT,提示输入需反编译的jar包,请输入完整的jar路径
  2. 直接将 jar 包拖放在bat上
  3.右键点击jar包,选择打开方式,然后选择使用该BAT来执行
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>运行后的结果如下:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  在jar包的同一目录下, 将会生成一个目录,一个jar,目录下有两个子目录,一个目录存放解压缩后的所有class,一个目录存放反编译后的java文件,jar包是用源码压缩生成的
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  在jar包的同一目录下, 将会生成一个目录,一个jar,目录下有两个子目录,一个目录存放解压缩后的所有class,一个目录存放反编译后的java文件,jar包是用源码压缩生成的
+</code></pre></div></div>
 
 <p>几点说明:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1. 工具中使用的WinRAR是自动识别安装路径的,请正确安装WinRAR
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 工具中使用的WinRAR是自动识别安装路径的,请正确安装WinRAR
 2. 工具使用的jad.exe,须与BAT放在同一目录,或者放在PATH可搜索到的位置
 3.  jar包中非class文件,也会完整拷贝在源码目录下,方便生成源码工程
 4. 生成的目录名与原 jar 包同名, 生成的源码 jar 包的文件名是在原名称中加入-src而生成, 如原 jar 包为 jdbc.jar, 则生成的目录名为 jdbc, 而生成的源码jar 包名则为 jdbc-src.jar
 5. eclipse使用方法1, 将BAT生成的目录放在workspace中,然后创建同名工程
 6. eclipse使用方法2,在 eclipse 中创建同名工程,使用src为源文件目录,bin为class文件目录,然后将BAT生成的目录拷贝在eclipse的workspace中 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>该BAT为 blog.csdn.net/seavers 原创, BAT源码仅供个人学习,使用,研究,未经本人同意,不可用于商业用途</p>
 
@@ -141,7 +137,7 @@
 
 <p>BAT源码如下: (请直接拷贝在BAT文件中)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>::功能:     利用bat反编译jar包生成源码jar包
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>::功能:     利用bat反编译jar包生成源码jar包
 ::作者:     seavers
 ::博客:     http://seavers.iteye.com/
 ::版本:     1.7
@@ -208,8 +204,7 @@ echo *********************************************
 pause
 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
 
@@ -234,7 +229,7 @@ pause
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/java/'>java</a>
+    java
   
 </span>
 
@@ -259,30 +254,106 @@ pause
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -290,13 +361,14 @@ pause
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

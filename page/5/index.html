@@ -15,7 +15,7 @@
       
   
     
-      maven 多环境配置
+      java rsa code
     
     
       
@@ -35,11 +35,8 @@
   
 
 
-  maven多环境配置
-
-比较常见的maven的多环境配置
-
-&lt;build&gt...">
+  package rsa;
+import java.security.Key;  ...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -80,6 +77,152 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013-04-26-1855578.html">java rsa code</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2013-04-26T23:08:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>package rsa;
+import java.security.Key;  
+import java.security.KeyFactory;  
+import java.security.KeyPair;  
+import java.security.KeyPairGenerator;  
+import java.security.PrivateKey;  
+import java.security.PublicKey;  
+import java.security.interfaces.RSAPrivateKey;  
+import java.security.interfaces.RSAPublicKey;  
+import java.security.spec.PKCS8EncodedKeySpec;  
+import java.security.spec.X509EncodedKeySpec;  
+   
+import javax.crypto.Cipher;  
+
+import sun.misc.BASE64Decoder;  
+import sun.misc.BASE64Encoder;  
+   
+   
+public class RSAUtil {
+	public static String[] initKey() throws Exception {
+		KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");  
+        //密钥位数  
+        keyPairGen.initialize(1024);  
+        //密钥对  
+        KeyPair keyPair = keyPairGen.generateKeyPair();  
+
+        // 公钥  
+        PublicKey publicKey = (RSAPublicKey) keyPair.getPublic();  
+
+        // 私钥  
+        PrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();  
+
+        String publicKeyString = getKeyString(publicKey);  
+        System.out.println("public:\n" + publicKeyString);  
+
+        String privateKeyString = getKeyString(privateKey);  
+        System.out.println("private:\n" + privateKeyString);  
+        return new String[]{publicKeyString, privateKeyString};
+	}
+	
+	public static String encode(String data, String publicKey) throws Exception {
+        //加解密类  
+        Cipher cipher = Cipher.getInstance("RSA");//Cipher.getInstance("RSA/ECB/PKCS1Padding");  
+        cipher.init(Cipher.ENCRYPT_MODE, getPublicKey(publicKey));  
+
+        //加密  
+        byte[] enBytes = cipher.doFinal(data.getBytes("UTF-8"));  
+        return new BASE64Encoder().encode(enBytes);
+	}
+	
+	public static String decode(String data, String privateKey) throws Exception {
+        //加解密类  
+        Cipher cipher = Cipher.getInstance("RSA");//Cipher.getInstance("RSA/ECB/PKCS1Padding");  
+        cipher.init(Cipher.DECRYPT_MODE, getPrivateKey(privateKey));  
+
+        //加密  
+        byte[] deBytes = new BASE64Decoder().decodeBuffer(data);
+        byte[] enBytes = cipher.doFinal(deBytes);  
+        return new String(enBytes, "UTF-8");
+	}	
+	
+   
+      /** 
+       * 得到公钥 
+       * @param key 密钥字符串（经过base64编码） 
+       * @throws Exception 
+       */  
+      private static PublicKey getPublicKey(String key) throws Exception {  
+            byte[] keyBytes;  
+            keyBytes = (new BASE64Decoder()).decodeBuffer(key);  
+   
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);  
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");  
+            PublicKey publicKey = keyFactory.generatePublic(keySpec);  
+            return publicKey;  
+      }  
+      /** 
+       * 得到私钥 
+       * @param key 密钥字符串（经过base64编码） 
+       * @throws Exception 
+       */  
+      private static PrivateKey getPrivateKey(String key) throws Exception {  
+            byte[] keyBytes;  
+            keyBytes = (new BASE64Decoder()).decodeBuffer(key);  
+   
+            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);  
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");  
+            PrivateKey privateKey = keyFactory.generatePrivate(keySpec);  
+            return privateKey;  
+      }  
+   
+      /** 
+       * 得到密钥字符串（经过base64编码） 
+       * @return 
+       */  
+      private static String getKeyString(Key key) throws Exception {  
+            byte[] keyBytes = key.getEncoded();  
+            String s = (new BASE64Encoder()).encode(keyBytes);  
+            return s;  
+      }  
+   
+   
+      public static void main(String[] args) throws Exception {  
+          //明文  
+          String plainText = "很好！hello world";  
+          String[] keys = initKey();
+          
+          System.out.println(encode(plainText, keys[0]));
+          System.out.println(decode(encode(plainText, keys[0]), keys[1]));
+   
+      }  
+   
+}  
+</code></pre></div></div>
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013-04-25-1853687.html">maven 多环境配置</a></h1>
     
     
@@ -104,7 +247,7 @@
 
 <p>比较常见的maven的多环境配置</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;build&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;build&gt;
   &lt;resources&gt;
      &lt;resource&gt;
        &lt;directory&gt;src/main/resources&lt;/directory&gt;
@@ -129,19 +272,17 @@
      &lt;/profile&gt;
   &lt;/profiles&gt;
 &lt;/build&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    mvn jetty:run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    mvn jetty:run
     mvn jetty:run -Pproduction
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>当没有写P参数时，采用development的profile,若指定，则使用指定的profile</p>
 
 <p>另外一种写，个人认为比较优化</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>&lt;properties&gt;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&lt;properties&gt;
   &lt;env&gt;development&lt;/env&gt;
 &lt;build&gt;
   &lt;filters&gt;
@@ -154,23 +295,23 @@
      &lt;/resource&gt;
   &lt;/resources&gt;
 &lt;/build&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>   mvn jetty:run
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   mvn jetty:run
    mvn jetty:run -Denv=production
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>默认的采用properties中的配置，不同的环境采用指定的参数</p>
 
 <hr />
 
-<p>多环境需要注意的点：
-1. 在切换环境时，不能改动源代码，如操作系统，线上线下，切换数据库等
-2. 源代码独立于环境配置，或配置文件独立，或切换环境名称
-3. 环境所有配置独立，需独立server管理
-4. 环境名称切换，则可扩展性不强，但适应性强，管理方便</p>
+<p>多环境需要注意的点：</p>
+<ol>
+  <li>在切换环境时，不能改动源代码，如操作系统，线上线下，切换数据库等</li>
+  <li>源代码独立于环境配置，或配置文件独立，或切换环境名称</li>
+  <li>环境所有配置独立，需独立server管理</li>
+  <li>环境名称切换，则可扩展性不强，但适应性强，管理方便</li>
+</ol>
 
 </div>
   
@@ -206,15 +347,17 @@
 
   <div class="entry-content"><p>今天调了一天 raspberry pi 的网络设置</p>
 
-<p>测试结论如下
-1. raspberry pi的USB确实有问题, 插拔都会引起系统重启, 尤其是TTL2USB以及USB网卡
-2. usb网卡在TTL模式下时, 可以设置成功, 拔掉TTL后, 自动重启, 然后就连不上了, 再接上TTL, 网络又好了, 很怪
-3. 有线网卡, DHCP下总是不成功, 设置死IP后, 就成功了, 可以断掉TTL, 重启后,依然正常
-4. 有线网卡, DHCP下也是可以成功的, 需要在rc.local中添加 dhclient eth0</p>
+<p>测试结论如下</p>
+<ol>
+  <li>raspberry pi的USB确实有问题, 插拔都会引起系统重启, 尤其是TTL2USB以及USB网卡</li>
+  <li>usb网卡在TTL模式下时, 可以设置成功, 拔掉TTL后, 自动重启, 然后就连不上了, 再接上TTL, 网络又好了, 很怪</li>
+  <li>有线网卡, DHCP下总是不成功, 设置死IP后, 就成功了, 可以断掉TTL, 重启后,依然正常</li>
+  <li>有线网卡, DHCP下也是可以成功的, 需要在rc.local中添加 dhclient eth0</li>
+</ol>
 
 <p>正常的/etc/network/interfaces 如下</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>auto lo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto lo
 iface lo inet loopback
 
 auto eth0
@@ -230,15 +373,14 @@ iface wlan0 inet manual
 wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 iface default inet dhcp
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>以上测试基于2013-02-09-wheezy-raspbian.img
 只改动了 interfaces , 其余未动</p>
 
 <p>dhcp的/etc/network/interfaces 如下</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>auto lo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto lo
 iface lo inet loopback
 
 auto eth0
@@ -250,8 +392,7 @@ iface wlan0 inet manual
 wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
 iface default inet dhcp
 
-</code></pre>
-</div>
+</code></pre></div></div>
 <p>并在 /etc/rc.local中添加一行, 需在exit 0前
 dhclient eth0</p>
 
@@ -295,42 +436,40 @@ dhclient eth0</p>
 
 <p>ubuntu下的apache跟其它操作系统下的apache, 有很大的区别</p>
 
-<p>ubuntu下安装apache
-<code class="highlighter-rouge">
-    sudo apt-get install apache2
-</code>
-ubuntu下启用apache的模块
-<code class="highlighter-rouge">
-   sudo a2enmod &lt;modname&gt;
-</code></p>
+<p>ubuntu下安装apache</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    sudo apt-get install apache2
+</code></pre></div></div>
+<p>ubuntu下启用apache的模块</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>   sudo a2enmod &lt;modname&gt;
+</code></pre></div></div>
 
 <p>ubuntu下的apache的设计, 有很大程度上, 是帮助程序员尽量的减少conf的改动
-比如:
-1. 让apache启用一个模块
-     a) 我们可以看到apache下的模块,是以文件的形式存在的, mods-enables下, 多一个模块的引用, 就表示启用一个模块, 而全部的模块, 是保存在 mods-available中的
-     b) 这样设计的原因, 就在于, 启用以及停用模块, 简化为文件的操作
-     c) 这样, apt-get,a2enmod这样的命令行,会更方便的执行命令, 否则要用正则匹配conf文件, 复杂麻烦,易出错, 而且耦合在了一起, 不利于apache的conf版本升级
-2. 让apache启用一个站点
-       同上面的设计一样,  站点也是使用 sites-available 以及 sites-enables 来管理的
-3. conf.d 的设计
-       a) 使用 conf.d 目录的设计, 让增加以及修改 apache2.conf 文件的方式, 改为了文件操作
-       b) 比如支持一个proxy的, 或者 Redirect 类的, 可以简化增加一个文件配置
-4. 利用别名的技术
-       a)  增加一个 phpmyadmin
-<code class="highlighter-rouge">
-     sudo ln -s  /usr/share/phpmyadmin  /var/www/phpmyadmin
-</code>
-      b)  或者自定义的代码库
-<code class="highlighter-rouge">
-     sudo ln -s  /home/admin/workspace  /var/www/workspace
-</code>
-<code class="highlighter-rouge">
-     sudo ln -s  /home/admin/.m2/repository      /var/www/maven2
-</code>
-5. 使用 .htaccess
-        将 .htaccess 打包在代码库里, 统一使用上面的别名部署, 统一代码管理, 减少与 apache 的相关配置文件的耦合
-6.  使用 .htpasswd
-        这其实也是一个不错的实践</p>
+比如:</p>
+<ol>
+  <li>让apache启用一个模块
+  a) 我们可以看到apache下的模块,是以文件的形式存在的, mods-enables下, 多一个模块的引用, 就表示启用一个模块, 而全部的模块, 是保存在 mods-available中的
+  b) 这样设计的原因, 就在于, 启用以及停用模块, 简化为文件的操作
+  c) 这样, apt-get,a2enmod这样的命令行,会更方便的执行命令, 否则要用正则匹配conf文件, 复杂麻烦,易出错, 而且耦合在了一起, 不利于apache的conf版本升级</li>
+  <li>让apache启用一个站点
+    同上面的设计一样,  站点也是使用 sites-available 以及 sites-enables 来管理的</li>
+  <li>conf.d 的设计
+    a) 使用 conf.d 目录的设计, 让增加以及修改 apache2.conf 文件的方式, 改为了文件操作
+    b) 比如支持一个proxy的, 或者 Redirect 类的, 可以简化增加一个文件配置</li>
+  <li>利用别名的技术
+    a)  增加一个 phpmyadmin
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sudo ln -s  /usr/share/phpmyadmin  /var/www/phpmyadmin
+</code></pre></div>    </div>
+    <p>b)  或者自定义的代码库</p>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sudo ln -s  /home/admin/workspace  /var/www/workspace
+</code></pre></div>    </div>
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  sudo ln -s  /home/admin/.m2/repository      /var/www/maven2
+</code></pre></div>    </div>
+  </li>
+  <li>使用 .htaccess
+     将 .htaccess 打包在代码库里, 统一使用上面的别名部署, 统一代码管理, 减少与 apache 的相关配置文件的耦合</li>
+  <li>使用 .htpasswd
+    这其实也是一个不错的实践</li>
+</ol>
 
 </div>
   
@@ -366,9 +505,8 @@ ubuntu下启用apache的模块
 
   <div class="entry-content"><p>其实ubuntu下安装phpmyadmin很简单</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get install phpmyadmin
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install phpmyadmin
+</code></pre></div></div>
 
 <p>然而,装完之后的配置, 就让人容易出错了
 起初我一直在修改  /usr/share/phpmyadmin/config.inc.php
@@ -378,34 +516,33 @@ ubuntu下启用apache的模块
 <p>事实上, 我们没有必要手工去修改 config.inc.php
 我们可以这样配置   http://localhost/phpmyadmin/setup/</p>
 
-<p>有两个命令可以帮助我们
-* pma-configure
-* pma-secure
+<p>有两个命令可以帮助我们</p>
+<ul>
+  <li>pma-configure</li>
+  <li>pma-secure
 这两个命令, 都没有参数, 作用相反, 一个为打开配置开关, 另一个为关闭配置,禁止修改
 当我们需要修改时, 就执行pma-configure, 修改完后,执行 pma-secure
-当然, 这两个命令都需要 sudo 权限</p>
+当然, 这两个命令都需要 sudo 权限</li>
+</ul>
 
 <p>于是整体流程如下:
 install phpmyadmin -&gt; pma-configure -&gt; /phpmyadmin/setup -&gt; pma-secure</p>
 
-<p>当然, 我们需要将phpmyadmin放置在apache下面, 或者 nginx下
-<code class="highlighter-rouge">
-sudo ln -s /usr/share/phpmyadmin  /var/www/
-</code>
-事实上, 上面的步骤也是多余的
-看看 /etc/phpmyadmin/apache.conf , 你就明白了
-<code class="highlighter-rouge">
-Alias /phpmyadmin /usr/share/phpmyadmin
-</code>
-而且还有别的配置</p>
+<p>当然, 我们需要将phpmyadmin放置在apache下面, 或者 nginx下</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo ln -s /usr/share/phpmyadmin  /var/www/
+</code></pre></div></div>
+<p>事实上, 上面的步骤也是多余的
+看看 /etc/phpmyadmin/apache.conf , 你就明白了</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Alias /phpmyadmin /usr/share/phpmyadmin
+</code></pre></div></div>
+<p>而且还有别的配置</p>
 
 <hr />
 
-<p>这么多的内容, 其实你可以从这里看出点端倪来
-<code class="highlighter-rouge">
-dpkg -L phpmyadmin
-</code>
-这样, 你可以看到 phpmyadmin到底在硬盘上装了什么文件</p>
+<p>这么多的内容, 其实你可以从这里看出点端倪来</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dpkg -L phpmyadmin
+</code></pre></div></div>
+<p>这样, 你可以看到 phpmyadmin到底在硬盘上装了什么文件</p>
 
 </div>
   
@@ -441,28 +578,26 @@ dpkg -L phpmyadmin
 
   <div class="entry-content"><p>在cubieboard上测试了下无线网卡, ubuntu上也应该是适用的</p>
 
-<p>要求:
-<code class="highlighter-rouge">
-sudo apt-get install wpasupplicant
-</code></p>
+<p>要求:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install wpasupplicant
+</code></pre></div></div>
 
 <p>插上无线网卡后, 在ifconfig里看到了wlan0</p>
 
 <p>然后在 /etc/network/interfaces 里添加四行即可, 完整的见下</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>auto lo
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>auto lo
 iface lo inet loopback
 
 auto wlan0
 iface wlan0 inet dhcp   
 wpa-ssid  &lt;you wlan ssid&gt;
 wpa-psk   &lt;your wlan password&gt;
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>然后重启网络生效</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>//关闭再开启wlan0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//关闭再开启wlan0
 sudo ifdown wlan0
 sudo ifup wlan0
 
@@ -472,8 +607,7 @@ sudo service networking start
 
 //或者重启,有时需要执行两次, 执行时会有提示
 sudo service networking restart
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <ul>
   <li>网上说的wpa打头的各类配置经测试可以省略,  我这里是 tp-link wpa2-psk的安全配置</li>
@@ -546,39 +680,42 @@ http://www.raspberrypi.org/phpBB3/viewtopic.php?f=27&amp;t=7592</p>
   <li>mac呢</li>
 </ol>
 
-<p>name到ip的映射有以下几个方式
-1. /etc/hosts的方式, 用户自行配置的, 优先级最高
-2. wins  windows用于解析名字的服务
-3. mdns 是apple发明的, ubuntu下也可以使用
-4. dns服务, 通常由ISP提供,  一般局域网搜不到, 就要去外网搜了
+<p>name到ip的映射有以下几个方式</p>
+<ol>
+  <li>/etc/hosts的方式, 用户自行配置的, 优先级最高</li>
+  <li>wins  windows用于解析名字的服务</li>
+  <li>mdns 是apple发明的, ubuntu下也可以使用</li>
+  <li>dns服务, 通常由ISP提供,  一般局域网搜不到, 就要去外网搜了
 另外:
-wins 的服务, 有时会有域服务器来提供服务</p>
+wins 的服务, 有时会有域服务器来提供服务</li>
+</ol>
 
-<p>由此: windows 与 ubuntu 下互通name, 需要敲定要走 wins还是mdns
-1. windows 下默认支持 wins 服务, 有服务器,也有客户端支持
-2. ubuntu下走wins,  可以安装 samba , 由 nmbd服务器提供服务端
-3. ubuntu 下 ping wins, 可以在 smb.conf 下配置 wins server
-4. windows 下走 mdns 服务, 可以安装apple的itunes, 由bonjour提供服务端
-5. ubuntu 下安装 mdns服务, 可使用 avahi-demon 来提供 mdns 服务
-6. ubuntu 下解析 mdns, 可以在 /etc/resolv.conf 中配置, 由 dnsmasq 来提供解析
-7. mac 上默认提供了 mdns 与 wins</p>
+<p>由此: windows 与 ubuntu 下互通name, 需要敲定要走 wins还是mdns</p>
+<ol>
+  <li>windows 下默认支持 wins 服务, 有服务器,也有客户端支持</li>
+  <li>ubuntu下走wins,  可以安装 samba , 由 nmbd服务器提供服务端</li>
+  <li>ubuntu 下 ping wins, 可以在 smb.conf 下配置 wins server</li>
+  <li>windows 下走 mdns 服务, 可以安装apple的itunes, 由bonjour提供服务端</li>
+  <li>ubuntu 下安装 mdns服务, 可使用 avahi-demon 来提供 mdns 服务</li>
+  <li>ubuntu 下解析 mdns, 可以在 /etc/resolv.conf 中配置, 由 dnsmasq 来提供解析</li>
+  <li>mac 上默认提供了 mdns 与 wins</li>
+</ol>
 
-<p>因此, 不动 windows, 可以在 ubuntu 中安装以下服务
-```
-sudo apt-get install samba
+<p>因此, 不动 windows, 可以在 ubuntu 中安装以下服务</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo apt-get install samba
 sudo apt-get install avahi-daemon
-sudo apt-get install libnss-mdns             ##necessary?</p>
+sudo apt-get install libnss-mdns             ##necessary?
 
-<p>sudo vi /etc/nsswitch.conf   (hosts:          files mdns4_minimal dns)
-sudo vi /etc/samba/smb.conf</p>
+sudo vi /etc/nsswitch.conf   (hosts:          files mdns4_minimal dns)
+sudo vi /etc/samba/smb.conf
 
-<p>sudo service smbd restart
+sudo service smbd restart
 sudo service nmbd restart
 //sudo service avahi-daemon restart
-sudo dnsmasq</p>
+sudo dnsmasq
 
-<p>sudo service networking restart
-```</p>
+sudo service networking restart
+</code></pre></div></div>
 
 <p>如果ubuntu一直ping不通mac.local or ipad.local,请尝试重启
 这样, 在 windows, ubuntu, mac 下互相ping hostname就OK了
@@ -627,17 +764,15 @@ https://wiki.archlinux.org/index.php/Avahi</p>
 
   <div class="entry-content"><p>maven常用技巧</p>
 
-<p>限定只使用内置的archetypes
-<code class="highlighter-rouge">
-mvn archetype:generate -DarchetypeCatalog=internal
-</code></p>
+<p>限定只使用内置的archetypes</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn archetype:generate -DarchetypeCatalog=internal
+</code></pre></div></div>
 
 <p>mvn创建spring mvc 
 https://github.com/kolorobot/spring-mvc-quickstart-archetype</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>mvn archetype:generate -DarchetypeGroupId=com.github.spring-mvc-archetypes -DarchetypeArtifactId=spring-mvc-quickstart -DarchetypeVersion=1.0.0-SNAPSHOT -DgroupId=hello -DartifactId=hello -Dversion=1.0.0
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mvn archetype:generate -DarchetypeGroupId=com.github.spring-mvc-archetypes -DarchetypeArtifactId=spring-mvc-quickstart -DarchetypeVersion=1.0.0-SNAPSHOT -DgroupId=hello -DartifactId=hello -Dversion=1.0.0
+</code></pre></div></div>
 
 </div>
   
@@ -782,73 +917,13 @@ http://cn.cubieboard.org/forum.php?mod=viewthread&amp;tid=55&amp;extra=page%3D1
 <p>接下来, 就可以搜索各种有趣的玩法了~~~</p>
 
 <hr />
-<p>sd卡刷ubuntu/linaro, (来源见前面描述)
-<code class="highlighter-rouge">
-git clone https://github.com/linux-sunxi/sunxi-bsp/ 
+<p>sd卡刷ubuntu/linaro, (来源见前面描述)</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone https://github.com/linux-sunxi/sunxi-bsp/ 
 cd sunxi-bsp 
 wget http://dl.linux-sunxi.org/amery/sunxi-3.0/latest/cubieboard_hwpack.tar.xz
 wget http://releases.linaro.org/latest/ubuntu/quantal-images/alip/linaro-quantal-alip-20121124-519.tar.gz
 ./scripts/sunxi-media-create.sh /dev/sdb cubieboard_hwpack.tar.xz linaro-quantal-alip-20121124-519.tar.gz
-</code></p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013-03-20-1832792.html">ubuntu 下使用 tf 卡</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-03-20T16:45:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>记录下,在ubuntu下使用tf卡的问题</p>
-
-<p>在ubuntu使用了下tf卡,在windows下使用读卡器正常, 在ubuntu下就变成63M了</p>
-
-<p>使用
-<code class="highlighter-rouge">
-sudo fdisk /dev/sdb
-</code>
-之后为交互式的命令行操作</p>
-
-<ul>
-  <li>使用p显示当前分区情况</li>
-  <li>使用d命令删除了所有的分区</li>
-  <li>使用o命令改为兼容的分区表结构 或 用c,没有研究</li>
-  <li>使用a命令,增加可引导标识</li>
-  <li>使用w命令,保存退出</li>
-  <li>使用q命令,不保存退出</li>
-</ul>
-
-<p>中间操作时,会遇到一些error(如设备忙),请尝试以下办法
-* 操作完一个命令,如o后,先w保存退出,然后重新fdisk进命令后,再操作
-* 使用d删除完全后,w保存后,再重新进入操作
-* 分区后,还要再格式化为某个文件系统, 关键词 mkfs
-* /dev/sdb为tf卡, /dev/sdb1为第一个分区, /dev/sdb2为第二个分区</p>
-
-<p>fdisk后, ubuntu与windows就都正常了, 没试过U盘,改天看看~~</p>
+</code></pre></div></div>
 
 </div>
   
@@ -933,11 +1008,18 @@ sudo fdisk /dev/sdb
 	
         <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
     
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
   </ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
@@ -955,18 +1037,6 @@ sudo fdisk /dev/sdb
         <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
-  <h1>大牛博客</h1>
-  <ul>
-    <li>
-      <a href="http://ithans.com/">ithans</a>
-    </li>
   </ul>
 </section>
 
@@ -976,13 +1046,14 @@ sudo fdisk /dev/sdb
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right">  <a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备13034675号-1 </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

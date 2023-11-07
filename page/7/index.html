@@ -15,7 +15,7 @@
       
   
     
-      maven jetty 配置
+      function 工具集
     
     
       
@@ -35,10 +35,11 @@
   
 
 
-  jetty的maven插件配置(pom.xml)
+  function 工具集
 
+经常会碰到这样的问题
 
-  scanInterv...">
+  button.click ...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -79,6 +80,118 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012-11-19-1729814.html">function 工具集</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2012-11-19T22:09:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>function 工具集</p>
+
+<p>经常会碰到这样的问题</p>
+<ol>
+  <li>button.click 后，只调用一次方法</li>
+  <li>window.scroll触发太频繁，导致滚动加载次数太多</li>
+  <li>document.keyup次数太多，导致智能提示调用次数太多</li>
+</ol>
+
+<p>你需要以下的方法来解决此类问题</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">a.load</span><span class="dl">'</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">once</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#tabs .first</span><span class="dl">'</span><span class="p">).</span><span class="nx">load</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+<span class="p">}));</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nb">window</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">scroll</span><span class="dl">'</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">throttle</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">$</span><span class="p">(</span><span class="dl">'</span><span class="s1">#rest</span><span class="dl">'</span><span class="p">).</span><span class="nx">lazyload</span><span class="p">();</span>    
+<span class="p">}));</span>
+
+<span class="nx">$</span><span class="p">(</span><span class="nx">input</span><span class="p">).</span><span class="nx">on</span><span class="p">(</span><span class="dl">'</span><span class="s1">keyup</span><span class="dl">'</span><span class="p">,</span> <span class="nx">$</span><span class="p">.</span><span class="nx">debounce</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+     <span class="nx">$</span><span class="p">.</span><span class="nx">suggest</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span>
+<span class="p">}));</span>
+
+</code></pre></div></div>
+
+<p>工具集源码如下：</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">$</span><span class="p">.</span><span class="nx">bind</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">args</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+      <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">return</span>  <span class="nx">func</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">args</span><span class="p">);</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//只调用一次</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">once</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">ran</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+	<span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="nx">ran</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+		<span class="nx">ran</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+		<span class="nx">func</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//ms时间内只执行一次</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">throttle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+   <span class="nx">ms</span> <span class="o">=</span> <span class="nx">ms</span> <span class="o">||</span> <span class="mi">150</span><span class="p">;</span>
+
+   <span class="kd">var</span> <span class="nx">last</span> <span class="o">=</span> <span class="o">+</span><span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+   <span class="kd">var</span> <span class="nx">timer</span> <span class="p">;</span>
+    <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">now</span> <span class="o">=</span> <span class="o">+</span><span class="k">new</span> <span class="nb">Date</span><span class="p">();</span>
+        <span class="k">if</span><span class="p">(</span><span class="nx">now</span> <span class="o">-</span> <span class="nx">last</span> <span class="o">&gt;</span> <span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+             <span class="nx">timer</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+             <span class="nx">last</span> <span class="o">=</span> <span class="nx">now</span><span class="p">;</span>
+             <span class="nx">func</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+             <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span> <span class="o">-</span> <span class="p">(</span><span class="nx">now</span><span class="o">-</span><span class="nx">last</span><span class="p">));</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//缓冲ms时间后才执行</span>
+<span class="nx">$</span><span class="p">.</span><span class="nx">debounce</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span><span class="p">)</span> <span class="p">{</span>
+       <span class="nx">ms</span> <span class="o">=</span> <span class="nx">ms</span> <span class="o">||</span> <span class="mi">150</span><span class="p">;</span>
+
+       <span class="kd">var</span> <span class="nx">timer</span><span class="p">;</span>
+       <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+           <span class="nx">clearTimeout</span><span class="p">(</span><span class="nx">timer</span><span class="p">);</span>
+           <span class="nx">timer</span> <span class="o">=</span> <span class="nx">setTimeout</span><span class="p">(</span><span class="nx">func</span><span class="p">,</span> <span class="nx">ms</span><span class="p">);</span>
+      <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>underscore, yui 中有throttle, debounce两个方法, jquery中没有发现</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+    
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012-10-02-1689147.html">maven jetty 配置</a></h1>
     
     
@@ -107,7 +220,7 @@
   <li>将jetty默认的uri编码, 改为GBK   (jetty默认是utf8)</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span> 
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;plugin&gt;</span> 
     <span class="nt">&lt;groupId&gt;</span>org.mortbay.jetty<span class="nt">&lt;/groupId&gt;</span> 
     <span class="nt">&lt;artifactId&gt;</span>maven-jetty-plugin<span class="nt">&lt;/artifactId&gt;</span>
     <span class="nt">&lt;configuration&gt;</span>    
@@ -127,13 +240,12 @@
 	 <span class="nt">&lt;/systemProperties&gt;</span>
      <span class="nt">&lt;/configuration&gt;</span> 
 <span class="nt">&lt;/plugin&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><em>jetty的另一段配置</em>(修改web.xml)
 用于解决使用jetty后无法修改文件问题(错误描述:请求的操作无法在使用用户映射区域打开的文件上执行)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;servlet&gt;</span>
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;servlet&gt;</span>
     <span class="nt">&lt;servlet-name&gt;</span>default<span class="nt">&lt;/servlet-name&gt;</span>
     <span class="nt">&lt;servlet-class&gt;</span>org.mortbay.jetty.servlet.DefaultServlet<span class="nt">&lt;/servlet-class&gt;</span>
     <span class="nt">&lt;init-param&gt;</span>
@@ -142,15 +254,13 @@
     <span class="nt">&lt;/init-param&gt;</span>
     <span class="nt">&lt;load-on-startup&gt;</span>0<span class="nt">&lt;/load-on-startup&gt;</span>
 <span class="nt">&lt;/servlet&gt;</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p><em>修改mvn时的java运行时参数</em> (解决 PermGen space问题)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>set MAVEN_OPTS=-XX:MaxPermSize=128M
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set MAVEN_OPTS=-XX:MaxPermSize=128M
 mvn jetty:run
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -188,7 +298,7 @@ mvn jetty:run
 
 <p>问题：有两个字符串 A 和 B，如何简单高效的判断 A 和 B 的相似度？A 和 B 完全一样，相似度为 100, A 和 B 完全不一样，相似度为 0. A 和 B 中有一半文字相同，相似度为 50. 依此类推。文字中包含中英文，空白字符也算。哪位用 JS 挑战下？性能第一，代码长短无所谓。</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">compare</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">compare</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
 	<span class="kd">var</span> <span class="nx">z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 	<span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span> <span class="o">+</span> <span class="nx">y</span><span class="p">.</span><span class="nx">length</span><span class="p">;;</span>
 
@@ -211,14 +321,13 @@ mvn jetty:run
 	<span class="k">return</span> <span class="nx">z</span><span class="o">/</span><span class="nx">s</span> <span class="o">*</span> <span class="mi">200</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">]))</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">].</span><span class="nx">sort</span><span class="p">()))</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">].</span><span class="nx">reverse</span><span class="p">()))</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">,</span><span class="s1">'中2文'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'12'</span><span class="p">,</span> <span class="s1">'中2文'</span><span class="p">,</span> <span class="s1">'123'</span><span class="p">,</span><span class="s1">'中文3'</span><span class="p">]))</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'456'</span><span class="p">]))</span>
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="s1">'123'</span><span class="p">,</span> <span class="s1">'中3文'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">],</span> <span class="p">[</span><span class="s1">'中文'</span><span class="p">,</span> <span class="s1">'world'</span><span class="p">,</span> <span class="s1">'汉字'</span><span class="p">]))</span>
-</code></pre>
-</div>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">],</span> <span class="p">[</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">]))</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">],</span> <span class="p">[</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">].</span><span class="nx">sort</span><span class="p">()))</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">],</span> <span class="p">[</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">].</span><span class="nx">reverse</span><span class="p">()))</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">中2文</span><span class="dl">'</span><span class="p">],</span> <span class="p">[</span><span class="dl">'</span><span class="s1">12</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中2文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span><span class="dl">'</span><span class="s1">中文3</span><span class="dl">'</span><span class="p">]))</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">],</span> <span class="p">[</span><span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">world</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">456</span><span class="dl">'</span><span class="p">]))</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">compare</span><span class="p">([</span><span class="dl">'</span><span class="s1">123</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">中3文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">],</span> <span class="p">[</span><span class="dl">'</span><span class="s1">中文</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">world</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">汉字</span><span class="dl">'</span><span class="p">]))</span>
+</code></pre></div></div>
 </div>
   
   
@@ -253,7 +362,7 @@ mvn jetty:run
 
   <div class="entry-content"><p>写了一个超简单的串行加载工具, 不想引入框架时, 可以试用下</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">all</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">all</span><span class="p">)</span> <span class="p">{</span>
 	<span class="kd">var</span> <span class="nx">callee</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">callee</span><span class="p">;</span>
 	<span class="nx">all</span><span class="p">.</span><span class="nx">shift</span><span class="p">()(</span><span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">callee</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="nx">all</span><span class="p">,</span> <span class="nx">data</span><span class="p">);</span>
@@ -261,27 +370,26 @@ mvn jetty:run
 <span class="p">})([</span>
 	<span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-			<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="s1">'&lt;li&gt;first'</span><span class="p">;</span>
+			<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">&lt;li&gt;first</span><span class="dl">'</span><span class="p">;</span>
 
 			<span class="nx">next</span><span class="p">();</span>
 		<span class="p">},</span> <span class="mi">1000</span><span class="p">)</span>
 	<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-			<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="s1">'&lt;li&gt;second'</span><span class="p">;</span>
+			<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">&lt;li&gt;second</span><span class="dl">'</span><span class="p">;</span>
 
 			<span class="nx">next</span><span class="p">();</span>
 		<span class="p">},</span> <span class="mi">2000</span><span class="p">)</span>
 	<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">next</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-			<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="s1">'&lt;li&gt;third'</span><span class="p">;</span>
+			<span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="dl">'</span><span class="s1">&lt;li&gt;third</span><span class="dl">'</span><span class="p">;</span>
 
 		<span class="p">},</span> <span class="mi">3000</span><span class="p">)</span>
 	<span class="p">}</span>
 <span class="p">]);</span>
 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -319,29 +427,28 @@ mvn jetty:run
 而链接的url中, 我们没有现成的API可以获取这些参数
 下面是一个小方法, 可以得到链接中的各种参数</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseURL</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">function</span> <span class="nx">parseURL</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span> <span class="p">{</span>
 	<span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span> <span class="p">{};</span>
 	<span class="nx">ret</span><span class="p">.</span><span class="nx">href</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
 
 	<span class="kd">var</span> <span class="nx">match</span> <span class="o">=</span> <span class="nx">url</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span><span class="sr">/^</span><span class="se">([^\/</span><span class="sr">:</span><span class="se">]</span><span class="sr">+:</span><span class="se">)?(?:\/\/([^\/</span><span class="sr">:</span><span class="se">]</span><span class="sr">*</span><span class="se">)(?:</span><span class="sr">:</span><span class="se">([\d]</span><span class="sr">+</span><span class="se">))?)?(\/?[^\?</span><span class="sr">#</span><span class="se">]</span><span class="sr">*</span><span class="se">)?(\?[^\#]</span><span class="sr">*</span><span class="se">)?(</span><span class="sr">#.*</span><span class="se">)?</span><span class="sr">$/i</span><span class="p">);</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">match</span><span class="p">)</span> <span class="p">{</span>
 		<span class="nx">ret</span><span class="p">.</span><span class="nx">isValid</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="p">?</span> <span class="s1">':'</span> <span class="p">:</span> <span class="s1">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">||</span> <span class="s2">"/"</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">origin</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="p">?</span> <span class="s1">'//'</span> <span class="p">:</span> <span class="s1">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">search</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
-		<span class="nx">ret</span><span class="p">.</span><span class="nx">hash</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">||</span> <span class="s1">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">hostname</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">:</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">port</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">pathname</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">||</span> <span class="dl">"</span><span class="s2">/</span><span class="dl">"</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">origin</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">protocol</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">//</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">''</span> <span class="o">+</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">host</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">search</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
+		<span class="nx">ret</span><span class="p">.</span><span class="nx">hash</span> <span class="o">=</span> <span class="nx">match</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">||</span> <span class="dl">''</span><span class="p">;</span>
 	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 		<span class="nx">ret</span><span class="p">.</span><span class="nx">isValid</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 		<span class="nx">ret</span><span class="p">.</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">ret</span><span class="p">.</span><span class="nx">url</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
 <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -392,16 +499,21 @@ mvn jetty:run
   <li>其它      如各类backup, 等…</li>
 </ul>
 
-<p>细数下来
-* 硬盘的功能, 越来越像一个cache了, 程序的cache,数据的cache,只是做个中转.   ]* 硬盘大小不够时,可以随时删除,随时从服务端再获取
-* 将来我们的电脑,会不会就像ipad一样
-    1. 在线商店里, 双击某个应用, 开始自动安装
-    2. 自动将程序装在 D:\program files\
-    3. 自动将数据装在 D:\Users\xx\Application Data , 并自动服务端同步
-    4. 然后, 打开应用, 正常使用
-    5. 使用过程中, 将配置,数据自动同步,  某些cache,找个大盘自动cache
-    6. 不需要理会装在哪里,不需要理会数据备份问题,都由软件来解决吧
-* 这个就是传说中的app模式, ipad, 360桌面, Q+, win8, 似乎都有这个意向…</p>
+<p>细数下来</p>
+<ul>
+  <li>硬盘的功能, 越来越像一个cache了, 程序的cache,数据的cache,只是做个中转.   ]* 硬盘大小不够时,可以随时删除,随时从服务端再获取</li>
+  <li>将来我们的电脑,会不会就像ipad一样
+    <ol>
+      <li>在线商店里, 双击某个应用, 开始自动安装</li>
+      <li>自动将程序装在 D:\program files\</li>
+      <li>自动将数据装在 D:\Users\xx\Application Data , 并自动服务端同步</li>
+      <li>然后, 打开应用, 正常使用</li>
+      <li>使用过程中, 将配置,数据自动同步,  某些cache,找个大盘自动cache</li>
+      <li>不需要理会装在哪里,不需要理会数据备份问题,都由软件来解决吧</li>
+    </ol>
+  </li>
+  <li>这个就是传说中的app模式, ipad, 360桌面, Q+, win8, 似乎都有这个意向…</li>
+</ul>
 
 <p>还有哪些会存在硬盘里呢:</p>
 
@@ -459,7 +571,7 @@ mvn jetty:run
  require(deps, callback)   其中 callback(dep1, dep2, dep3…)</li>
 </ul>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="nx">define</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 	
 	<span class="kd">var</span> <span class="nx">modules</span> <span class="o">=</span> <span class="p">{};</span>
@@ -474,13 +586,13 @@ mvn jetty:run
 		<span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">isString</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'string'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">string</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'[object Array]'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">[object Array]</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">isFunction</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'function'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="k">typeof</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">function</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">mix</span><span class="p">(</span><span class="nx">src</span><span class="p">,</span> <span class="nx">dst</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">dst</span><span class="p">)</span> <span class="p">{</span>
@@ -488,20 +600,20 @@ mvn jetty:run
 		<span class="p">}</span>
 	<span class="p">}</span>
 	<span class="kd">function</span> <span class="nx">getScript</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">"script"</span><span class="p">);</span>
-		<span class="nx">node</span><span class="p">.</span><span class="nx">async</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+		<span class="kd">var</span> <span class="nx">node</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="dl">"</span><span class="s2">script</span><span class="dl">"</span><span class="p">);</span>
+		<span class="nx">node</span><span class="p">.</span><span class="k">async</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
 		<span class="k">if</span> <span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">node</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'load'</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+			<span class="nx">node</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">load</span><span class="dl">'</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
 		<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
 			<span class="nx">node</span><span class="p">.</span><span class="nx">onreadystatechange</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-				<span class="k">if</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="s1">'loaded'</span> <span class="o">||</span> <span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="s1">'complete'</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">loaded</span><span class="dl">'</span> <span class="o">||</span> <span class="nx">node</span><span class="p">.</span><span class="nx">readyState</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">complete</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
 					<span class="nx">callback</span> <span class="o">&amp;&amp;</span> <span class="nx">callback</span><span class="p">();</span>
 				<span class="p">}</span>
 			<span class="p">}</span>
 		<span class="p">}</span>
 		<span class="nx">node</span><span class="p">.</span><span class="nx">src</span> <span class="o">=</span> <span class="nx">url</span><span class="p">;</span>
 
-		<span class="kd">var</span> <span class="nx">head</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">head</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'head'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">;</span>
+		<span class="kd">var</span> <span class="nx">head</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">head</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="dl">'</span><span class="s1">head</span><span class="dl">'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">||</span> <span class="nb">document</span><span class="p">.</span><span class="nx">documentElement</span><span class="p">;</span>
 		<span class="nx">head</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span><span class="nx">node</span><span class="p">,</span> <span class="nx">head</span><span class="p">.</span><span class="nx">firstChild</span><span class="p">);</span>
 		<span class="k">return</span> <span class="nx">node</span><span class="p">;</span>
 	<span class="p">}</span>
@@ -513,9 +625,9 @@ mvn jetty:run
 			<span class="k">return</span> <span class="nb">document</span><span class="p">.</span><span class="nx">currentScript</span><span class="p">;</span>
 		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">attachEvent</span><span class="p">)</span> <span class="p">{</span>
 			<span class="c1">//ie6-9 得到当前正在执行的script标签</span>
-			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span>
+			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="dl">'</span><span class="s1">script</span><span class="dl">'</span><span class="p">);</span>
 			<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">scripts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
-				<span class="k">if</span> <span class="p">(</span><span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">readyState</span> <span class="o">===</span> <span class="s1">'interactive'</span><span class="p">)</span> <span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">readyState</span> <span class="o">===</span> <span class="dl">'</span><span class="s1">interactive</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
 					<span class="k">return</span> <span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
 				<span class="p">}</span>
 			<span class="p">}</span>
@@ -532,13 +644,13 @@ mvn jetty:run
 				<span class="k">return</span> <span class="kc">undefined</span><span class="p">;</span>
 			<span class="c1">// chrome uses at, ff uses @</span>
 
-			<span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">' at '</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span> <span class="p">?</span> <span class="s1">' at '</span> <span class="p">:</span> <span class="s1">'@'</span><span class="p">;</span>
+			<span class="kd">var</span> <span class="nx">e</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="dl">'</span><span class="s1"> at </span><span class="dl">'</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span> <span class="p">?</span> <span class="dl">'</span><span class="s1"> at </span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">@</span><span class="dl">'</span><span class="p">;</span>
 			<span class="k">while</span> <span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">!==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
 				<span class="nx">stack</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="nx">stack</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="o">+</span> <span class="nx">e</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
 			<span class="p">}</span>
-			<span class="nx">stack</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/:</span><span class="se">\d</span><span class="sr">+:</span><span class="se">\d</span><span class="sr">+$/ig</span><span class="p">,</span> <span class="s2">""</span><span class="p">);</span>
+			<span class="nx">stack</span> <span class="o">=</span> <span class="nx">stack</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/:</span><span class="se">\d</span><span class="sr">+:</span><span class="se">\d</span><span class="sr">+$/ig</span><span class="p">,</span> <span class="dl">""</span><span class="p">);</span>
 
-			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s1">'script'</span><span class="p">);</span>
+			<span class="kd">var</span> <span class="nx">scripts</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="dl">'</span><span class="s1">script</span><span class="dl">'</span><span class="p">);</span>
 			<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">scripts</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
 				<span class="k">if</span> <span class="p">(</span><span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">src</span> <span class="o">===</span> <span class="nx">stack</span><span class="p">)</span> <span class="p">{</span>
 					<span class="k">return</span> <span class="nx">scripts</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
@@ -611,7 +723,7 @@ mvn jetty:run
 
 		<span class="nx">deps</span> <span class="o">=</span> <span class="nx">deps</span> <span class="o">||</span> <span class="p">[];</span>
 		<span class="k">if</span> <span class="p">(</span><span class="nx">isString</span><span class="p">(</span><span class="nx">deps</span><span class="p">))</span> <span class="p">{</span>
-			<span class="nx">deps</span> <span class="o">=</span> <span class="nx">deps</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">','</span><span class="p">);</span>
+			<span class="nx">deps</span> <span class="o">=</span> <span class="nx">deps</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="dl">'</span><span class="s1">,</span><span class="dl">'</span><span class="p">);</span>
 		<span class="p">}</span>
 		<span class="kd">var</span> <span class="nx">allDeps</span> <span class="o">=</span> <span class="nx">map</span><span class="p">(</span><span class="nx">deps</span><span class="p">,</span> <span class="nx">tran</span><span class="p">);</span>				<span class="c1">//全部转换映射</span>
 
@@ -634,17 +746,16 @@ mvn jetty:run
 
 	<span class="kd">function</span> <span class="nx">tran</span><span class="p">(</span><span class="nx">dep</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">for</span><span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">alias</span><span class="p">)</span> <span class="p">{</span>
-			<span class="nx">dep</span> <span class="o">=</span> <span class="nx">dep</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="s1">'^'</span> <span class="o">+</span> <span class="nx">key</span><span class="p">),</span> <span class="nx">alias</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>		<span class="c1">//TODO</span>
+			<span class="nx">dep</span> <span class="o">=</span> <span class="nx">dep</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="k">new</span> <span class="nb">RegExp</span><span class="p">(</span><span class="dl">'</span><span class="s1">^</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">key</span><span class="p">),</span> <span class="nx">alias</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>		<span class="c1">//TODO</span>
 		<span class="p">}</span>
-		<span class="k">return</span> <span class="nx">dep</span> <span class="o">+</span> <span class="s1">'.js'</span><span class="p">;</span>
+		<span class="k">return</span> <span class="nx">dep</span> <span class="o">+</span> <span class="dl">'</span><span class="s1">.js</span><span class="dl">'</span><span class="p">;</span>
 	<span class="p">}</span>
 
 	<span class="nx">define</span><span class="p">.</span><span class="nx">alias</span> <span class="o">=</span> <span class="nx">alias</span><span class="p">;</span>
 	<span class="k">return</span> <span class="nx">define</span><span class="p">;</span>
 <span class="p">})();</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>测试用例</p>
 
@@ -663,39 +774,37 @@ define(['ok/mod1', 'ok/mod2'], function(Mod1, Mod2) {
 
 </code></pre>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">//   http://localhost/loader/mod1.js</span>
-<span class="nx">require</span><span class="p">([</span><span class="s1">'ok/mod2'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Mod2</span><span class="p">)</span> <span class="p">{</span>
-	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'mod1 index '</span><span class="p">,</span> <span class="nx">Mod2</span><span class="p">);</span>
+<span class="nx">require</span><span class="p">([</span><span class="dl">'</span><span class="s1">ok/mod2</span><span class="dl">'</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Mod2</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">mod1 index </span><span class="dl">'</span><span class="p">,</span> <span class="nx">Mod2</span><span class="p">);</span>
 
 	<span class="k">return</span> <span class="p">{</span>
-		<span class="na">mod1</span><span class="p">:</span> <span class="s1">'this is mod1'</span>
+		<span class="na">mod1</span><span class="p">:</span> <span class="dl">'</span><span class="s1">this is mod1</span><span class="dl">'</span>
 	<span class="p">}</span>
 <span class="p">});</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 <span class="c1">//   http://localhost/loader/mod2.js</span>
 <span class="nx">define</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'mod2 index '</span><span class="p">);</span>
+	<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">mod2 index </span><span class="dl">'</span><span class="p">);</span>
 
 	<span class="k">return</span> <span class="p">{</span>
-		<span class="s1">'hello'</span> <span class="p">:</span> <span class="s1">'world'</span>
+		<span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">world</span><span class="dl">'</span>
 	<span class="p">}</span>
 <span class="p">});</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>补: 其它用法</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">//mod3.js</span>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//mod3.js</span>
 <span class="c1">//功能模块1</span>
 <span class="nx">define</span><span class="p">({</span>
     <span class="na">sayHello</span> <span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'hello'</span><span class="p">);</span>
+       <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">hello</span><span class="dl">'</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">});</span>
 
@@ -703,16 +812,15 @@ define(['ok/mod1', 'ok/mod2'], function(Mod1, Mod2) {
 <span class="nx">define</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="na">sayWorld</span> <span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'world'</span><span class="p">);</span>
+           <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">world</span><span class="dl">'</span><span class="p">);</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">});</span>
 
 
 
-</code></pre>
-</div>
-<div class="highlighter-rouge"><pre class="highlight"><code>
+</code></pre></div></div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
 App = {define : define, require: define};
 App.define.alias['ok'] = 'http://lhj/loader';
 App.define({
@@ -734,8 +842,7 @@ App.define(function(Mod3) {
 App.showMsg(123);
 App.say();
 
-</code></pre>
-</div>
+</code></pre></div></div>
 </div>
   
   
@@ -772,7 +879,7 @@ App.say();
 
 <p>随手写了一个demo:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;h3&gt;</span>inline测试<span class="nt">&lt;/h3&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h3&gt;</span>inline测试<span class="nt">&lt;/h3&gt;</span>
 <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"width:110px"</span><span class="nt">&gt;</span><span class="ni">&amp;nbsp;</span>
 <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">style=</span><span class="s">"
     background: #ccc;
@@ -797,28 +904,63 @@ App.say();
 "</span><span class="nt">&gt;</span>inline<span class="nt">&lt;/i&gt;</span>
 <span class="nt">&lt;/div&gt;</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<p>经测试
-1. inline元素, 有效的: background, margin-left, margin-right, padding, border
-2. inline元素, 无效的: width, height, margin-top, margin-bottom
-3. 因width, height无效, 因此下列属性也无效: text-align, text-indent, min|max-width|height, overflow
-4. 原文字相关的依然有效, 如word-spacing,  word-wrap,  white-space, letter-spacing
-5. 下面两个有效, line-height, vertical-align, box-shadow
-6. float,position及与之相关top,left, 不考虑, 已经不是inline了</p>
+<p>经测试</p>
+<ol>
+  <li>inline元素, 有效的: background, margin-left, margin-right, padding, border</li>
+  <li>inline元素, 无效的: width, height, margin-top, margin-bottom</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>因width, height无效, 因此下列属性也无效: text-align, text-indent, min</td>
+          <td>max-width</td>
+          <td>height, overflow</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>原文字相关的依然有效, 如word-spacing,  word-wrap,  white-space, letter-spacing</li>
+  <li>下面两个有效, line-height, vertical-align, box-shadow</li>
+  <li>float,position及与之相关top,left, 不考虑, 已经不是inline了</li>
+</ol>
 
 <p>其中 border, line-height, 这两个可以多多利用</p>
 
-<p><em>思考:</em>
-1. inline元素的宽高是不能定义, 即宽高度是由inline元素inline内容的元素决定的,(ie6,ie7下高度会受inline-block元素的影响)
-2. 即宽高完全是自适应而得出的, 因此也不存在overflow的问题, min|max-width|height也没有影响
-3. margin四个属性, left|right 与 top|bottom 有不同的待遇
-4. margin-top, margin-bottom, 可以用line-height模拟, 但有很大不同, 与inline-block也不兼容,  另 margin:0 auto的居中效果, 也没有作用</p>
+<p><em>思考:</em></p>
+<ol>
+  <li>inline元素的宽高是不能定义, 即宽高度是由inline元素inline内容的元素决定的,(ie6,ie7下高度会受inline-block元素的影响)</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>即宽高完全是自适应而得出的, 因此也不存在overflow的问题, min</td>
+          <td>max-width</td>
+          <td>height也没有影响</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>margin四个属性, left</td>
+          <td>right 与 top</td>
+          <td>bottom 有不同的待遇</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>margin-top, margin-bottom, 可以用line-height模拟, 但有很大不同, 与inline-block也不兼容,  另 margin:0 auto的居中效果, 也没有作用</li>
+</ol>
 
-<p>*其次: *
-1. div元素, 使用 display:inline 以上几条也成立
-2. button元素, 使用display:inline, 样式没有变化, 等于于inline-block</p>
+<p>*其次: *</p>
+<ol>
+  <li>div元素, 使用 display:inline 以上几条也成立</li>
+  <li>button元素, 使用display:inline, 样式没有变化, 等于于inline-block</li>
+</ol>
 
 <p>*最后: *
 mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
@@ -876,34 +1018,30 @@ mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
 
 <p>安装方法如下:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>    复制粘贴后面的文本为一个BAT,然后与jad.exe放在同一个目录即可(WinRAR需正确安装)
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    复制粘贴后面的文本为一个BAT,然后与jad.exe放在同一个目录即可(WinRAR需正确安装)
+</code></pre></div></div>
 
 <p>使用方法如下:   (有3种使用方法, 使用其中任意一种均可,结果是相同的)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code> 1. 双击BAT,提示输入需反编译的jar包,请输入完整的jar路径
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code> 1. 双击BAT,提示输入需反编译的jar包,请输入完整的jar路径
  2. 直接将 jar 包拖放在bat上
  3.右键点击jar包,选择打开方式,然后选择使用该BAT来执行
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>运行后的结果如下:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>  在jar包的同一目录下, 将会生成一个目录,一个jar,目录下有两个子目录,一个目录存放解压缩后的所有class,一个目录存放反编译后的java文件,jar包是用源码压缩生成的
-</code></pre>
-</div>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  在jar包的同一目录下, 将会生成一个目录,一个jar,目录下有两个子目录,一个目录存放解压缩后的所有class,一个目录存放反编译后的java文件,jar包是用源码压缩生成的
+</code></pre></div></div>
 
 <p>几点说明:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>1. 工具中使用的WinRAR是自动识别安装路径的,请正确安装WinRAR
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 工具中使用的WinRAR是自动识别安装路径的,请正确安装WinRAR
 2. 工具使用的jad.exe,须与BAT放在同一目录,或者放在PATH可搜索到的位置
 3.  jar包中非class文件,也会完整拷贝在源码目录下,方便生成源码工程
 4. 生成的目录名与原 jar 包同名, 生成的源码 jar 包的文件名是在原名称中加入-src而生成, 如原 jar 包为 jdbc.jar, 则生成的目录名为 jdbc, 而生成的源码jar 包名则为 jdbc-src.jar
 5. eclipse使用方法1, 将BAT生成的目录放在workspace中,然后创建同名工程
 6. eclipse使用方法2,在 eclipse 中创建同名工程,使用src为源文件目录,bin为class文件目录,然后将BAT生成的目录拷贝在eclipse的workspace中 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>该BAT为 blog.csdn.net/seavers 原创, BAT源码仅供个人学习,使用,研究,未经本人同意,不可用于商业用途</p>
 
@@ -915,7 +1053,7 @@ mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
 
 <p>BAT源码如下: (请直接拷贝在BAT文件中)</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>::功能:     利用bat反编译jar包生成源码jar包
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>::功能:     利用bat反编译jar包生成源码jar包
 ::作者:     seavers
 ::博客:     http://seavers.iteye.com/
 ::版本:     1.7
@@ -982,8 +1120,7 @@ echo *********************************************
 pause
 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
   
@@ -1023,7 +1160,7 @@ pause
 
 <p>sync.js</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="cm">/*** 
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cm">/*** 
  *   Sync 框架
  *
  *   支持 addTask,  addCirle,  addListener,  finish 等功能
@@ -1075,7 +1212,7 @@ pause
 	<span class="p">}</span>
 
 	<span class="nx">Sync</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addCircle</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">total</span><span class="p">,</span> <span class="nx">func</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
-		<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">total</span><span class="p">)</span> <span class="o">==</span> <span class="s1">'function'</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="nx">total</span><span class="p">)</span> <span class="o">==</span> <span class="dl">'</span><span class="s1">function</span><span class="dl">'</span><span class="p">)</span> <span class="p">{</span>
 			<span class="nx">func</span> <span class="o">=</span> <span class="nx">total</span><span class="p">;</span>
 			<span class="nx">total</span> <span class="o">=</span> <span class="nx">MAX_TOTAL</span><span class="p">;</span>
 		<span class="p">}</span>
@@ -1145,21 +1282,20 @@ pause
 
 
 <span class="p">})();</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>index.htm:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"sync.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"sync.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
 <span class="nt">&lt;script&gt;</span>
 
 	<span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Sync</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span>
-	<span class="nx">a</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">){</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'notify .'</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
-	<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'execute 2 -- '</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
-	<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'execute 4 -- '</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
-	<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'execute 8 -- '</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
+	<span class="nx">a</span><span class="p">.</span><span class="nx">addListener</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">){</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">notify .</span><span class="dl">'</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
+	<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">execute 2 -- </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
+	<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">execute 4 -- </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
+	<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">execute 8 -- </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
 	<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-		<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'execute n -- '</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
+		<span class="nx">a</span><span class="p">.</span><span class="nx">addCircle</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">n</span><span class="p">)</span> <span class="p">{</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">execute n -- </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">n</span><span class="p">)});</span>
 		<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 			<span class="nx">a</span><span class="p">.</span><span class="nx">finish</span><span class="p">();</span>
 		<span class="p">},</span> <span class="mi">3000</span><span class="p">);</span>
@@ -1169,109 +1305,7 @@ pause
 
 
 
-</code></pre>
-</div>
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011-10-01-1184400.html">with语句的本质</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2011-10-01T23:41:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>通过测试及debug后, 得出结论, 仅代表个人意见:</p>
-
-<p>with的本质, 就是构造一个作用域, 将with的对象的所有key, 声明为局部变量</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>
-var inner = '123';
-var outer = {inner : 'hello world', another: 'hello with'};
-window.obj = {outer: outer};
-
-with(outer) {
-	alert(inner);
-	alert(another);
-	alert(outer.inner);
-	alert(window.obj.outer.inner);
-	show();
-}
-
-
-function show() {
-	alert(inner);
-
-}
-</code></pre>
-</div>
-
-<p>等同于以下代码</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>
-var inner = '123';
-var outer = {inner : 'hello world', another: 'hello with'};
-window.obj = {outer: outer};
-
-(function(inner, another) {
-	alert(inner);
-	alert(another);
-	alert(outer.inner);
-	alert(window.obj.outer.inner);
-	show();
-})(outer.inner, outer.another);
-
-
-function show() {
-	alert(inner);
-
-}
-
-</code></pre>
-</div>
-
-<p>再看看下面这个常见的问题, 一目了然</p>
-
-<div class="highlighter-rouge"><pre class="highlight"><code>var root = { 
-    branch: { 
-        node: 1 
-    } 
-}; 
-
-with(root.branch) { 
-    root.branch = { 
-        node: 0 
-    }; 
-    // 显示 1, 错误! 
-    alert(node); 
-} 
-// 显示 0, 正确! 
-alert(root.branch.node); 
-</code></pre>
-</div>
-
+</code></pre></div></div>
 </div>
   
   
@@ -1355,11 +1389,18 @@ alert(root.branch.node);
 	
         <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
     
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
   </ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
@@ -1377,18 +1418,6 @@ alert(root.branch.node);
         <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
-  <h1>大牛博客</h1>
-  <ul>
-    <li>
-      <a href="http://ithans.com/">ithans</a>
-    </li>
   </ul>
 </section>
 
@@ -1398,13 +1427,14 @@ alert(root.branch.node);
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right">  <a target="_blank" href="https://beian.miit.gov.cn/">浙ICP备13034675号-1 </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

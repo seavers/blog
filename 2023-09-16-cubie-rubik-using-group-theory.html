@@ -1,0 +1,1704 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>利用群论来研究魔方 - 大海Online的博客</title>
+  <meta name="author" content="lianghaijun">
+
+  
+  <meta name="description" content="
+
+  
+  
+    
+      利用群论来研究魔方
+    
+    
+      
+        
+
+
+
+
+
+
+
+
+
+
+      
+    
+  
+
+
+文章灵感来源于：
+
+  https://zhuanlan.zhihu.com/p/76038006
+  并参考了：https://...">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.lianghaijun.com/2023-09-16-cubie-rubik-using-group-theory.html">
+  <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
+  <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="wb_connect_btn"></div>
+  <h1><a href="/">大海Online的博客</a></h1>
+  
+    <h2>Looking for Interest</h2>
+  
+</hgroup>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<ul class="main-navigation">
+  <li><a href="/blog/archives.html">Archives</a></li>
+  <li><a href="/blog/link.html">link</a></li>
+  <li><a href="/blog/about.html">about</a></li>
+</ul>
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">利用群论来研究魔方</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+
+<time datetime="2023-09-16T15:22:00+08:00" pubdate data-updated="true"></time>
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>文章灵感来源于：</p>
+<ul>
+  <li><a href="https://zhuanlan.zhihu.com/p/76038006">https://zhuanlan.zhihu.com/p/76038006</a></li>
+  <li>并参考了：<a href="https://www.gap-system.org/Doc/Examples/rubik.html">https://www.gap-system.org/Doc/Examples/rubik.html</a></li>
+  <li>使用了这里的小程序：<a href="https://www.jaapsch.net/puzzles/cubie.htm">https://www.jaapsch.net/puzzles/cubie.htm</a></li>
+</ul>
+
+<h2 id="先汇制一张魔方图">先汇制一张，魔方图</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               +--------------+
+               |  1    2    3 |
+               |  4  top    5 |
+               |  6    7    8 |
++--------------+--------------+--------------+--------------+
+|              |            8 |  8    5    3 |              |
+|     left     |    front   9 |  9 right  13 |     rear     |
+|              |           10 | 10   11   12 |              |
++--------------+--------------+--------------+--------------+
+               |              |
+               |    bottom    |
+               |              |
+               +--------------+      
+</code></pre></div></div>
+
+<p>这里做了几个简化</p>
+<ul>
+  <li>同一个块的两个棱或三个角，不做区分，视为同一数字</li>
+  <li>仅考虑顶部和右手边的图块，主要是顶部和8、9、10，这是我拼魔方经常研究的地方</li>
+</ul>
+
+<p>这里仅研究，1-10 这10个块的还原方法</p>
+
+<p>让我们参考 <a href="https://www.gap-system.org/Doc/Examples/rubik.html">gap</a> 的程序，来建立模型</p>
+
+<h2 id="创建一个群">创建一个群</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; cube := Group((1,3,8,6)(2,5,7,4),(8,3,12,10)(5,13,11,9));
+Group([ (1,3,8,6)(2,5,7,4), (3,12,10,8)(5,13,11,9) ])    
+</code></pre></div></div>
+<ul>
+  <li>这里通过Group构造了一个群，由置换构造而来的群
+    <ul>
+      <li>比如：这里(1,3,8,6)的置换，表示顶部4个角块的一次置换</li>
+    </ul>
+  </li>
+  <li>所以这个群，只有两元素
+    <ul>
+      <li>一个是(1,3,8,6)(2,5,7,4) 两个置换组合而成的TOP的转换，这里命名为 U ，（参考：<a href="http://www.rubik.com.cn/notation.htm">http://www.rubik.com.cn/notation.htm</a> ）</li>
+      <li>一个是(8,3,12,10)(5,13,11,9)，两个置换组合而成的RIGHT的转换，这里命名为 R</li>
+    </ul>
+  </li>
+  <li>群里只有乘法一种运算，表示为置换的乘法
+    <ul>
+      <li>比如 U*U=U^2 =&gt; (1,3,8,6)(2,5,7,4) = (1,8)(3,6)(2,7)(5,4)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="简化旋转的表示方法">简化旋转的表示方法</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; f := FreeGroup("U", "R");
+&lt;free group on the generators [ U, R ]&gt;
+
+gap&gt; hom := GroupHomomorphismByImages( f, cube, GeneratorsOfGroup(f), GeneratorsOfGroup(cube) );
+[ U, R ] -&gt; [ (1,3,8,6)(2,5,7,4), (3,12,10,8)(5,13,11,9) ]
+</code></pre></div></div>
+<ul>
+  <li>FreeGroup(“U”, “R”)是创建了两个元素的群，为了简化cube中两个元素的表示，分别代表Top、Right的旋转</li>
+  <li>GroupHomomorphismByImages是表示创建群同态，将U、R用于表示cube中定义的两个旋转</li>
+</ul>
+
+<h2 id="做一些测试">做一些测试</h2>
+<ul>
+  <li>比如我们要实现 5、9 两个块的交换，即实现 (5,9)
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; pre := PreImagesRepresentative(hom, (5,9));
+U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-1*U^-1*R*U*R^-1*U*R*U^-2*R^-1*U*R*U^-1*R^-1*U^-2*R*U^-1*R^-1*U^-1*R*U*R^-1*U^-1
+</code></pre></div>    </div>
+  </li>
+  <li>PreImagesRepresentative用于群的求解，计算出(5,9)的计算公式</li>
+  <li>
+    <p>答案也很好理解，比如：U、U^2、U^-1 分别表示 U的一次、两次、三次旋转</p>
+  </li>
+  <li>按照公式可逆旋转一次，验证一下
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; v := Image(hom, pre);
+(2,4)(5,9)
+</code></pre></div>    </div>
+  </li>
+  <li>结果是 (2,4), (5,9) 两个置换，符合预期。 因为(5,9)无法单独置换</li>
+</ul>
+
+<h2 id="在gap中使用-ur-的转换标识">在gap中使用 U、R 的转换标识</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; U:=f.1;
+gap&gt; R:=f.2;
+gap&gt; Image(hom, R*U^-1*R^-1*U^-1*R*U^-1*R^-1*U*R*U*R^-1*U);
+(1,8)(2,4)(3,6)(5,9)
+</code></pre></div></div>
+<p>可以自行构造转换方案来计算转换结果，可以用于批量验证自己的想法</p>
+
+<p>然后，精彩来了…</p>
+
+<h2 id="枚举所有的转动可能">枚举所有的转动可能</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
+    if LargestMovedPoint(x) &lt;=7 then
+        f := PreImagesRepresentative( hom, x);
+        Print(LargestMovedPoint(x), " ", x, "\t===&gt;\t", Length(f), "\t", f, "\n");
+    fi;
+od;    
+</code></pre></div></div>
+<ul>
+  <li>这里我们枚举了cube中所有可能</li>
+  <li>LargestMovedPoint(x)是判断x中数字的最大值，7表示，我们只考虑1-7这7个数字转动的情况</li>
+  <li>然后进行求解公式，并打出来</li>
+  <li>Length(zz)表示求解公式的步数，几步可以转动完成</li>
+</ul>
+
+<p>我们将看到这样的结果</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0 ()	===&gt;	0	&lt;identity ...&gt;
+7 (4,7,5)	===&gt;	10	U^-1*R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-1
+7 (4,5,7)	===&gt;	10	U*R^-1*U^2*R*U*R^-1*U*R*U
+7 (2,5,7)	===&gt;	10	R*U*R^-1*U*R*U^-2*R^-1*U^-2
+5 (2,5,4)	===&gt;	10	U*R*U*R^-1*U*R*U^-2*R^-1*U
+7 (2,5)(4,7)	===&gt;	18	U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-2*U^2*R*U*R^-1*U*R*U
+7 (2,7,5)	===&gt;	10	R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-2
+7 (2,7,4)	===&gt;	20	U*R*U*R^-1*U*R*U^-2*(R^-1*U^2)^2*R*U*R^-1*U*R*U
+7 (2,7)(4,5)	===&gt;	20	(U*R*U*R^-1*U*R*U^-2*R^-1)^2*U^-2
+7 (2,4,7)	===&gt;	20	U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-1*U^-1*R*U*R^-1*U*R*U^-2*R^-1*U^-2
+5 (2,4,5)	===&gt;	10	U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-1*U^-1
+7 (2,4)(5,7)	===&gt;	20	U^-1*R*U^2*(R^-1*U^-1*R*U^-1*R^-1*U^-1)^2*U^-1*R*U^-2
+</code></pre></div></div>
+<ul>
+  <li>举个例子
+    <ul>
+      <li>要转换实现(4,7,5)，这样三个棱块的转换，可以使用 <code>U^-1*R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-1</code> 这个公式</li>
+      <li>我们使用下面的JS方法，做个转换
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'U^-1*R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-1'.replaceAll('*', ' ').replaceAll(/\((.*)\)\^2/g, "$1 $1").replaceAll('^-1', "'").replaceAll("^2", "2").replaceAll("^-2", "2");
+</code></pre></div>        </div>
+        <p>答案是：U’ R’ U’ R U’ R’ U2 R U’   (参考 <a href="http://www.rubik.com.cn/notation.htm">http://www.rubik.com.cn/notation.htm</a> 这里的表示法)</p>
+      </li>
+      <li>下面是转换小工具</li>
+    </ul>
+  </li>
+</ul>
+<div style="margin-bottom: 40px">
+  <div>输入：<input style="width:80%" oninput="javascript:document.getElementById('transform_result').innerHTML=this.value.replaceAll('*', ' ').replaceAll(/\((.*)\)\^2/g, '$1 $1').replaceAll('^-1', '\'').replaceAll('^2', '2').replaceAll('^-2', '2')" placeholder="输入GAP的结果" /></div>
+  <div>输出：<span id="transform_result"></span></div>
+</div>
+
+<h2 id="我们验证一下">我们验证一下</h2>
+<p>我们使用这个工具进行验证，<a href="https://www.jaapsch.net/puzzles/cubie.htm">https://www.jaapsch.net/puzzles/cubie.htm</a>
+或者自己拿魔方验证一下，
+<img src="uploads/20230916/image.png" alt="cubie" />
+验证通过</p>
+
+<h2 id="校验更多">校验更多</h2>
+<p>刚才的公式，我们挑选一部进行校验</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(4,7,5) =&gt; U' R' U' R  U' R' U2 R  U'
+(4,5,7) =&gt; U  R' U2 R  U  R' U  R  U
+(2,7,5) =&gt;    R' U' R  U' R' U2 R  U2
+(2,5,7) =&gt;    R  U  R' U  R  U2 R' U2
+(2,5,4) =&gt; U  R  U  R' U  R  U2 R' U
+(2,4,5) =&gt; U' R  U2 R' U' R  U' R' U'
+
+(2,7,4) =&gt; U R U R' U R U2 R' U2 R' U2 2 R U R' U R U
+(2,7)(4,5) =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2
+(2,4)(5,7) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2
+(2,5)(4,7) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U
+</code></pre></div></div>
+
+<p>这些公式，再结合看看 <a href="http://www.rubik.com.cn/beginner2.htm">http://www.rubik.com.cn/beginner2.htm</a> ，我们能发现更多的魔方公式</p>
+
+<h2 id="再计算和校验">再计算和校验</h2>
+<p>这里只计算了一些步数比较小的，比较有研究价值</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
+    f := PreImagesRepresentative( hom, x);
+    if LargestMovedPoint(x) = 8 and Length(f) &lt;= 10 then
+        Print(LargestMovedPoint(x), " ", x, "\t===&gt;\t", Length(f), "\t", f, "\n");
+    fi;
+od;
+</code></pre></div></div>
+<p>结果：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8 (1,6,8,3)(2,4,7,5)	===&gt;	1	U'
+8 (1,6,8,3)(2,4,5,7)	===&gt;	9	U R U2 R' U' R U' R'
+8 (1,6,8,3)(2,4)	===&gt;	9	U R' U2 R U R' U R
+8 (1,6,8,3)(4,7)	===&gt;	9	R U R' U R U2 R' U
+8 (1,6,8,3)(5,7)	===&gt;	9	U R U R' U R U2 R'
+8 (1,8)(2,7)(3,6)(4,5)	===&gt;	2	U2
+8 (1,8)(2,7,4)(3,6)	===&gt;	10	U R U2 R' U' R U' R' U'
+8 (1,8)(2,7,5)(3,6)	===&gt;	10	U R' U2 R U R' U R U'
+8 (1,8)(2,4,5)(3,6)	===&gt;	8	R U R' U R U2 R'
+8 (1,8)(2,4,7)(3,6)	===&gt;	10	U R U R' U R U2 R' U'
+8 (1,8)(3,6)(4,5,7)	===&gt;	8	R' U' R U' R' U2 R
+8 (1,8)(3,6)(4,7,5)	===&gt;	8	R' U2 R U R' U R
+8 (1,8)(2,5,4)(3,6)	===&gt;	8	R U2 R' U' R U' R'
+8 (1,8)(2,5,7)(3,6)	===&gt;	10	U R' U' R U' R' U2 R U'
+8 (1,3,8,6)(2,5,7,4)	===&gt;	1	U
+8 (1,3,8,6)(2,7,5,4)	===&gt;	9	R U R' U R U2 R' U'
+8 (1,3,8,6)(2,4)	===&gt;	9	R' U' R U' R' U2 R U'
+8 (1,3,8,6)(5,7)	===&gt;	9	R U2 R' U' R U' R' U'
+8 (1,3,8,6)(4,7)	===&gt;	9	U' R U2 R' U' R U' R'
+</code></pre></div></div>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
+    f := PreImagesRepresentative( hom, x);
+    if LargestMovedPoint(x) = 9 then
+        Print(LargestMovedPoint(x), " ", x, "\t===&gt;\t", Length(f), "\t", f, "\n");
+    fi;
+od;  
+</code></pre></div></div>
+<p>举两个比较特殊的例子</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  (1,3,8,6)(2,5)(4,7,9) =&gt; R U' R' U2 R U2 R'
+  (1,6,8,3)(2,9,5)(4,7) =&gt; R U2 R' U2 R U  R'
+</code></pre></div></div>
+
+<h2 id="计算更多可能">计算更多可能</h2>
+<p>我们来打印出各种可能（只看1-10的变换）</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
+    f := PreImagesRepresentative( hom, x);
+    if LargestMovedPoint(x) &lt;= 10 then
+        Print(x, " =&gt; ", f, "\n");
+    fi;
+od;
+</code></pre></div></div>
+
+<p>通过以下程序转换</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">test</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.file.Files</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.nio.file.Path</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">lines</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">readAllLines</span><span class="o">(</span><span class="nc">Path</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"input.txt"</span><span class="o">));</span>
+        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">map</span><span class="o">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="sc">'*'</span><span class="o">,</span> <span class="sc">' '</span><span class="o">).</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"\\((.+)\\)\\\\^2"</span><span class="o">,</span> <span class="s">"$1 $1"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"^-1"</span><span class="o">,</span> <span class="s">"'"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"^2"</span><span class="o">,</span> <span class="s">"2"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"^-2"</span><span class="o">,</span> <span class="s">"2"</span><span class="o">)).</span><span class="na">toList</span><span class="o">();</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="s">"\n"</span><span class="o">,</span> <span class="n">result</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></div>
+
+<p>得到：</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(5,7,9)                 =&gt; R U' R' U R U R' U U R U R' U R' U' R U' R' U2 R U'
+(5,9,7)                 =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U R'
+(4,7,9)                 =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R' U'
+(4,7)(5,9)              =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2 R U' R' U' R U R' U'
+(4,7,5)                 =&gt; U' R' U' R U' R' U2 R U'
+(4,9,7)                 =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U R'
+(4,9,5)                 =&gt; U R U2 R' U2 R U R'
+(4,9)(5,7)              =&gt; U R' U2 R U R' U R U R U' R' U2 R U2 R' U'
+(4,5,7)                 =&gt; U R' U2 R U R' U R U
+(4,5,9)                 =&gt; R U' R' U2 R U2 R' U'
+(4,5)(7,9)              =&gt; U2 R U' R' U2 R U' R' U' R U R'
+(3,8)(5,9,7)(6,10)      =&gt; U' R U R'
+(3,8)(5,7,9)(6,10)      =&gt; R U' R' U
+(3,8)(6,10)             =&gt; U R' U2 R U R' U R U' R U' R' U2 R U' R'
+(3,8)(4,7)(5,9)(6,10)   =&gt; U R' U2 R U R' U R U R U' R' U
+(3,8)(4,7,9)(6,10)      =&gt; R U' R2 U' R U' R' U2 R U'
+(3,8)(4,7,5)(6,10)      =&gt; U2 R U' R' U2 R U' R'
+(3,8)(4,5,9)(6,10)      =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U' R U' R' U'
+(3,8)(4,5)(6,10)(7,9)   =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U R U R'
+(3,8)(4,5,7)(6,10)      =&gt; R U R' U2 R U R' U2
+(3,8)(4,9,7)(6,10)      =&gt; U R' U2 R U R' U R2 U R'
+(3,8)(4,9)(5,7)(6,10)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U' U' R U' R' U' R U' R' U'
+(3,8)(4,9,5)(6,10)      =&gt; U R U R' U R U R' U U R U R' U U2 R' U2 R U R' U R
+(3,10,8,6)(7,9)         =&gt; R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R'
+(3,10,8,6)(5,7)         =&gt; R U2 R' U R U R' U' R U2 R' U' R U' R'
+(3,10,8,6)(5,9)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U R' U'
+(3,10,8,6)(4,7,5,9)     =&gt; U' R U2 R' U' R U' R' U R U' R' U' R U' U' R' U' R U' R' U'
+(3,10,8,6)(4,7,9,5)     =&gt; U R' U2 R U R' U R U2 R U R' U'
+(3,10,8,6)(4,7)         =&gt; R U' R' U2 R U' R' U'
+(3,10,8,6)(4,9)         =&gt; U R U R' U2 R' U' R U' R' U2 R U'
+(3,10,8,6)(4,9,7,5)     =&gt; U R U R' U R U' U2 R' U' R U2 R' U' R U R'
+(3,10,8,6)(4,9,5,7)     =&gt; U R U R' U'
+(3,10,8,6)(4,5,7,9)     =&gt; R U R' U R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(3,10,8,6)(4,5,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U' R U2 R' U' R U R'
+(3,10,8,6)(4,5)         =&gt; R U2 R' U R U' R' U' R U' R' U'
+(3,6,8,10)(4,7,5,9)     =&gt; U R U' R' U'
+(3,6,8,10)(4,7)         =&gt; U R U R' U2 R U R'
+(3,6,8,10)(4,7,9,5)     =&gt; R U' R' U R U2 R' U R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(3,6,8,10)(7,9)         =&gt; R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R'
+(3,6,8,10)(5,9)         =&gt; U R U' R' U R' U U R U R' U R U' R U2 R' U' R U' R' U'
+(3,6,8,10)(5,7)         =&gt; R U R' U R U2 R' U R U' R' U' R U2 R'
+(3,6,8,10)(4,5)         =&gt; U R U R' U R U R' U' R U2 R'
+(3,6,8,10)(4,5,9,7)     =&gt; U R U' R' U2 R' U' R U' R' U2 R U'
+(3,6,8,10)(4,5,7,9)     =&gt; R U' R' U R U2 R' U R U2 U R' U' R U' R' U'
+(3,6,8,10)(4,9)         =&gt; U R' U2 R U R' U R U2 R U' R' U'
+(3,6,8,10)(4,9,7,5)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U' R'
+(3,6,8,10)(4,9,5,7)     =&gt; U' R U2 R' U' R U' R' U R U' R' U' R U2 R' U' R U R' U'
+(2,5,9)                 =&gt; R U R' U R U2 R' U R U' R' U2 R U2 R'
+(2,5)(7,9)              =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U' R U R'
+(2,5,7)                 =&gt; R U R' U R U2 R' U2
+(2,5,9,7,4)             =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U' R' U' R U R'
+(2,5,4)                 =&gt; U R U R' U R U2 R' U
+(2,5,7,9,4)             =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R' U'
+(2,5,9,4,7)             =&gt; U R U' R' U R U R' U2 R U R2 U' R U' R' U2 R U'
+(2,5,4,7,9)             =&gt; U R U R' U R U R' U2 R U2 R'
+(2,5)(4,7)              =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U
+(2,5,7,4,9)             =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2 R U2 R'
+(2,5)(4,9)              =&gt; U' R U2 R' U' R U' R' U' R U' R' U2 R U2 R' U'
+(2,5,4,9,7)             =&gt; U R U2 R' U2 R U R' U2 R' U2 R U R' U R
+(2,5,7)(3,8)(6,10)      =&gt; R U R' U2 R U R' U U2 R U R' U R U2 R' U
+(2,5)(3,8)(6,10)(7,9)   =&gt; R' U' R U' R' U2 R U R U R'
+(2,5,9)(3,8)(6,10)      =&gt; U' R U R' U U R' U U R U R' U R
+(2,5)(3,8)(4,9)(6,10)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U2 R U' R' U2 R U' R' U' R U' R' U'
+(2,5,7,4,9)(3,8)(6,10)  =&gt; U R U R' U R U R' U2 R U R2 U' R U' R' U2 R U'
+(2,5,4,9,7)(3,8)(6,10)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U R'
+(2,5,9,7,4)(3,8)(6,10)  =&gt; U2 U R U R' U R U R' U R U2 R' U
+(2,5,7,9,4)(3,8)(6,10)  =&gt; R U' R' U2 R U R' U R U2 R' U
+(2,5,4)(3,8)(6,10)      =&gt; R U R' U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(2,5)(3,8)(4,7)(6,10)   =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R'
+(2,5,9,4,7)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U' R U' R' U'
+(2,5,4,7,9)(3,8)(6,10)  =&gt; R U' R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(2,5,9,7)(3,10,8,6)     =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R' U' R U R'
+(2,5,7,9)(3,10,8,6)     =&gt; R U R' U R U R' U' R' U' R U' R' U2 R U'
+(2,5)(3,10,8,6)         =&gt; R U2 R' U R U R' U
+(2,5,9)(3,10,8,6)(4,7)  =&gt; U' R U2 R' U' R U' R' U R U' R'
+(2,5,4,7)(3,10,8,6)     =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U'
+(2,5)(3,10,8,6)(4,7,9)  =&gt; R U R' U R U R' U U R' U U R U R' U R U R U R' U R U2 R' U
+(2,5,9,4)(3,10,8,6)     =&gt; R' U' R U' R' U2 R2 U' R' U' R U' U' R' U' R U' R' U'
+(2,5,4)(3,10,8,6)(7,9)  =&gt; R U R' U R U R' U U R U2 R' U' R U' R'
+(2,5,7,4)(3,10,8,6)     =&gt; U R U R' U R U2 R' U R U' R' U2 R U' R' U'
+(2,5,7)(3,10,8,6)(4,9)  =&gt; U R U2 R' U R U2 R' U
+(2,5)(3,10,8,6)(4,9,7)  =&gt; U R U R' U R' U2 R U R' U R
+(2,5,4,9)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R'
+(2,5,7,4)(3,6,8,10)     =&gt; U R' U2 R U R' U R2 U' R' U' R U2 R'
+(2,5,4)(3,6,8,10)(7,9)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' U' R U' R' U' R U' R'
+(2,5,9,4)(3,6,8,10)     =&gt; U R U' R' U R' U U R U R' U R
+(2,5,7)(3,6,8,10)(4,9)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U'
+(2,5)(3,6,8,10)(4,9,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U' R U' R'
+(2,5,4,9)(3,6,8,10)     =&gt; R U R' U R U R' U' R U R'
+(2,5,7,9)(3,6,8,10)     =&gt; R U' R' U R U2 R' U R U R' U
+(2,5)(3,6,8,10)         =&gt; U' R U' R' U' R U2 R'
+(2,5,9,7)(3,6,8,10)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' R'
+(2,5,9)(3,6,8,10)(4,7)  =&gt; U2 R U2 R' U
+(2,5)(3,6,8,10)(4,7,9)  =&gt; R' U' R U' R' U' U' R U' R U' R' U'
+(2,5,4,7)(3,6,8,10)     =&gt; U R U R' U U R U R' U R U R' U R U2 R' U
+(2,9,7)(3,8)(6,10)      =&gt; R U R' U R U2 R' U R U R'
+(2,9,5)(3,8)(6,10)      =&gt; R' U' R U' R' U2 R U2 R U' R' U
+(2,9)(3,8)(5,7)(6,10)   =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U' U' R' U' R U' R'
+(2,9,4)(3,8)(6,10)      =&gt; R U R' U R U U R' U R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(2,9,7,5,4)(3,8)(6,10)  =&gt; U R U R' U R U' R'
+(2,9,5,7,4)(3,8)(6,10)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U
+(2,9)(3,8)(4,7)(6,10)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U' U' R' U' R U' R'
+(2,9,5,4,7)(3,8)(6,10)  =&gt; R U R' U R U U R' U R U R' U' R' U' R U' R' U2 R U'
+(2,9,4,7,5)(3,8)(6,10)  =&gt; U R' U2 R U R' U R2 U' R' U' U' R U' R' U' R U' R' U'
+(2,9,7,4,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U R'
+(2,9,4,5,7)(3,8)(6,10)  =&gt; U' R U' R' U' U' R U' R' U' R U' R' U'
+(2,9)(3,8)(4,5)(6,10)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U' U' R' U' R U' R'
+(2,9,5,7)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' R U R' U'
+(2,9,7,5)(3,10,8,6)     =&gt; U' R U' R' U' R U2 R' U' R U R'
+(2,9)(3,10,8,6)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R'
+(2,9)(3,10,8,6)(4,5,7)  =&gt; U2 R U' R'
+(2,9,4,5)(3,10,8,6)     =&gt; R U' R' U R U' R' U' R U' R'
+(2,9,7)(3,10,8,6)(4,5)  =&gt; R U' R' U R U R' U R' U' R U' R' U2 R U'
+(2,9,4)(3,10,8,6)(5,7)  =&gt; U2 R U' R' U' R U' U' R' U' R U' R' U'
+(2,9,7,4)(3,10,8,6)     =&gt; U R' U2 R U R' U R2 U' R' U' R U2 R' U' R U R'
+(2,9,5,4)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U R' U'
+(2,9,4,7)(3,10,8,6)     =&gt; R U' R' U R U R' U2
+(2,9,5)(3,10,8,6)(4,7)  =&gt; U' R U2 R' U2
+(2,9)(3,10,8,6)(4,7,5)  =&gt; U R' U2 R U R' U R U' R U' R'
+(2,9,5)                 =&gt; R U2 R' U2 R U R' U' R U2 R' U' R U' R'
+(2,9)(5,7)              =&gt; R' U' R U' R' U2 R U2 U' R U' R' U2 R U2 R'
+(2,9,7)                 =&gt; R U2 R' U2 R U R' U
+(2,9,4,5,7)             =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U2 R' U'
+(2,9,7,4,5)             =&gt; R U2 R' U2 R U' R' U' R U' R' U'
+(2,9)(4,5)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U2 R U2 R'
+(2,9)(4,7)              =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2 R U2 R'
+(2,9,4,7,5)             =&gt; R U2 R' U2 R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(2,9,5,4,7)             =&gt; R U2 R' U2 R U R2 U' R U' R' U2 R U'
+(2,9,5,7,4)             =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2 R U' R' U' R U R' U'
+(2,9,4)                 =&gt; U R U R' U R U2 R' U R U' R' U2 R U2 R' U'
+(2,9,7,5,4)             =&gt; R U U R' U2 R U R' U2 R U R' U R U2 R' U
+(2,9,4)(3,6,8,10)(5,7)  =&gt; U R U R' U R U2 R' U2 R U' R' U'
+(2,9,5,4)(3,6,8,10)     =&gt; R U R2 U2 R U R' U R
+(2,9,7,4)(3,6,8,10)     =&gt; R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
+(2,9)(3,6,8,10)         =&gt; R U R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
+(2,9,5,7)(3,6,8,10)     =&gt; R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(2,9,7,5)(3,6,8,10)     =&gt; U R' U2 R U R' U R U R U' R' U' R U' R'
+(2,9,7)(3,6,8,10)(4,5)  =&gt; R U' R' U' R U' R'
+(2,9)(3,6,8,10)(4,5,7)  =&gt; R U R' U R' U' R U' R' U2 R U'
+(2,9,4,5)(3,6,8,10)     =&gt; R U R2 U U R U R' U R U R U R' U R U2 R' U
+(2,9,4,7)(3,6,8,10)     =&gt; R U R' U R U2 R' U' R U' R' U'
+(2,9,5)(3,6,8,10)(4,7)  =&gt; R U R' U' R U R' U R U2 R' U
+(2,9)(3,6,8,10)(4,7,5)  =&gt; R U R' U2
+(2,7)(3,8)(5,9)(6,10)   =&gt; R U R' U R U2 R' U2 R U' R' U
+(2,7,5)(3,8)(6,10)      =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R'
+(2,7,9)(3,8)(6,10)      =&gt; R U' R' U' R U' U' R' U' R U' R'
+(2,7,4)(3,8)(6,10)      =&gt; R U R' U2 R U' R' U' R U' R'
+(2,7,9,5,4)(3,8)(6,10)  =&gt; U R U R' U R U2 R' U R U' R' U
+(2,7,5,9,4)(3,8)(6,10)  =&gt; U' R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(2,7,4,5,9)(3,8)(6,10)  =&gt; U R' U2 R U R' U R U R U' R' U' R U' U' R' U' R U' R'
+(2,7)(3,8)(4,5)(6,10)   =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U2 R U' R'
+(2,7,9,4,5)(3,8)(6,10)  =&gt; R U R' U R U2 R' U R U' R' U' U' R U' R' U' R U' R' U'
+(2,7,4,9,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U
+(2,7)(3,8)(4,9)(6,10)   =&gt; U R U R' U R U R' U' U' R U' R' U' R U' R' U'
+(2,7,5,4,9)(3,8)(6,10)  =&gt; U R U R' U R U R' U U R U R' U
+(2,7)(3,10,8,6)         =&gt; R U2 R' U R U R' U2 U R' U2 R U R' U R
+(2,7,9,5)(3,10,8,6)     =&gt; R U R' U R U R' U R U R' U R U2 R' U
+(2,7,5,9)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R'
+(2,7,4)(3,10,8,6)(5,9)  =&gt; U R U R' U R U2 R' U2 R U R' U'
+(2,7,5,4)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U'
+(2,7,9,4)(3,10,8,6)     =&gt; R U R' U R U R' U' R U2 R' U' R U' R' U'
+(2,7,4,9)(3,10,8,6)     =&gt; U R U R' U R U2 R' U' R U' R'
+(2,7)(3,10,8,6)(4,9,5)  =&gt; R U R' U R U2 R' U' R U R' U'
+(2,7,5)(3,10,8,6)(4,9)  =&gt; U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(2,7)(3,10,8,6)(4,5,9)  =&gt; U R U' R' U R U2 R' U R U R' U R' U' R U' R' U2 R U'
+(2,7,4,5)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U'
+(2,7,9)(3,10,8,6)(4,5)  =&gt; R U R' U R U R'
+(2,7,9)                 =&gt; U' R U' R' U2 R U2 R'
+(2,7,5)                 =&gt; R' U' R U' R' U2 R U2
+(2,7)(5,9)              =&gt; U' R U' R' U' U' R U' R' U' R U R' U'
+(2,7,4)                 =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U
+(2,7,5,9,4)             =&gt; U R U' R' U R U R' U U R U R' U U R U R' U R U2 R' U
+(2,7,9,5,4)             =&gt; R U' R' U R U R' U2 R U' R' U' R U' R'
+(2,7)(4,9)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2 R U2 R' U'
+(2,7,5,4,9)             =&gt; U R U U R' U2 R U R' U2 R U2 R' U' R U' R'
+(2,7,4,9,5)             =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R' U' R U R' U'
+(2,7,4,5,9)             =&gt; U R' U2 R U R' U R2 U' R' U2 R U2 R'
+(2,7,9,4,5)             =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R' U'
+(2,7)(4,5)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2
+(2,7,9,4)(3,6,8,10)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U'
+(2,7,4)(3,6,8,10)(5,9)  =&gt; U2 R U' R' U' R U2 R' U' R U R' U'
+(2,7,5,4)(3,6,8,10)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U2 R'
+(2,7,9)(3,6,8,10)(4,5)  =&gt; U R' U2 R U R' U R U' R U' R' U' R U R'
+(2,7)(3,6,8,10)(4,5,9)  =&gt; U R U' R' U R U2 R' U' R U' R'
+(2,7,4,5)(3,6,8,10)     =&gt; U R U R' U U R U R' U U R U2 R' U' R U' R'
+(2,7,5)(3,6,8,10)(4,9)  =&gt; U' R U2 R' U' R U2 R' U'
+(2,7,4,9)(3,6,8,10)     =&gt; U2 R U' R' U' R U R'
+(2,7)(3,6,8,10)(4,9,5)  =&gt; U R' U2 R U R' U R U' R U' R' U' R U2 R' U' R U R' U'
+(2,7,9,5)(3,6,8,10)     =&gt; R U' R' U R U2 R' U R U R' U2 U R' U2 R U R' U R
+(2,7)(3,6,8,10)         =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R'
+(2,7,5,9)(3,6,8,10)     =&gt; U R U' R' U R U2 R' U' R U' R' U R U R' U R U2 R' U
+(2,4,7,9,5)             =&gt; R U' R' U R U R' U2 R U R' R' U2 R U R' U R U R U R' U R U2 R' U
+(2,4,7)                 =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2
+(2,4,7,5,9)             =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U2 U' R U' R' U2 R U2 R'
+(2,4,5)                 =&gt; U' R U2 R' U' R U' R' U'
+(2,4,5,7,9)             =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U2 R'
+(2,4,5,9,7)             =&gt; R U R' U R U R' U2 R U' R' U' R U R'
+(2,4,9,7,5)             =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' U' R U' R' U' R U R'
+(2,4,9,5,7)             =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U' R U R' U'
+(2,4,9)                 =&gt; U R U2 R' U2 R U R' U' R U2 R' U' R U' R' U'
+(2,4)(7,9)              =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R'
+(2,4)(5,9)              =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2 R U' R' U' R U R' U'
+(2,4)(5,7)              =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2
+(2,4,7,5)(3,6,8,10)     =&gt; U R U R' U2 R U R' U' R U2 R' U' R U' R' U'
+(2,4,7)(3,6,8,10)(5,9)  =&gt; U R U' R' U2 R U2 R' U' R U' R' U'
+(2,4,7,9)(3,6,8,10)     =&gt; R U' R' U R U2 R' U R U R2 U' R U' R' U2 R U'
+(2,4,9,5)(3,6,8,10)     =&gt; U R U R' U R U U R' U R U R2 U2 R U R' U R
+(2,4,9)(3,6,8,10)(5,7)  =&gt; U R U R' U R U U R' U R U R' U2
+(2,4,9,7)(3,6,8,10)     =&gt; U R U R' U R U2 R' U R U' R' U' R U' R'
+(2,4,5)(3,6,8,10)(7,9)  =&gt; R U R' U R U2 R' U' U' R U' R' U' R U' R'
+(2,4,5,7)(3,6,8,10)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U' R' U' R U2 R'
+(2,4,5,9)(3,6,8,10)     =&gt; U R U' R' U R' U U R U R' U R U R U R' U R U2 R' U
+(2,4)(3,6,8,10)         =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R'
+(2,4)(3,6,8,10)(5,9,7)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U' R'
+(2,4)(3,6,8,10)(5,7,9)  =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R' U' R U R' U'
+(2,4,7,9)(3,10,8,6)     =&gt; U R U R' U R U2 R' U R U R' U R U R'
+(2,4,7)(3,10,8,6)(5,9)  =&gt; U R U' R' U R U2 R' U R U R' U2
+(2,4,7,5)(3,10,8,6)     =&gt; R U2 R' U R U R2 U' R U' R' U2 R U'
+(2,4)(3,10,8,6)(5,9,7)  =&gt; U R U' R' U R U2 R' U R U R2 U2 R U R' U R
+(2,4)(3,10,8,6)         =&gt; R U2 R' U R U R' U U R U R' U R U2 R' U
+(2,4)(3,10,8,6)(5,7,9)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U R' U'
+(2,4,9,5)(3,10,8,6)     =&gt; R' U' R U' R' U' U' R U' R U R' U'
+(2,4,9,7)(3,10,8,6)     =&gt; U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(2,4,9)(3,10,8,6)(5,7)  =&gt; U R U R' U2 R U2 R' U' R U' R' U'
+(2,4,5,9)(3,10,8,6)     =&gt; R' U' R U' R' U2 R2 U' R'
+(2,4,5)(3,10,8,6)(7,9)  =&gt; R U R' U R U R' U U R U2 R' U' R U' R' U R U R' U R U2 R' U
+(2,4,5,7)(3,10,8,6)     =&gt; R U2 R' U R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(2,4,5,9,7)(3,8)(6,10)  =&gt; U' R U R' U' R U2 R' U' R U' R' U'
+(2,4,5,7,9)(3,8)(6,10)  =&gt; R U R' U' R U' R' U'
+(2,4,5)(3,8)(6,10)      =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2 R U' R'
+(2,4,7,9,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U' R U' R' U
+(2,4,7,5,9)(3,8)(6,10)  =&gt; U' R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(2,4,7)(3,8)(6,10)      =&gt; R U R' U R U R' U2 R U' R'
+(2,4)(3,8)(5,7)(6,10)   =&gt; U R U R' U R U2 R' U' R U' R' U2 R U' R'
+(2,4)(3,8)(5,9)(6,10)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U
+(2,4)(3,8)(6,10)(7,9)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U R'
+(2,4,9,7,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U2 R U R'
+(2,4,9)(3,8)(6,10)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U' R U' U' R' U' R U' R'
+(2,4,9,5,7)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U
+(1,6,8,3)(2,4,7,5)      =&gt; U'
+(1,6,8,3)(2,4,7,9)      =&gt; U R' U2 R U R' U R U' R U' R' U2 R U2 R'
+(1,6,8,3)(2,4,7)(5,9)   =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U R' U'
+(1,6,8,3)(2,4,5)(7,9)   =&gt; R U' R' U R U R' U U R U R' U U2 R' U2 R U R' U R
+(1,6,8,3)(2,4,5,9)      =&gt; U R U' R' U R U R' U2 R U R' U' R' U' R U' R' U2 R U'
+(1,6,8,3)(2,4,5,7)      =&gt; U R U2 R' U' R U' R'
+(1,6,8,3)(2,4,9,5)      =&gt; U R U U R' U2 R U R' U R' U2 R U R' U R
+(1,6,8,3)(2,4,9)(5,7)   =&gt; U2 R U' R' U2 R U2 R'
+(1,6,8,3)(2,4,9,7)      =&gt; U R U2 R' U2 R U R' U R U2 R' U' R U' R'
+(1,6,8,3)(2,4)          =&gt; U R' U2 R U R' U R
+(1,6,8,3)(2,4)(5,9,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R'
+(1,6,8,3)(2,4)(5,7,9)   =&gt; R U' R' U R U R' U U R U R' U
+(1,6,10,8)(2,4,7)(5,9)  =&gt; U' R U R' U'
+(1,6,10,8)(2,4,7,9)     =&gt; R U' R'
+(1,6,10,8)(2,4,7,5)     =&gt; R U R' U2 R U R' U' R U2 R' U' R U' R'
+(1,6,10,8)(2,4,5,9)     =&gt; U R' U2 R U R' U R U R U' R'
+(1,6,10,8)(2,4,5)(7,9)  =&gt; R U' R' U2 R U2 R' U' R U' R'
+(1,6,10,8)(2,4,5,7)     =&gt; U2 R U' R' U2 R U' R' U'
+(1,6,10,8)(2,4)(5,9,7)  =&gt; U' R U R' U R' U2 R U R' U R
+(1,6,10,8)(2,4)(5,7,9)  =&gt; R U' R' U2 R' U2 R U R' U R
+(1,6,10,8)(2,4)         =&gt; R U R' U2 R U R' U
+(1,6,10,8)(2,4,9,5)     =&gt; U R' U2 R U R' U R2 U R' U'
+(1,6,10,8)(2,4,9,7)     =&gt; U R U R' U R U R' U2 R U R' U' R' U' R U' R' U2 R U'
+(1,6,10,8)(2,4,9)(5,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R'
+(1,6)(2,4,7,9,5)(3,10)  =&gt; R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R' U'
+(1,6)(2,4,7)(3,10)      =&gt; R U2 R' U R U R' U' R U2 R' U' R U' R' U'
+(1,6)(2,4,7,5,9)(3,10)  =&gt; R U R' U R U2 R' U R U' R' U' R U R'
+(1,6)(2,4,5,9,7)(3,10)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U' R U' R'
+(1,6)(2,4,5,7,9)(3,10)  =&gt; R U R' U R U2 R' U R U2 R' U
+(1,6)(2,4,5)(3,10)      =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U2 R'
+(1,6)(2,4,9,7,5)(3,10)  =&gt; U R U' R' U' R U' R'
+(1,6)(2,4,9,5,7)(3,10)  =&gt; U R U R2 U2 R U R' U R
+(1,6)(2,4,9)(3,10)      =&gt; U R U R' U2
+(1,6)(2,4)(3,10)(7,9)   =&gt; U R' U2 R U R' U R U' U' R U' R' U' R U' R'
+(1,6)(2,4)(3,10)(5,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U' R U2 R' U' R U R' U'
+(1,6)(2,4)(3,10)(5,7)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U2 R'
+(1,6,3,8,10)(2,4,5,9,7) =&gt; U R U' R' U2
+(1,6,3,8,10)(2,4,5)     =&gt; U R U R' U2 R U R' U'
+(1,6,3,8,10)(2,4,5,7,9) =&gt; U R' U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R'
+(1,6,3,8,10)(2,4,7,9,5) =&gt; R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R' U'
+(1,6,3,8,10)(2,4,7,5,9) =&gt; U R U' R2 U2 R U R' U R
+(1,6,3,8,10)(2,4,7)     =&gt; R U R' U R U2 R' U R U' R' U' R U2 R' U'
+(1,6,3,8,10)(2,4)(5,7)  =&gt; U R U R' U R U R' U' R U2 R' U'
+(1,6,3,8,10)(2,4)(5,9)  =&gt; U R U R' U' R U' R'
+(1,6,3,8,10)(2,4)(7,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U2
+(1,6,3,8,10)(2,4,9,7,5) =&gt; U R' U2 R U R' U R U2 R U' R' U2
+(1,6,3,8,10)(2,4,9,5,7) =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U' R' U'
+(1,6,3,8,10)(2,4,9)     =&gt; R U' R' U' U' R U' R' U' R U' R'
+(1,6,8,3)(4,7,5,9)      =&gt; R U R' U R U2 R' U R U' R' U2 R U2 R' U'
+(1,6,8,3)(4,7,9,5)      =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U' R U R' U'
+(1,6,8,3)(4,7)          =&gt; R U R' U R U2 R' U
+(1,6,8,3)(5,9)          =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U' R' U' R U R' U'
+(1,6,8,3)(5,7)          =&gt; U R U R' U R U2 R'
+(1,6,8,3)(7,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U' R' U' R U R'
+(1,6,8,3)(4,5,9,7)      =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R' U' R U R'
+(1,6,8,3)(4,5,7,9)      =&gt; U R U R' U R U R' U2 R U2 R' U'
+(1,6,8,3)(4,5)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R
+(1,6,8,3)(4,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2 R U2 R' U'
+(1,6,8,3)(4,9,7,5)      =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R'
+(1,6,8,3)(4,9,5,7)      =&gt; U R U2 R' U U R U2 R' U R U2 R' U
+(1,6,10,8)(4,7)         =&gt; U R U R' U R U2 R' U R U R' U R U R' U2 R U' R' U'
+(1,6,10,8)(4,7,9,5)     =&gt; R U' R' U R U R' U R U2 R' U
+(1,6,10,8)(4,7,5,9)     =&gt; U' R U2 R' U R U2 R' U
+(1,6,10,8)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U' R U' R' U' R U2 R' U' R U R'
+(1,6,10,8)(4,9)         =&gt; U R U R' U R U R' U U R U R' U U R U2 R' U' R U' R'
+(1,6,10,8)(4,9,5,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U R' U'
+(1,6,10,8)(5,9)         =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U R' U'
+(1,6,10,8)(7,9)         =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U R'
+(1,6,10,8)(5,7)         =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U' U' R U' R' U'
+(1,6,10,8)(4,5)         =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U'
+(1,6,10,8)(4,5,9,7)     =&gt; U' R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,6,10,8)(4,5,7,9)     =&gt; U R U R' U R U2 R' U R U' R' U' R U' U' R' U' R U' R' U'
+(1,6)(3,10)(4,7)(5,9)   =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R' U' R U R' U'
+(1,6)(3,10)(4,7,9)      =&gt; R U R' U R U R' U R U2 R' U' R U' R'
+(1,6)(3,10)(4,7,5)      =&gt; R U2 R' U R U R'
+(1,6)(3,10)(4,5,9)      =&gt; U' R U2 R' U' R U' R' U R U' R' U'
+(1,6)(3,10)(4,5,7)      =&gt; R U' R' U' R U2 R'
+(1,6)(3,10)(4,5)(7,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' U' R U' R' U' R U' R'
+(1,6)(3,10)(5,9,7)      =&gt; U R U R' U R U2 R' U2 R U' R' U' R U' R'
+(1,6)(3,10)(5,7,9)      =&gt; R U R' U R U R' U2 R U2 R' U' R U' R' U'
+(1,6)(3,10)             =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R' U' R U2 R'
+(1,6)(3,10)(4,9,7)      =&gt; R U R' U R U' U' R' U' R U' R' U' R U' R'
+(1,6)(3,10)(4,9,5)      =&gt; U R U R' U' R U R' U R U2 R' U
+(1,6)(3,10)(4,9)(5,7)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U'
+(1,6,3,8,10)            =&gt; U R U R' U2 R U2 R' U R U2 R' U
+(1,6,3,8,10)(5,7,9)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' U' R U' R' U' R U' R' U'
+(1,6,3,8,10)(5,9,7)     =&gt; U R U' R' U' R U R' U R U2 R' U
+(1,6,3,8,10)(4,9,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U2
+(1,6,3,8,10)(4,9,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U' R U' R' U'
+(1,6,3,8,10)(4,9)(5,7)  =&gt; R U R' U R U R' U' R U R' U'
+(1,6,3,8,10)(4,7,9)     =&gt; R U' R' U R U2 R' U R U R'
+(1,6,3,8,10)(4,7,5)     =&gt; U' R U' R' U' R U2 R' U'
+(1,6,3,8,10)(4,7)(5,9)  =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' R' U'
+(1,6,3,8,10)(4,5,9)     =&gt; U R U R' U' R U' R' U R U R' U R U2 R' U
+(1,6,3,8,10)(4,5)(7,9)  =&gt; R' U' R U' R' U' U' R U' R U' R' U2
+(1,6,3,8,10)(4,5,7)     =&gt; U R U R' U U R U R' U R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,6,10,8)(2,9,5)(4,7)  =&gt; R U R' U R U2 R' U R U R' U'
+(1,6,10,8)(2,9)(4,7,5)  =&gt; R' U' R U' R' U2 R U2 R U' R'
+(1,6,10,8)(2,9,4,7)     =&gt; R U R' U R U U R' U R U U R' U R U2 R' U
+(1,6,10,8)(2,9,7,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U R'
+(1,6,10,8)(2,9,5,7)     =&gt; U R U R' U R U' R' U'
+(1,6,10,8)(2,9)         =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R'
+(1,6,10,8)(2,9,4,5)     =&gt; R U R' U R U U R' U R U R' U2 R' U' R U' R' U2 R U'
+(1,6,10,8)(2,9)(4,5,7)  =&gt; R U R' U R U U R' U R U R' U R U2 R' U' R U' R'
+(1,6,10,8)(2,9,7)(4,5)  =&gt; R U R' U R U U R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,6,10,8)(2,9,5,4)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U R' U'
+(1,6,10,8)(2,9,7,4)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U' R U R'
+(1,6,10,8)(2,9,4)(5,7)  =&gt; R U R' U R U U R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,6)(2,9)(3,10)(4,7)   =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U R'
+(1,6)(2,9,5,4,7)(3,10)  =&gt; U' R U' R' U' R U2 R' U' R U R' U'
+(1,6)(2,9,4,7,5)(3,10)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U'
+(1,6)(2,9,4)(3,10)      =&gt; U2 R U' R' U'
+(1,6)(2,9,7,5,4)(3,10)  =&gt; U' R U2 R' U' R U2 R' U' R U' R'
+(1,6)(2,9,5,7,4)(3,10)  =&gt; R U' R' U R U R' U' R U2 R' U' R U' R'
+(1,6)(2,9,7)(3,10)      =&gt; R U' R' U R U R' U U R U R' U R U2 R' U
+(1,6)(2,9,5)(3,10)      =&gt; R U' R' U R U R2 U' R U' R' U2 R U'
+(1,6)(2,9)(3,10)(5,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U R'
+(1,6)(2,9,7,4,5)(3,10)  =&gt; R U' R' U R U R' U
+(1,6)(2,9)(3,10)(4,5)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U' R U R'
+(1,6)(2,9,4,5,7)(3,10)  =&gt; U R' U2 R U R' U R U' R U' R' U'
+(1,6,8,3)(2,9)(4,7,5)   =&gt; R U2 R' U2 R U R' U' R U2 R' U' R U' R' U'
+(1,6,8,3)(2,9,4,7)      =&gt; R U2 R' U U R U R' U R U R' U R U2 R' U
+(1,6,8,3)(2,9,5)(4,7)   =&gt; R U2 R' U2 R U R'
+(1,6,8,3)(2,9,7,4)      =&gt; U' R U2 R' U' R U2 R' U2 R U' R' U' R U R'
+(1,6,8,3)(2,9,5,4)      =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U R' U'
+(1,6,8,3)(2,9,4)(5,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U2 R U2 R' U'
+(1,6,8,3)(2,9,4,5)      =&gt; R U2 R' U2 R U R' U' R' U' R U' R' U2 R U'
+(1,6,8,3)(2,9,7)(4,5)   =&gt; R U2 R' U2 R U R' U2 R' U2 R U R' U R U R U R' U R U2 R' U
+(1,6,8,3)(2,9)(4,5,7)   =&gt; R U U R' U2 R U R' U2 R U2 R' U' R U' R'
+(1,6,8,3)(2,9)          =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U2 R'
+(1,6,8,3)(2,9,7,5)      =&gt; R U2 R' U2 R U R' U2 R' U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,6,8,3)(2,9,5,7)      =&gt; R U U R' U2 R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,6,3,8,10)(2,9,7)     =&gt; R U R2 U' R U' R' U2 R U'
+(1,6,3,8,10)(2,9)(5,7)  =&gt; R U R' U2 R U R' U R U2 R' U
+(1,6,3,8,10)(2,9,5)     =&gt; R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,6,3,8,10)(2,9,4,7,5) =&gt; R U R' U2 U R' U2 R U R' U R
+(1,6,3,8,10)(2,9)(4,7)  =&gt; R U R' U' R' U U R U R' U R U R U R' U R U2 R' U
+(1,6,3,8,10)(2,9,5,4,7) =&gt; U R' U2 R U R' U R U R U' R' U' R U' R' U'
+(1,6,3,8,10)(2,9,5,7,4) =&gt; R U' R' U' R U' R' U'
+(1,6,3,8,10)(2,9,4)     =&gt; R U R' U' R U2 R' U' R U' R'
+(1,6,3,8,10)(2,9,7,5,4) =&gt; R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6,3,8,10)(2,9,7,4,5) =&gt; R U R' U R U2 R' U' R U' R' U2
+(1,6,3,8,10)(2,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U' R U' R'
+(1,6,3,8,10)(2,9,4,5,7) =&gt; R U R' U
+(1,6,10,8)(2,5,9)(4,7)  =&gt; R U R' U R U2 R' U2 R U' R'
+(1,6,10,8)(2,5,4,7)     =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U'
+(1,6,10,8)(2,5)(4,7,9)  =&gt; R U' R' U' R U' U' R' U' R U' R' U'
+(1,6,10,8)(2,5)         =&gt; R U R' U2 R U' R' U' R U' R' U'
+(1,6,10,8)(2,5,7,9)     =&gt; U R U R' U R U2 R' U R U' R'
+(1,6,10,8)(2,5,9,7)     =&gt; U R' U2 R U R' U R U2 R U' R' U' R U2 R' U' R U R'
+(1,6,10,8)(2,5,9,4)     =&gt; U R' U2 R U R' U R U R U' R' U' R U' U' R' U' R U' R' U'
+(1,6,10,8)(2,5,7,4)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U2 R U' R' U'
+(1,6,10,8)(2,5,4)(7,9)  =&gt; U R U' R' U' R U2 R' U' R U R'
+(1,6,10,8)(2,5,4,9)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R'
+(1,6,10,8)(2,5)(4,9,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U' R U R'
+(1,6,10,8)(2,5,7)(4,9)  =&gt; U R U R' U R U R' U2 R U R'
+(1,6)(2,5)(3,10)(4,7)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R'
+(1,6)(2,5,4,7,9)(3,10)  =&gt; U' R U' R' U' R U R'
+(1,6)(2,5,9,4,7)(3,10)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U'
+(1,6)(2,5,9)(3,10)      =&gt; U R' U2 R U R' U R2 U' R' U' R U R'
+(1,6)(2,5,7)(3,10)      =&gt; R U2 R' U R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6)(2,5)(3,10)(7,9)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' U' R U' R' U' R U' R'
+(1,6)(2,5)(3,10)(4,9)   =&gt; U R U R' U R U2 R' U' R U' R' U'
+(1,6)(2,5,7,4,9)(3,10)  =&gt; U R U R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,6)(2,5,4,9,7)(3,10)  =&gt; R' U' R U' R' U2 R U' R U' R' U' R U' R'
+(1,6)(2,5,9,7,4)(3,10)  =&gt; U R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R'
+(1,6)(2,5,4)(3,10)      =&gt; R U2 R' U R U R' U U R' U U R U R' U R
+(1,6)(2,5,7,9,4)(3,10)  =&gt; R U R' U R U R' U'
+(1,6,8,3)(2,5)(4,7,9)   =&gt; U' R U' R' U2 R U2 R' U'
+(1,6,8,3)(2,5,4,7)      =&gt; R' U' R U' R' U2 R U
+(1,6,8,3)(2,5,9)(4,7)   =&gt; U R U' R' U R U R' U2 R U R'
+(1,6,8,3)(2,5)          =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R
+(1,6,8,3)(2,5,9,7)      =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U R'
+(1,6,8,3)(2,5,7,9)      =&gt; R U' R' U R U R' U2 R U' R' U' R U' R' U'
+(1,6,8,3)(2,5)(4,9,7)   =&gt; U R U' R' U2 R U' R' U' R U R'
+(1,6,8,3)(2,5,7)(4,9)   =&gt; U R U2 R' U2 R U R' U2 R U2 R' U' R U' R' U'
+(1,6,8,3)(2,5,4,9)      =&gt; R' U' R U' R' U2 R R U' R' U2 R U2 R'
+(1,6,8,3)(2,5,9,4)      =&gt; U R' U2 R U R' U R2 U' R' U2 R U2 R' U'
+(1,6,8,3)(2,5,4)(7,9)   =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U' R U R'
+(1,6,8,3)(2,5,7,4)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U
+(1,6,3,8,10)(2,5)(7,9)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U2
+(1,6,3,8,10)(2,5,9)     =&gt; U R U R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,6,3,8,10)(2,5,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U2 R' U'
+(1,6,3,8,10)(2,5,7,9,4) =&gt; U R' U2 R U R' U R U' R U' R' U' R U R' U'
+(1,6,3,8,10)(2,5,9,7,4) =&gt; U R U' R' U R U2 R' U' R U' R' U'
+(1,6,3,8,10)(2,5,4)     =&gt; U R U R' U2 R U R' U2 R U2 R' U' R U' R' U'
+(1,6,3,8,10)(2,5,4,9,7) =&gt; U' R U2 R' U' R U2 R' U2
+(1,6,3,8,10)(2,5)(4,9)  =&gt; U2 R U' R' U' R U R' U'
+(1,6,3,8,10)(2,5,7,4,9) =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U' R'
+(1,6,3,8,10)(2,5,4,7,9) =&gt; R U' R' U R U U R' U R U R' U R U R' U R U2 R' U
+(1,6,3,8,10)(2,5)(4,7)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R' U'
+(1,6,3,8,10)(2,5,9,4,7) =&gt; U R U' R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,6,8,3)(2,7,9)(4,5)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2 R U2 R'
+(1,6,8,3)(2,7,4,5)      =&gt; U2 R' U' R U' R' U2 R U'
+(1,6,8,3)(2,7)(4,5,9)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U2 U' R U' R' U2 R U2 R' U'
+(1,6,8,3)(2,7,5,4)      =&gt; U' R U2 R' U' R U' R' U2
+(1,6,8,3)(2,7,9,4)      =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U2 R' U'
+(1,6,8,3)(2,7,4)(5,9)   =&gt; R U R' U R U R' U2 R U' R' U' R U R' U'
+(1,6,8,3)(2,7)(4,9,5)   =&gt; U R U2 R' U2 R U R' U2 R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6,8,3)(2,7,4,9)      =&gt; R U R' U R U R' U2 R U2 R'
+(1,6,8,3)(2,7,5)(4,9)   =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2 R U2 R' U'
+(1,6,8,3)(2,7,9,5)      =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
+(1,6,8,3)(2,7,5,9)      =&gt; U R U R' U R U2 R' U' R U' R' U2 R U2 R'
+(1,6,8,3)(2,7)          =&gt; U2 R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6,3,8,10)(2,7)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U' R U2 R' U'
+(1,6,3,8,10)(2,7,4,5,9) =&gt; U R U' R' U R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,6,3,8,10)(2,7,9,4,5) =&gt; R U' R' U R U2 R' U R U R' U2 R U2 R' U' R U' R'
+(1,6,3,8,10)(2,7,5,4,9) =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U' R U' R'
+(1,6,3,8,10)(2,7)(4,9)  =&gt; U R U R' U R U U R' U R U R' U
+(1,6,3,8,10)(2,7,4,9,5) =&gt; U R U R' U R U2 R' U R U' R' U' R U' R' U'
+(1,6,3,8,10)(2,7,9,5,4) =&gt; R U R' U R U2 R' U' U' R U' R' U' R U' R' U'
+(1,6,3,8,10)(2,7,4)     =&gt; U R U R' U U R U R' U U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6,3,8,10)(2,7,5,9,4) =&gt; U R U' R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6,3,8,10)(2,7,5)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R' U'
+(1,6,3,8,10)(2,7)(5,9)  =&gt; U R U' R' U R' U' R U' R' U2 R U'
+(1,6,3,8,10)(2,7,9)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R'
+(1,6)(2,7,9,4,5)(3,10)  =&gt; R U R' U R U R' U R' U2 R U R' U R
+(1,6)(2,7,4,5,9)(3,10)  =&gt; U R U' R' U R U2 R' U R U R' U
+(1,6)(2,7)(3,10)(4,5)   =&gt; R U R' U R U2 R' U2 R U' R' U' R U2 R'
+(1,6)(2,7)(3,10)(5,9)   =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R' U' R U R' U'
+(1,6)(2,7,5)(3,10)      =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U2 R'
+(1,6)(2,7,9)(3,10)      =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U R'
+(1,6)(2,7,5,4,9)(3,10)  =&gt; U R U R' U R' U' R U' R' U2 R U'
+(1,6)(2,7,4,9,5)(3,10)  =&gt; U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6)(2,7)(3,10)(4,9)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U'
+(1,6)(2,7,5,9,4)(3,10)  =&gt; R' U' R U' R' U2 R2 U' R' U'
+(1,6)(2,7,9,5,4)(3,10)  =&gt; R U R' U R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,6)(2,7,4)(3,10)      =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R'
+(1,6,10,8)(2,7,4)(5,9)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U R' U'
+(1,6,10,8)(2,7,9,4)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U' R U' R' U'
+(1,6,10,8)(2,7,5,4)     =&gt; R U R' U2 R U R2 U' R U' R' U2 R U'
+(1,6,10,8)(2,7,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U' R'
+(1,6,10,8)(2,7)(4,5,9)  =&gt; U' R U R' U2 R' U' R U' R' U2 R U'
+(1,6,10,8)(2,7,4,5)     =&gt; R U R' U R U R' U2 R U' R' U'
+(1,6,10,8)(2,7)         =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U'
+(1,6,10,8)(2,7,5,9)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R'
+(1,6,10,8)(2,7,9,5)     =&gt; R U' R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,6,10,8)(2,7)(4,9,5)  =&gt; U' R U2 R' U' R U' R' U2 R U R' U'
+(1,6,10,8)(2,7,5)(4,9)  =&gt; U R U R' U R U R' U2 R U R' U U R' U2 R U R' U R
+(1,6,10,8)(2,7,4,9)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R'
+(1,8)(2,7)(3,6)(4,5)    =&gt; U2
+(1,8)(2,7,9,4,5)(3,6)   =&gt; U R' U2 R U R' U R U' R U' R' U2 R U2 R' U'
+(1,8)(2,7,4,5,9)(3,6)   =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U2 R'
+(1,8)(2,7,9,5,4)(3,6)   =&gt; R U' R' U R U R' U U R U R' U R U R' U R U2 R' U
+(1,8)(2,7,5,9,4)(3,6)   =&gt; U R U' R' U R U R' U U R U R' U R U2 R' U' R U' R'
+(1,8)(2,7,4)(3,6)       =&gt; U R U2 R' U' R U' R' U'
+(1,8)(2,7,5,4,9)(3,6)   =&gt; U R U2 R' U2 R U R' U U2 R U R' U R U2 R' U
+(1,8)(2,7)(3,6)(4,9)    =&gt; U2 R U' R' U2 R U2 R' U'
+(1,8)(2,7,4,9,5)(3,6)   =&gt; U R U2 R' U2 R U R' U R U2 R' U' R U' R' U'
+(1,8)(2,7,5)(3,6)       =&gt; U R' U2 R U R' U R U'
+(1,8)(2,7)(3,6)(5,9)    =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
+(1,8)(2,7,9)(3,6)       =&gt; R U' R' U R U R' U2 R U R'
+(1,8,6,10,3)(2,7,4,5,9) =&gt; U' R U R' U2
+(1,8,6,10,3)(2,7,9,4,5) =&gt; R U' R' U'
+(1,8,6,10,3)(2,7)(4,5)  =&gt; R U R' U2 R U R' U' R U2 R' U' R U' R' U'
+(1,8,6,10,3)(2,7,5,9,4) =&gt; U R' U2 R U R' U R U R U' R' U'
+(1,8,6,10,3)(2,7,9,5,4) =&gt; R U' R' U2 R U2 R' U' R U' R' U'
+(1,8,6,10,3)(2,7,4)     =&gt; R U R' U U R U R' U R U R' U R U2 R' U
+(1,8,6,10,3)(2,7)(5,9)  =&gt; U' R U R' U' R U R' U R U2 R' U
+(1,8,6,10,3)(2,7,9)     =&gt; U R U2 R' U
+(1,8,6,10,3)(2,7,5)     =&gt; R U R' U2 R U R'
+(1,8,6,10,3)(2,7,5,4,9) =&gt; U R U R' U R U2 R' U2 R U' R' U' R U R'
+(1,8,6,10,3)(2,7,4,9,5) =&gt; U R U R' U R U R' U U R U R' U R U2 R' U' R U' R'
+(1,8,6,10,3)(2,7)(4,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R' U'
+(1,8,3,10)(2,7,9)(4,5)  =&gt; U R U R' U R U2 R' U2 R U' R' U' U' R U' R' U' R U' R'
+(1,8,3,10)(2,7,4,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U2 R' U'
+(1,8,3,10)(2,7)(4,5,9)  =&gt; R U R' U R U2 R' U R U' R' U' R U R' U'
+(1,8,3,10)(2,7,4)(5,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U' R U' R' U'
+(1,8,3,10)(2,7,9,4)     =&gt; U R U R' U R U R' U' R U R' U'
+(1,8,3,10)(2,7,5,4)     =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U2 R' U'
+(1,8,3,10)(2,7)(4,9,5)  =&gt; U R U' R' U' R U' R' U'
+(1,8,3,10)(2,7,4,9)     =&gt; U R U R' U U R U R' U R U2 R' U
+(1,8,3,10)(2,7,5)(4,9)  =&gt; U R U R' U
+(1,8,3,10)(2,7,9,5)     =&gt; R U R' U R U' R' U' R U' R'
+(1,8,3,10)(2,7,5,9)     =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R'
+(1,8,3,10)(2,7)         =&gt; R U2 R' U R U R' U2 R' U' R U' R' U2 R U'
+(1,8,10,6)(2,7,4)(5,9)  =&gt; U R U' R' U
+(1,8,10,6)(2,7,5,4)     =&gt; U R U R' U U R U R' U U
+(1,8,10,6)(2,7,9,4)     =&gt; U R' U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R' U'
+(1,8,10,6)(2,7,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R'
+(1,8,10,6)(2,7)(4,5,9)  =&gt; U R U' R' U2 R U R' U R U2 R' U
+(1,8,10,6)(2,7,4,5)     =&gt; U R U R' U2 R U R' U U2 R U R' U R U2 R' U
+(1,8,10,6)(2,7)         =&gt; U R U R' U U R U R' U R U2 R' U' R U' R' U'
+(1,8,10,6)(2,7,5,9)     =&gt; U R U R' U' R U' R' U'
+(1,8,10,6)(2,7,9,5)     =&gt; R U' R' U R U2 R' U R U R' U2 R' U' R U' R' U2 R U'
+(1,8,10,6)(2,7)(4,9,5)  =&gt; U R' U2 R U R' U R U2 R U' R' U
+(1,8,10,6)(2,7,4,9)     =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U' R'
+(1,8,10,6)(2,7,5)(4,9)  =&gt; R U' R' U' U' R U' R' U' R U' R' U'
+(1,8)(2,4,5,9,7)(3,6)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U' R U R'
+(1,8)(2,4,5,7,9)(3,6)   =&gt; R U R' U R U2 R' U' R U' R' U2 R U2 R'
+(1,8)(2,4,5)(3,6)       =&gt; R U R' U R U2 R'
+(1,8)(2,4,7,5,9)(3,6)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U2 R'
+(1,8)(2,4,7)(3,6)       =&gt; U R U R' U R U2 R' U'
+(1,8)(2,4,7,9,5)(3,6)   =&gt; R U' R' U R U R' U2 R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8)(2,4)(3,6)(5,9)    =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R' U' R U R' U'
+(1,8)(2,4)(3,6)(7,9)    =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U R'
+(1,8)(2,4)(3,6)(5,7)    =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U'
+(1,8)(2,4,9,7,5)(3,6)   =&gt; U R U2 R' U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8)(2,4,9,5,7)(3,6)   =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
+(1,8)(2,4,9)(3,6)       =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U2 R'
+(1,8,6,10,3)(2,4,5)     =&gt; U R' U2 R U R' U R U' R U' R' U' R U2 R'
+(1,8,6,10,3)(2,4,5,7,9) =&gt; R U' R' U R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,8,6,10,3)(2,4,5,9,7) =&gt; U' R U' R' U' R U' R' U R U R' U R U2 R' U
+(1,8,6,10,3)(2,4,9,5,7) =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U' R U' R' U' R U2 R' U' R U R' U'
+(1,8,6,10,3)(2,4,9,7,5) =&gt; U R U R' U R U R' U2 R U R' U2 R U2 R' U' R U' R' U'
+(1,8,6,10,3)(2,4,9)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U R'
+(1,8,6,10,3)(2,4,7,5,9) =&gt; U' R U2 R' U' R U2 R' U' R U2 U' R'
+(1,8,6,10,3)(2,4,7,9,5) =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U R' U'
+(1,8,6,10,3)(2,4,7)     =&gt; U2 R U' R' U' R U2 R'
+(1,8,6,10,3)(2,4)(5,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U' R U2 R'
+(1,8,6,10,3)(2,4)(5,9)  =&gt; U' R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8,6,10,3)(2,4)(7,9)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U' R'
+(1,8,3,10)(2,4,5,9)     =&gt; U R U' R' U R U U R' U R U R' U R U R' U R U2 R' U
+(1,8,3,10)(2,4,5)(7,9)  =&gt; R U R' U R U R' U R U2 R' U' R U' R' U'
+(1,8,3,10)(2,4,5,7)     =&gt; R U2 R' U R U R' U'
+(1,8,3,10)(2,4)(5,9,7)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2
+(1,8,3,10)(2,4)         =&gt; R U' R' U' R U2 R' U'
+(1,8,3,10)(2,4)(5,7,9)  =&gt; R U R' U R U R2 U U R U R' U R U R U R' U R U2 R' U
+(1,8,3,10)(2,4,7)(5,9)  =&gt; U R U R' U R U2 R' U2 R U' R' U' R U' R' U'
+(1,8,3,10)(2,4,7,9)     =&gt; U' R U2 R' U' R U2 R' U' U' R U' R' U' R U' R'
+(1,8,3,10)(2,4,7,5)     =&gt; R U2 R' U R U R' U R' U2 R U R' U R
+(1,8,3,10)(2,4,9,5)     =&gt; R U R' U R U' U' R' U' R U' R' U' R U' R' U'
+(1,8,3,10)(2,4,9)(5,7)  =&gt; U R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,8,3,10)(2,4,9,7)     =&gt; U R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8,10,6)(2,4,7,5)     =&gt; U R U R' U2 R U' R' U' R U' R' U R U R' U R U2 R' U
+(1,8,10,6)(2,4,7,9)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R'
+(1,8,10,6)(2,4,7)(5,9)  =&gt; U R U' R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,8,10,6)(2,4,9,5)     =&gt; U R U R' U R U U R' U R U R' U' R' U' R U' R' U2 R U'
+(1,8,10,6)(2,4,9)(5,7)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R'
+(1,8,10,6)(2,4,9,7)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U R'
+(1,8,10,6)(2,4,5)(7,9)  =&gt; R U' R' U R U2 R' U R U R' U'
+(1,8,10,6)(2,4,5,7)     =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R'
+(1,8,10,6)(2,4,5,9)     =&gt; U R U' R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8,10,6)(2,4)(5,9,7)  =&gt; R' U' R U' R' U2 R U2 R U R'
+(1,8,10,6)(2,4)(5,7,9)  =&gt; R' U' R U' R' U' U' R U' R U' R' U
+(1,8,10,6)(2,4)         =&gt; U' R U' R' U2 R U' R'
+(1,8,6,10,3)(2,9)(4,5)  =&gt; R U R' U R U U R' U R U R' U2
+(1,8,6,10,3)(2,9,4,5,7) =&gt; R' U' R U' R' U2 R U2 R U' R' U'
+(1,8,6,10,3)(2,9,7,4,5) =&gt; U R U R' U R U R' U' R U' R'
+(1,8,6,10,3)(2,9,5,4,7) =&gt; R U R' U R U U R' U R U R2 U2 R U R' U R
+(1,8,6,10,3)(2,9)(4,7)  =&gt; U R' U2 R U R' U R U2 R U' R' U' R U R'
+(1,8,6,10,3)(2,9,4,7,5) =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U'
+(1,8,6,10,3)(2,9,7,5,4) =&gt; R U R' U R U2 R' U R U' R' U' R U' R'
+(1,8,6,10,3)(2,9,4)     =&gt; R U R' U R U U R' U R U R' U R U2 R' U' R U' R' U'
+(1,8,6,10,3)(2,9,5,7,4) =&gt; R U R' U R U U R' U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8,6,10,3)(2,9)(5,7)  =&gt; U R U' R' U' R U R'
+(1,8,6,10,3)(2,9,5)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U' R U R' U'
+(1,8,6,10,3)(2,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U' R U' R'
+(1,8,3,10)(2,9,4,5)     =&gt; R U2 U R' U R U R' U R U R' U R U2 R' U
+(1,8,3,10)(2,9)(4,5,7)  =&gt; R U' R' U R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8,3,10)(2,9,7)(4,5)  =&gt; R U' R' U R U R' U U R' U U R U R' U R
+(1,8,3,10)(2,9,7,5)     =&gt; U2 R U' R' U2
+(1,8,3,10)(2,9,5,7)     =&gt; U' R U2 R' U' R U2 R' U' R U' R' U'
+(1,8,3,10)(2,9)         =&gt; R U' R' U R U R' U' R U2 R' U' R U' R' U'
+(1,8,3,10)(2,9,5)(4,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U' R' U'
+(1,8,3,10)(2,9)(4,7,5)  =&gt; R U' R' U R U R' U2 R U2 R' U' R U' R'
+(1,8,3,10)(2,9,4,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U R' U'
+(1,8,3,10)(2,9,5,4)     =&gt; R U' R' U R U R'
+(1,8,3,10)(2,9,4)(5,7)  =&gt; R U' R' U R U R' U' R' U' R U' R' U2 R U'
+(1,8,3,10)(2,9,7,4)     =&gt; U R' U2 R U R' U R U' R U' R' U2
+(1,8)(2,9,4,5,7)(3,6)   =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U2 R' U'
+(1,8)(2,9,7,4,5)(3,6)   =&gt; U R' U2 R U R' U R U R U' R' U2 R U' R' U' R U R'
+(1,8)(2,9)(3,6)(4,5)    =&gt; U R U' R' U2 R U2 R'
+(1,8)(2,9,5)(3,6)       =&gt; R U2 R' U2 R U2 R' U R U2 R' U
+(1,8)(2,9)(3,6)(5,7)    =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U2 R'
+(1,8)(2,9,7)(3,6)       =&gt; R U' R' U2 R U' R' U' R U R'
+(1,8)(2,9,7,5,4)(3,6)   =&gt; R U2 R' U2 R U R' U R U2 R' U' R U' R'
+(1,8)(2,9,5,7,4)(3,6)   =&gt; R U2 R' U2 R U R' U2 R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8)(2,9,4)(3,6)       =&gt; R U2 R' U2 R U R' U2 R U2 R' U' R U' R' U'
+(1,8)(2,9,4,7,5)(3,6)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U2 R' U'
+(1,8)(2,9,5,4,7)(3,6)   =&gt; R U U R' U2 R U R' U R' U2 R U R' U R
+(1,8)(2,9)(3,6)(4,7)    =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U2 R'
+(1,8,10,6)(2,9,5)(4,7)  =&gt; R U R' U2 R U2 R' U' R U' R'
+(1,8,10,6)(2,9,4,7)     =&gt; R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,8,10,6)(2,9)(4,7,5)  =&gt; R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R'
+(1,8,10,6)(2,9,7)(4,5)  =&gt; U R' U2 R U R' U R U R U R'
+(1,8,10,6)(2,9,4,5)     =&gt; R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,8,10,6)(2,9)(4,5,7)  =&gt; R U R' U U R' U U R U R' U R
+(1,8,10,6)(2,9)         =&gt; R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,8,10,6)(2,9,7,5)     =&gt; R U R' U' R U2 R' U' R U' R' U'
+(1,8,10,6)(2,9,5,7)     =&gt; R U R' U U R' U U R U R' U R U R U R' U R U2 R' U
+(1,8,10,6)(2,9,5,4)     =&gt; R U R' U' R' U' R U' R' U2 R U'
+(1,8,10,6)(2,9,4)(5,7)  =&gt; U' R U2 R' (U' R U' R' (U' R U' R' U')2
+(1,8,10,6)(2,9,7,4)     =&gt; R U R'
+(1,8,6,10,3)(4,5,9)     =&gt; R U R' U R U2 R' U2 R U' R' U'
+(1,8,6,10,3)(4,5,7)     =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U2 R'
+(1,8,6,10,3)(4,5)(7,9)  =&gt; R U' R' U2 R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,8,6,10,3)(4,7,5)     =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R'
+(1,8,6,10,3)(4,7,9)     =&gt; R U' R' U R' U U R U R' U R
+(1,8,6,10,3)(4,7)(5,9)  =&gt; U' R U R2 U2 R U R' U R
+(1,8,6,10,3)(5,9,7)     =&gt; U' R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,8,6,10,3)            =&gt; R U R' U2 R U R' U U R' U2 R U R' U R
+(1,8,6,10,3)(5,7,9)     =&gt; U R U' R' U' R U2 R' U' R U R' U'
+(1,8,6,10,3)(4,9)(5,7)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U'
+(1,8,6,10,3)(4,9,5)     =&gt; U R U R' U R U R' U U R U R' U U R' U' R U' R' U2 R U'
+(1,8,6,10,3)(4,9,7)     =&gt; U R U R' U R U R' U2 R U R' U'
+(1,8,3,10)(4,5)         =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U'
+(1,8,3,10)(4,5,7,9)     =&gt; U' R U' R' U' R U R' U'
+(1,8,3,10)(4,5,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2
+(1,8,3,10)(4,7,5,9)     =&gt; U R' U2 R U R' U R2 U' R' U' R U R' U'
+(1,8,3,10)(4,7)         =&gt; R U2 R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,8,3,10)(4,7,9,5)     =&gt; R U R' U R U R' U R' U' R U' R' U2 R U'
+(1,8,3,10)(4,9,7,5)     =&gt; U R U R' U R U2 R' U' R U' R' U2
+(1,8,3,10)(4,9)         =&gt; U R U R' U2 U R' U2 R U R' U R
+(1,8,3,10)(4,9,5,7)     =&gt; R' U' R U' R' U2 R U' R U' R' U' R U' R' U'
+(1,8,3,10)(5,9)         =&gt; U R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R' U'
+(1,8,3,10)(5,7)         =&gt; R U2 R' U R U2 R' U R U2 R' U
+(1,8,3,10)(7,9)         =&gt; R U R' U R U R' U U
+(1,8)(3,6)(4,5)(7,9)    =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2 R U' R' U' R U R'
+(1,8)(3,6)(4,5,7)       =&gt; R' U' R U' R' U2 R
+(1,8)(3,6)(4,5,9)       =&gt; U R U' R' U R U R' U2 R U R' U'
+(1,8)(3,6)(4,7,5)       =&gt; R' U2 R U R' U R
+(1,8)(3,6)(4,7)(5,9)    =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U R' U'
+(1,8)(3,6)(4,7,9)       =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U2 R U2 R' U'
+(1,8)(3,6)(4,9,5)       =&gt; U R U' R' U2 R U' R' U' R U R' U'
+(1,8)(3,6)(4,9,7)       =&gt; U R U2 R' U2 R U R' U R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,8)(3,6)(4,9)(5,7)    =&gt; R' U' R U' R' U2 R R U' R' U2 R U2 R' U'
+(1,8)(3,6)(5,9,7)       =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U' R U R'
+(1,8)(3,6)(5,7,9)       =&gt; R U' R' U R U R' U2 R U R' U U R' U2 R U R' U R
+(1,8)(3,6)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R'
+(1,8,10,6)(4,7,9,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U
+(1,8,10,6)(4,7,5,9)     =&gt; U R U R' U R U2 R' U R U' R' U' U' R U' R' U' R U' R' U'
+(1,8,10,6)(4,7)         =&gt; U R U R' U2 R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,8,10,6)(7,9)         =&gt; R U' R' U R U2 R' U R U2 R' U R U2 R' U
+(1,8,10,6)(5,9)         =&gt; U R U' R2 U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,8,10,6)(5,7)         =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U2 R U' R' U2 R U' R'
+(1,8,10,6)(4,9,5,7)     =&gt; U' R U2 R' U' R U2 R' U
+(1,8,10,6)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2 R U R'
+(1,8,10,6)(4,9)         =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U' R' U'
+(1,8,10,6)(4,5,7,9)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R' U'
+(1,8,10,6)(4,5)         =&gt; U R U R' U2 R U R' R' U2 R U R' U R
+(1,8,10,6)(4,5,9,7)     =&gt; U' R U2 R' U' R U' R' U' R U R'
+(1,8)(2,5,7,9,4)(3,6)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2 R U2 R' U'
+(1,8)(2,5,4)(3,6)       =&gt; R U2 R' U' R U' R'
+(1,8)(2,5,9,7,4)(3,6)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U2 R U' R' U' R U R'
+(1,8)(2,5,7)(3,6)       =&gt; U R' U' R U' R' U2 R U'
+(1,8)(2,5)(3,6)(7,9)    =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U R'
+(1,8)(2,5,9)(3,6)       =&gt; U' R U2 R' U' R U2 R' U2 R U2 R'
+(1,8)(2,5,7,4,9)(3,6)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' R U' R' U2 R U2 R'
+(1,8)(2,5)(3,6)(4,9)    =&gt; R U R' U R U R' U2 R U2 R' U'
+(1,8)(2,5,4,9,7)(3,6)   =&gt; U R U2 R' U2 R U R' U R' U' R U' R' U2 R U'
+(1,8)(2,5,4,7,9)(3,6)   =&gt; R U' R' U R U R' U2 R U R' U' R' U' R U' R' U2 R U'
+(1,8)(2,5,9,4,7)(3,6)   =&gt; U R U R' U R U2 R' U' R U' R' U2 R U2 R' U'
+(1,8)(2,5)(3,6)(4,7)    =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R
+(1,8,10,6)(2,5,7,4)     =&gt; R U R' U R U2 R' U R U' R' U2 R U' R'
+(1,8,10,6)(2,5,9,4)     =&gt; U R U' R2 U' R U' R' U2 R U'
+(1,8,10,6)(2,5,4)(7,9)  =&gt; R U R' U R U2 R' U2 R U R'
+(1,8,10,6)(2,5,7)(4,9)  =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U' R U' R' U'
+(1,8,10,6)(2,5)(4,9,7)  =&gt; U R U R' U R U2 R' U R U R'
+(1,8,10,6)(2,5,4,9)     =&gt; U R' U2 R U R' U R U2 R U' R' U' R U' U' R' U' R U' R'
+(1,8,10,6)(2,5,7,9)     =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R'
+(1,8,10,6)(2,5)         =&gt; U R U R' U R U R' U2 R U' R'
+(1,8,10,6)(2,5,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U R'
+(1,8,10,6)(2,5,4,7)     =&gt; U R U R' U2 R U' R' U' R U' R'
+(1,8,10,6)(2,5,9)(4,7)  =&gt; U R U' R' U' R U' U' R' U' R U' R'
+(1,8,10,6)(2,5)(4,7,9)  =&gt; R U' R' U R U2 R' U R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,8,3,10)(2,5,4)(7,9)  =&gt; R U R' U R U R' U U2 R U R' U R U2 R' U
+(1,8,3,10)(2,5,9,4)     =&gt; U R U' R' U R U2 R' U R U R'
+(1,8,3,10)(2,5,7,4)     =&gt; R U R' U R U2 R' U2 R U' R' U' R U2 R' U'
+(1,8,3,10)(2,5,9)(4,7)  =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U' R U' R'
+(1,8,3,10)(2,5,4,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U2 R' U'
+(1,8,3,10)(2,5)(4,7,9)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
+(1,8,3,10)(2,5,7)(4,9)  =&gt; U R U R' U' R U2 R' U' R U' R'
+(1,8,3,10)(2,5,4,9)     =&gt; U R U R' U' R' U U R U R' U R U R U R' U R U2 R' U
+(1,8,3,10)(2,5)(4,9,7)  =&gt; U R U R2 U' R U' R' U2 R U'
+(1,8,3,10)(2,5,9,7)     =&gt; R' U' R U' R' U2 R2 U' R' U2
+(1,8,3,10)(2,5,7,9)     =&gt; U R U' R' U' U' R U' R' U' R U' R'
+(1,8,3,10)(2,5)         =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R' U'
+(1,8,6,10,3)(2,5,9)     =&gt; U' R U R' U R' U' R U' R' U2 R U'
+(1,8,6,10,3)(2,5)(7,9)  =&gt; R U' R' U2 R' U' R U' R' U2 R U'
+(1,8,6,10,3)(2,5,7)     =&gt; U R U R' U R U' U' R' U' R U' R' U' R U2 R'
+(1,8,6,10,3)(2,5,7,9,4) =&gt; R U' R' U R U2 R' U' R U' R'
+(1,8,6,10,3)(2,5,9,7,4) =&gt; U' R U' R' U' R U' R'
+(1,8,6,10,3)(2,5,4)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U2 R'
+(1,8,6,10,3)(2,5)(4,7)  =&gt; R U R' U R U R' U' R U2 R'
+(1,8,6,10,3)(2,5,9,4,7) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U'
+(1,8,6,10,3)(2,5,4,7,9) =&gt; R U' R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,8,6,10,3)(2,5,7,4,9) =&gt; U R U R' U R U R' U2 R U R' U R' U2 R U R' U R
+(1,8,6,10,3)(2,5,4,9,7) =&gt; U R' U2 R U R' U R2 U' R' U' R U' R'
+(1,8,6,10,3)(2,5)(4,9)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U'
+(1,3,8,6)(2,5,7,4)      =&gt; U
+(1,3,8,6)(2,5,4)(7,9)   =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U' R U R'
+(1,3,8,6)(2,5,9,4)      =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U2 R' U'
+(1,3,8,6)(2,5,7,9)      =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R'
+(1,3,8,6)(2,5,9,7)      =&gt; U R U' R' U R U R' U U R U R' U R U2 R' U' R U' R' U'
+(1,3,8,6)(2,5)          =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U'
+(1,3,8,6)(2,5,7)(4,9)   =&gt; U R U2 R' U2 R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,3,8,6)(2,5)(4,9,7)   =&gt; U R U2 R' U2 R U R' U
+(1,3,8,6)(2,5,4,9)      =&gt; U R' U2 R U R' U R U R U' R' U2 R U2 R'
+(1,3,8,6)(2,5,4,7)      =&gt; U R' U2 R U R' U R U2
+(1,3,8,6)(2,5,9)(4,7)   =&gt; R U' R' U2 R U2 R'
+(1,3,8,6)(2,5)(4,7,9)   =&gt; R U' R' U R U R' U2 R U R' U'
+(1,3,6,10)(2,5,9,4)     =&gt; U' R U R' U
+(1,3,6,10)(2,5,4)(7,9)  =&gt; R U' R' U2
+(1,3,6,10)(2,5,7,4)     =&gt; U' R U2 R' U' R U' R' U R U' R' U' R U2 R' U'
+(1,3,6,10)(2,5,9,7)     =&gt; U R' U2 R U R' U R U R U' R' U2
+(1,3,6,10)(2,5,7,9)     =&gt; R U' R' U R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,3,6,10)(2,5)         =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U' R U2 R' U'
+(1,3,6,10)(2,5,9)(4,7)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U' R U' R'
+(1,3,6,10)(2,5)(4,7,9)  =&gt; R U R' U' R U' R' U R U R' U R U2 R' U
+(1,3,6,10)(2,5,4,7)     =&gt; R U R' U2 R U R' U'
+(1,3,6,10)(2,5,7)(4,9)  =&gt; U R U R' U R U2 R' U2 R U' R' U' R U R' U'
+(1,3,6,10)(2,5,4,9)     =&gt; U R U R' U R U R' U U R U R' U R U2 R' U' R U' R' U'
+(1,3,6,10)(2,5)(4,9,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R' U2
+(1,3,10,6,8)(2,5,7,9,4) =&gt; U R U R' U R U2 R' U2 R U' R' U' U' R U' R' U' R U' R' U'
+(1,3,10,6,8)(2,5,4)     =&gt; R U2 R' U R U R' U R' U' R U' R' U2 R U'
+(1,3,10,6,8)(2,5,9,7,4) =&gt; U R U' R' U R U2 R' U R U2 R' U R U2 R' U
+(1,3,10,6,8)(2,5,9)     =&gt; U R U' R' U R U2 R' U R U R' U R' U2 R U R' U R
+(1,3,10,6,8)(2,5)(7,9)  =&gt; U R' U2 R U R' U R U2 R U R'
+(1,3,10,6,8)(2,5,7)     =&gt; R U' R' U2 R U' R'
+(1,3,10,6,8)(2,5,7,4,9) =&gt; U R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,3,10,6,8)(2,5)(4,9)  =&gt; U R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,3,10,6,8)(2,5,4,9,7) =&gt; U R U R'
+(1,3,10,6,8)(2,5,4,7,9) =&gt; R U R' U R U' R' U' R U' R' U'
+(1,3,10,6,8)(2,5,9,4,7) =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R' U'
+(1,3,10,6,8)(2,5)(4,7)  =&gt; R U2 R' U R U' R' U' R U' R'
+(1,3)(2,5,9)(8,10)      =&gt; U R U' R'
+(1,3)(2,5,7)(8,10)      =&gt; U R U R' U U R U R' U
+(1,3)(2,5)(7,9)(8,10)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U' R U2 R' U' R U R'
+(1,3)(2,5,7,9,4)(8,10)  =&gt; R U' R' U R U2 R' U R U R' U R' U' R U' R' U2 R U'
+(1,3)(2,5,9,7,4)(8,10)  =&gt; U R U' R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,3)(2,5,4)(8,10)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U2 R U' R' U'
+(1,3)(2,5)(4,7)(8,10)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2 R U' R' U'
+(1,3)(2,5,9,4,7)(8,10)  =&gt; U R U' R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,3)(2,5,4,7,9)(8,10)  =&gt; R U' R' U R U2 R' U R U2 U R' U' R U' R'
+(1,3)(2,5,7,4,9)(8,10)  =&gt; U R' U2 R U R' U R U2 R U' R'
+(1,3)(2,5)(4,9)(8,10)   =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U' R' U'
+(1,3)(2,5,4,9,7)(8,10)  =&gt; U R U R' U R U U R' U R U R' U R' U U R U R' U R
+(1,3,8,6)(2,7,4)(5,9)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U' R U R' U'
+(1,3,8,6)(2,7,9,4)      =&gt; R U R' U R U2 R' U' R U' R' U2 R U2 R' U'
+(1,3,8,6)(2,7,5,4)      =&gt; R U R' U R U2 R' U'
+(1,3,8,6)(2,7)(4,5,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U2 R' U'
+(1,3,8,6)(2,7,4,5)      =&gt; U R U R' U R U2 R' U2
+(1,3,8,6)(2,7,9)(4,5)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R'
+(1,3,8,6)(2,7,5,9)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U2 R U' R' U2 R U2 R'
+(1,3,8,6)(2,7,9,5)      =&gt; R U' R' U R U R' U2 R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,3,8,6)(2,7)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2
+(1,3,8,6)(2,7)(4,9,5)   =&gt; U R U2 R' U2 R U R' U U2 R' U2 R U R' U R U R U R' U R U2 R' U
+(1,3,8,6)(2,7,4,9)      =&gt; U' R U2 R' U' R U' R' U' R U' R' U2 R U2 R'
+(1,3,8,6)(2,7,5)(4,9)   =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U2 R' U'
+(1,3,6,10)(2,7,5,4)     =&gt; R U R' U2 R U R' U R' U2 R U R' U R
+(1,3,6,10)(2,7,9,4)     =&gt; R U' R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,3,6,10)(2,7,4)(5,9)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R R U' R' U' R U' R' U'
+(1,3,6,10)(2,7,4,9)     =&gt; U R U R' U R U R' U U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,6,10)(2,7)(4,9,5)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U' R' U'
+(1,3,6,10)(2,7,5)(4,9)  =&gt; U R U R' U R U R' U U R U R' U R' U' R U' R' U2 R U'
+(1,3,6,10)(2,7)(4,5,9)  =&gt; U' R U2 R' U' R U2 R' U' R U2 U' R' U'
+(1,3,6,10)(2,7,9)(4,5)  =&gt; R U' R2 U2 R U R' U R
+(1,3,6,10)(2,7,4,5)     =&gt; U2 R U' R' U' R U2 R' U'
+(1,3,6,10)(2,7)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U' R U2 R' U'
+(1,3,6,10)(2,7,5,9)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U' R U' R'
+(1,3,6,10)(2,7,9,5)     =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U' R' U'
+(1,3,10,6,8)(2,7,5,9,4) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U' R' U'
+(1,3,10,6,8)(2,7,9,5,4) =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U
+(1,3,10,6,8)(2,7,4)     =&gt; R U2 R' U R U R' U2
+(1,3,10,6,8)(2,7)(5,9)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 U'
+(1,3,10,6,8)(2,7,5)     =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R'
+(1,3,10,6,8)(2,7,9)     =&gt; R U R' U R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,10,6,8)(2,7,4,5,9) =&gt; R' U' R U' R' U2 R2 U' R' U' R U' U' R' U' R U' R'
+(1,3,10,6,8)(2,7,9,4,5) =&gt; R U R' U R U R2 U' R U' R' U2 R U'
+(1,3,10,6,8)(2,7)(4,5)  =&gt; U R U R' U R U2 R' U R U' R' U2 R U' R'
+(1,3,10,6,8)(2,7,5,4,9) =&gt; U R U R' U U R' U U R U R' U R
+(1,3,10,6,8)(2,7)(4,9)  =&gt; U R U R' U U R' U U R U R' U R U' R U2 R' U' R U' R' U'
+(1,3,10,6,8)(2,7,4,9,5) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U
+(1,3)(2,7)(4,5)(8,10)   =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U'
+(1,3)(2,7,9,4,5)(8,10)  =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R' U'
+(1,3)(2,7,4,5,9)(8,10)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U' R'
+(1,3)(2,7,5,4,9)(8,10)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R'
+(1,3)(2,7)(4,9)(8,10)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R' U'
+(1,3)(2,7,4,9,5)(8,10)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U R' U'
+(1,3)(2,7,9,5,4)(8,10)  =&gt; R U' R' U R U2 R' U R U R' U2
+(1,3)(2,7,4)(8,10)      =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R' U'
+(1,3)(2,7,5,9,4)(8,10)  =&gt; U R U' R' U2 R' U U R U R' U R U R U R' U R U2 R' U
+(1,3)(2,7)(5,9)(8,10)   =&gt; R' U' R U' R' U2 R U2 R U R' U'
+(1,3)(2,7,9)(8,10)      =&gt; R' U' R U' R' U' U' R U' R U' R'
+(1,3)(2,7,5)(8,10)      =&gt; U' R U' R' U' U' R U' R' U'
+(1,3,6,10)(2,9,4)(5,7)  =&gt; R U R' U R U U R' U R U R' U
+(1,3,6,10)(2,9,7,4)     =&gt; R' U' R U' R' U2 R U2 R U' R' U2
+(1,3,6,10)(2,9,5,4)     =&gt; U R U R' U R U R' U' R U' R' U'
+(1,3,6,10)(2,9)(4,5,7)  =&gt; R U R' U R U U R' U R U R' U2 R U R' U R U2 R' U
+(1,3,6,10)(2,9,4,5)     =&gt; U R' U2 R U R' U R U2 R U' R' U' R U R' U'
+(1,3,6,10)(2,9,7)(4,5)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U2
+(1,3,6,10)(2,9,5,7)     =&gt; R U R' U R U2 R' U R U' R' U' R U' R' U'
+(1,3,6,10)(2,9,7,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2
+(1,3,6,10)(2,9)         =&gt; U R' U2 R U R' U R2 U' R' U' U' R U' R' U' R U' R'
+(1,3,6,10)(2,9,4,7)     =&gt; U R U' R' U' R U R' U'
+(1,3,6,10)(2,9)(4,7,5)  =&gt; U' R U' R' U' U' R U' R' U' R U' R'
+(1,3,6,10)(2,9,5)(4,7)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R R U' R' U' R U' R' U'
+(1,3,10,6,8)(2,9,7,5,4) =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' R U R'
+(1,3,10,6,8)(2,9,4)     =&gt; R U' R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,3,10,6,8)(2,9,5,7,4) =&gt; R U U2 R' U R U2 R' U R U2 R' U
+(1,3,10,6,8)(2,9,5,4,7) =&gt; U2 R U' R' U
+(1,3,10,6,8)(2,9)(4,7)  =&gt; R U' R' U R U R' U2 R' U' R U' R' U2 R U'
+(1,3,10,6,8)(2,9,4,7,5) =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U' R' U'
+(1,3,10,6,8)(2,9)(4,5)  =&gt; U2 R U' R' U' R U' U' R' U' R U' R'
+(1,3,10,6,8)(2,9,4,5,7) =&gt; R U' R' U R U R' U2 R U2 R' U' R U' R' U'
+(1,3,10,6,8)(2,9,7,4,5) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U R'
+(1,3,10,6,8)(2,9)(5,7)  =&gt; R U' R' U R U R' U'
+(1,3,10,6,8)(2,9,7)     =&gt; U' R U2 R' U'
+(1,3,10,6,8)(2,9,5)     =&gt; U R' U2 R U R' U R U' R U' R' U
+(1,3,8,6)(2,9,7,4)      =&gt; R U2 R' U2 R U R' U R' U' R U' R' U2 R U'
+(1,3,8,6)(2,9,5,4)      =&gt; U R' U2 R U R' U R U R U' R' U2 R U' R' U' R U R' U'
+(1,3,8,6)(2,9,4)(5,7)   =&gt; U R U' R' U2 R U2 R' U'
+(1,3,8,6)(2,9)(4,7,5)   =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U2 R'
+(1,3,8,6)(2,9,4,7)      =&gt; R U2 R' U2 R U' R' U' R U' R'
+(1,3,8,6)(2,9,5)(4,7)   =&gt; R U' R' U2 R U' R' U' R U R' U'
+(1,3,8,6)(2,9,5,7)      =&gt; R U2 R' U2 R U R' U R U2 R' U' R U' R' U'
+(1,3,8,6)(2,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U2 R U2 R'
+(1,3,8,6)(2,9,7,5)      =&gt; U R U R' U R U R' U2 R U' R' U' R U R'
+(1,3,8,6)(2,9,7)(4,5)   =&gt; R U2 R' U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,8,6)(2,9)(4,5,7)   =&gt; U R U R' U R U2 R' U R U' R' U2 R U2 R'
+(1,3,8,6)(2,9,4,5)      =&gt; R U2 R' U2 R U R' R' U2 R U R' U R
+(1,3)(2,9)(4,5)(8,10)   =&gt; U R U R' U R U2 R' U2 R U' R'
+(1,3)(2,9,7,4,5)(8,10)  =&gt; R U R' U R U' U2 R' U' R U2 R' U' R U R'
+(1,3)(2,9,4,5,7)(8,10)  =&gt; R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,3)(2,9,5,7,4)(8,10)  =&gt; U R' U2 R U R' U R U R U R' U'
+(1,3)(2,9,7,5,4)(8,10)  =&gt; R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,3)(2,9,4)(8,10)      =&gt; R U2 R' U R U2 R' U
+(1,3)(2,9,4,7,5)(8,10)  =&gt; R U R' U2 R' U' R U' R' U2 R U'
+(1,3)(2,9,5,4,7)(8,10)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U R' U'
+(1,3)(2,9)(4,7)(8,10)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R'
+(1,3)(2,9)(5,7)(8,10)   =&gt; R U R' U R U2 R' U' R U' R'
+(1,3)(2,9,7)(8,10)      =&gt; R U R' U R' U2 R U R' U R
+(1,3)(2,9,5)(8,10)      =&gt; R U R' U'
+(1,3,6,10)(2,4)(5,9,7)  =&gt; R U R' U R U2 R' U2 R U' R' U2
+(1,3,6,10)(2,4)         =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U2 R' U'
+(1,3,6,10)(2,4)(5,7,9)  =&gt; R U' R' U R' U' R U' R' U2 R U'
+(1,3,6,10)(2,4,5,7)     =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R' U'
+(1,3,6,10)(2,4,5)(7,9)  =&gt; U R U R' U R U2 R' U R U' R' U2
+(1,3,6,10)(2,4,5,9)     =&gt; U U2 R U R' U2 R U R' U R U2 R' U
+(1,3,6,10)(2,4,7)(5,9)  =&gt; U' R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,3,6,10)(2,4,7,5)     =&gt; R U R' U2 R U2 R' U R U2 R' U
+(1,3,6,10)(2,4,7,9)     =&gt; R U R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,3,6,10)(2,4,9,7)     =&gt; U R U R' U R U R' U2 R U R' R' U2 R U R' U R
+(1,3,6,10)(2,4,9)(5,7)  =&gt; U R U R' U R U R' U' U' R U' R' U' R U' R'
+(1,3,6,10)(2,4,9,5)     =&gt; U R U R' U R U R' U U R U R' U U
+(1,3,10,6,8)(2,4)(5,7)  =&gt; R U2 R' U R U R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,3,10,6,8)(2,4)(7,9)  =&gt; R U R' U R U R' U U2 R' U2 R U R' U R
+(1,3,10,6,8)(2,4)(5,9)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U
+(1,3,10,6,8)(2,4,5,9,7) =&gt; U R U R' U R U2 R' U2 R U R'
+(1,3,10,6,8)(2,4,5)     =&gt; R U2 R' U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,10,6,8)(2,4,5,7,9) =&gt; R U R' U R U R' U' R U2 R' U' R U' R'
+(1,3,10,6,8)(2,4,9,5,7) =&gt; U R U R' U' R' U' R U' R' U2 R U'
+(1,3,10,6,8)(2,4,9,7,5) =&gt; R U R' U R U2 R' U' R U R'
+(1,3,10,6,8)(2,4,9)     =&gt; U R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R'
+(1,3,10,6,8)(2,4,7,5,9) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U' U' R' U' R U' R'
+(1,3,10,6,8)(2,4,7)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U2 R U' R'
+(1,3,10,6,8)(2,4,7,9,5) =&gt; R U R' U R U R' U
+(1,3,8,6)(2,4)(5,7,9)   =&gt; R U' R' U R U R' U U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,3,8,6)(2,4)          =&gt; R' U' R U' R' U2 R U'
+(1,3,8,6)(2,4)(5,9,7)   =&gt; U' R U' R' U' U' R U' R' U' R U R'
+(1,3,8,6)(2,4,5,7)      =&gt; U2 R U R' U R U2 R' U
+(1,3,8,6)(2,4,5,9)      =&gt; U R U' R' U R U R' U2 R U R' R' U2 R U R' U R
+(1,3,8,6)(2,4,5)(7,9)   =&gt; R U' R' U R U R' U U R U R' U U R' U' R U' R' U2 R U'
+(1,3,8,6)(2,4,9)(5,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2 R U2 R'
+(1,3,8,6)(2,4,9,5)      =&gt; U R U2 R' U2 R U R2 U' R U' R' U2 R U'
+(1,3,8,6)(2,4,9,7)      =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R' U' R U R'
+(1,3,8,6)(2,4,7)(5,9)   =&gt; U R U' R' U R U R' U2 R U' R' U' R U' R'
+(1,3,8,6)(2,4,7,9)      =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R'
+(1,3,8,6)(2,4,7,5)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U'
+(1,3)(2,4,5,7,9)(8,10)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R'
+(1,3)(2,4,5,9,7)(8,10)  =&gt; U2 R U' R' U' R U2 R' U' R U R'
+(1,3)(2,4,5)(8,10)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2 R U' R' U'
+(1,3)(2,4,7,9,5)(8,10)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U R' U'
+(1,3)(2,4,7,5,9)(8,10)  =&gt; U R U' R' U' R' U' R U' R' U2 R U'
+(1,3)(2,4,7)(8,10)      =&gt; U R U R' U2 R U R2 U' R U' R' U2 R U'
+(1,3)(2,4,9)(8,10)      =&gt; U' R U2 R' U' R U2 R'
+(1,3)(2,4,9,5,7)(8,10)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2 R U R' U'
+(1,3)(2,4,9,7,5)(8,10)  =&gt; U R' U2 R U R' U R U' R U' R' U' R U2 R' U' R U R'
+(1,3)(2,4)(7,9)(8,10)   =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U' R U2 R' U' R U R'
+(1,3)(2,4)(5,7)(8,10)   =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U'
+(1,3)(2,4)(5,9)(8,10)   =&gt; U' R U2 R' U' R U' R' U' R U R' U'
+(1,3,8,6)(7,9)          =&gt; R U' R' U R U R' U U R U R' U U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,8,6)(5,7)          =&gt; R U2 R' U' R U' R' U'
+(1,3,8,6)(5,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U2 R U' R' U' R U R' U'
+(1,3,8,6)(4,7)          =&gt; U' R U2 R' U' R U' R'
+(1,3,8,6)(4,7,9,5)      =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U R' U'
+(1,3,8,6)(4,7,5,9)      =&gt; U' R U2 R' U' R U2 R' U' U' R U2 R' U'
+(1,3,8,6)(4,9)          =&gt; U R U2 R' U2 R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,8,6)(4,9,7,5)      =&gt; U R U2 R' U2 R U' R' U' R U' R' U'
+(1,3,8,6)(4,9,5,7)      =&gt; U R U2 R' U2 R U R' U' R U2 R' U' R U' R'
+(1,3,8,6)(4,5,7,9)      =&gt; R U' R' U R U R' U U R U R' U R U2 R' U' R U' R'
+(1,3,8,6)(4,5,9,7)      =&gt; U R U' R' U R U R' U2 R U R' U U2 R U R' U R U2 R' U
+(1,3,8,6)(4,5)          =&gt; R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3)(8,10)             =&gt; R U R' U R U2 R' U R U' R' U2 R U' R' U'
+(1,3)(5,9,7)(8,10)      =&gt; U R U' R' U2 R U2 R' U' R U' R'
+(1,3)(5,7,9)(8,10)      =&gt; R U R' U R U2 R' U2 R U R' U'
+(1,3)(4,9,7)(8,10)      =&gt; U R U R' U R U2 R' U R U R' U R U' U2 R' U' R U2 R' U' R U R'
+(1,3)(4,9,5)(8,10)      =&gt; U R U R' U R U2 R' U R U R' U'
+(1,3)(4,9)(5,7)(8,10)   =&gt; U R' U2 R U R' U R U2 R U' R' U' R U' U' R' U' R U' R' U'
+(1,3)(4,7,9)(8,10)      =&gt; R U' R' U R U2 R' U R U2 U R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,3)(4,7,5)(8,10)      =&gt; U R U R' U R U R' U2 R U' R' U'
+(1,3)(4,7)(5,9)(8,10)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U R' U'
+(1,3)(4,5,7)(8,10)      =&gt; U R U R' U2 R U' R' U' R U' R' U'
+(1,3)(4,5,9)(8,10)      =&gt; U R U' R' U' R U' U' R' U' R U' R' U'
+(1,3)(4,5)(7,9)(8,10)   =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R' U' R U R'
+(1,3,10,6,8)(5,7,9)     =&gt; U R U R' U R U2 R' U R U R' U R U R' U
+(1,3,10,6,8)(5,9,7)     =&gt; U R U' R' U R U2 R' U R U R' U'
+(1,3,10,6,8)            =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R'
+(1,3,10,6,8)(4,5,9)     =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U' R U' R' U'
+(1,3,10,6,8)(4,5,7)     =&gt; R U2 R' U R U R2 U2 R U R' U R
+(1,3,10,6,8)(4,5)(7,9)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U R'
+(1,3,10,6,8)(4,9,7)     =&gt; R' U' R U' R' U' U' R U' R U R'
+(1,3,10,6,8)(4,9)(5,7)  =&gt; U R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,10,6,8)(4,9,5)     =&gt; U R U R' U2 R U2 R' U' R U' R'
+(1,3,10,6,8)(4,7)(5,9)  =&gt; R' U' R U' R' U2 R2 U' R' U
+(1,3,10,6,8)(4,7,9)     =&gt; U R U' R' U' U' R U' R' U' R U' R' U'
+(1,3,10,6,8)(4,7,5)     =&gt; R U2 R' U R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,3,6,10)(4,7,5,9)     =&gt; U' R U R' U' R U2 R' U' R U' R'
+(1,3,6,10)(4,7,9,5)     =&gt; R U R' U' R U' R'
+(1,3,6,10)(4,7)         =&gt; U R U R' U R U' U' R' U' R U' R' U' R U2 R' U'
+(1,3,6,10)(7,9)         =&gt; R U' R' U R U2 R' U' R U' R' U'
+(1,3,6,10)(5,9)         =&gt; U' R U' R' U' R U' R' U'
+(1,3,6,10)(5,7)         =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U2 R' U'
+(1,3,6,10)(4,5)         =&gt; R U R' U R U R' U' R U2 R' U'
+(1,3,6,10)(4,5,9,7)     =&gt; U' R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,6,10)(4,5,7,9)     =&gt; R U' R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,3,6,10)(4,9)         =&gt; U R U R' U R U R' U2 R U R' U U2 R U R' U R U2 R' U
+(1,3,6,10)(4,9,5,7)     =&gt; U R' U2 R U R' U R R U' R' U' R U' R' U'
+(1,3,6,10)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U2
+(1,10,8,3,6)(2,7,5,4,9) =&gt; U' R U' R'
+(1,10,8,3,6)(2,7,4,9,5) =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U R' U'
+(1,10,8,3,6)(2,7)(4,9)  =&gt; U' R U' R' U' R U' U' R' U' R U' R' U'
+(1,10,8,3,6)(2,7,9,5,4) =&gt; U2 R U R' U'
+(1,10,8,3,6)(2,7,4)     =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U' R' U'
+(1,10,8,3,6)(2,7,5,9,4) =&gt; U R U R' U R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,10,8,3,6)(2,7)(4,5)  =&gt; U R U2 R' U R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,10,8,3,6)(2,7,4,5,9) =&gt; U R U R' U R U R' U' R' U' R U' R' U2 R U'
+(1,10,8,3,6)(2,7,9,4,5) =&gt; U2 R U2 R' U R U2 R' U
+(1,10,8,3,6)(2,7,9)     =&gt; U R' U2 R U R' U R2 U' R'
+(1,10,8,3,6)(2,7,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U2 R U' R' U'
+(1,10,8,3,6)(2,7)(5,9)  =&gt; U R' U2 R U R' U R U' R U R' U'
+(1,10,6,3)(2,7,4,9)     =&gt; U R U' R' U R U R' U'
+(1,10,6,3)(2,7,5)(4,9)  =&gt; U R U' R' U R U R' U2 R U2 R' U' R U' R' U'
+(1,10,6,3)(2,7)(4,9,5)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U
+(1,10,6,3)(2,7,5,4)     =&gt; U R U2 R' U R U R2 U2 R U R' U R
+(1,10,6,3)(2,7,4)(5,9)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U
+(1,10,6,3)(2,7,9,4)     =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U' R' U'
+(1,10,6,3)(2,7)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U' R'
+(1,10,6,3)(2,7,5,9)     =&gt; U R U R' U R U R' U' R U2 R' U' R U' R'
+(1,10,6,3)(2,7,9,5)     =&gt; U2 R U R' U' R' U' R U' R' U2 R U'
+(1,10,6,3)(2,7,4,5)     =&gt; U R U' R' U2 R U' R'
+(1,10,6,3)(2,7,9)(4,5)  =&gt; U2 R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
+(1,10,6,3)(2,7)(4,5,9)  =&gt; U R U R' U R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,10)(2,7)(4,9)(6,8)   =&gt; U R' U2 R U R' U R U R U' R' U' R U R' U'
+(1,10)(2,7,4,9,5)(6,8)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U' R U' R' U'
+(1,10)(2,7,5,4,9)(6,8)  =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R'
+(1,10)(2,7,4)(6,8)      =&gt; U R U2 R' U R U2 R' U R U2 R' U
+(1,10)(2,7,9,5,4)(6,8)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U' R U' R' U'
+(1,10)(2,7,5,9,4)(6,8)  =&gt; R U' R' U' R U R' U'
+(1,10)(2,7,9)(6,8)      =&gt; U2 R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,10)(2,7)(5,9)(6,8)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R R U' R' U' R U' R' U'
+(1,10)(2,7,5)(6,8)      =&gt; U R U2 R' U R U R' U'
+(1,10)(2,7,9,4,5)(6,8)  =&gt; U2 R U R' U' R U2 R' U' R U' R'
+(1,10)(2,7)(4,5)(6,8)   =&gt; U R U R' U R U2 R' U2 R U' R' U' R U2 R' U'
+(1,10)(2,7,4,5,9)(6,8)  =&gt; U2 R U' R' U2 R U' R' U' R U' R'
+(1,10,3,8)(2,7,5,4)     =&gt; U R U' R' U' R U2 R'
+(1,10,3,8)(2,7,9,4)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U'
+(1,10,3,8)(2,7,4)(5,9)  =&gt; U R U R' U R U R' U2 R U2 R' U' R U' R' U'
+(1,10,3,8)(2,7)(4,5,9)  =&gt; U R U R' U R U R' U'
+(1,10,3,8)(2,7,4,5)     =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U2 R'
+(1,10,3,8)(2,7,9)(4,5)  =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U R'
+(1,10,3,8)(2,7)(4,9,5)  =&gt; U R U' R' U R U R' U' R U2 R' U' R U' R'
+(1,10,3,8)(2,7,5)(4,9)  =&gt; R U R' U R U2 R' U R U' R' U'
+(1,10,3,8)(2,7,4,9)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U R'
+(1,10,3,8)(2,7,5,9)     =&gt; U R U R' U R U2 R' U R U2 R' U
+(1,10,3,8)(2,7)         =&gt; U R' U2 R U R' U R U2 R U' R' U' R U2 R'
+(1,10,3,8)(2,7,9,5)     =&gt; U2 R U R2 U2 R U R' U R
+(1,10,8,3,6)(2,4,9)     =&gt; R U R' U R U2 R' U R U' R'
+(1,10,8,3,6)(2,4,9,5,7) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U R' U'
+(1,10,8,3,6)(2,4,9,7,5) =&gt; U R U' R' U R U R' U R' U' R U' R' U2 R U'
+(1,10,8,3,6)(2,4,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U' R' U'
+(1,10,8,3,6)(2,4,7,5,9) =&gt; U R U R' U R U R'
+(1,10,8,3,6)(2,4,7,9,5) =&gt; U R U R' U R U2 R' U' R U R' U'
+(1,10,8,3,6)(2,4)(7,9)  =&gt; U2 R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,10,8,3,6)(2,4)(5,9)  =&gt; R U R' U R U' R' U'
+(1,10,8,3,6)(2,4)(5,7)  =&gt; U R U2 R' U R U' R' U' R U' R' U'
+(1,10,8,3,6)(2,4,5,7,9) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R'
+(1,10,8,3,6)(2,4,5)     =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R' U'
+(1,10,8,3,6)(2,4,5,9,7) =&gt; U R U R' U R U R' U2 R U2 R' U' R U' R'
+(1,10,6,3)(2,4,9,5)     =&gt; U' R U' R' U
+(1,10,6,3)(2,4,9)(5,7)  =&gt; U' R U' R' U' R U' U' R' U' R U' R'
+(1,10,6,3)(2,4,9,7)     =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U R'
+(1,10,6,3)(2,4,5)(7,9)  =&gt; U2 R U R'
+(1,10,6,3)(2,4,5,7)     =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U' R'
+(1,10,6,3)(2,4,5,9)     =&gt; U R U R' U R U' R' U' R U' R' U'
+(1,10,6,3)(2,4,7,5)     =&gt; U R U2 R' U R U R' U' R U R' U R U2 R' U
+(1,10,6,3)(2,4,7,9)     =&gt; U2 R U R' U U R' U U R U R' U R
+(1,10,6,3)(2,4,7)(5,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U2 R U' R' U
+(1,10,6,3)(2,4)         =&gt; U R U2 R' U R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,10,6,3)(2,4)(5,7,9)  =&gt; U R' U2 R U R' U R2 U' R' U
+(1,10,6,3)(2,4)(5,9,7)  =&gt; U R' U2 R U R' U R U' R U R'
+(1,10)(2,4,9,5,7)(6,8)  =&gt; U R U' R' U R U R'
+(1,10)(2,4,9,7,5)(6,8)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2
+(1,10)(2,4,9)(6,8)      =&gt; U R U' R' U R U R' U2 R U2 R' U' R U' R'
+(1,10)(2,4,5)(6,8)      =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U'
+(1,10)(2,4,5,7,9)(6,8)  =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U' R'
+(1,10)(2,4,5,9,7)(6,8)  =&gt; U R U R' U R U R' U' R U R' U R U2 R' U
+(1,10)(2,4)(6,8)(7,9)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2
+(1,10)(2,4)(5,7)(6,8)   =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U' R U' R' U' R U2 R' U'
+(1,10)(2,4)(5,9)(6,8)   =&gt; U R' U2 R U R' U R U' R U' R' U' R U' R' U'
+(1,10)(2,4,7,9,5)(6,8)  =&gt; U' U' R U' R' U' R U' R' U'
+(1,10)(2,4,7)(6,8)      =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U'
+(1,10)(2,4,7,5,9)(6,8)  =&gt; U R U R' U R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,10,3,8)(2,4,7,5)     =&gt; U R U R' U R U2 R' U2 R U' R' U' R U2 R'
+(1,10,3,8)(2,4,7)(5,9)  =&gt; U R U R' U R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
+(1,10,3,8)(2,4,7,9)     =&gt; U2 R U R' U R' U' R U' R' U2 R U'
+(1,10,3,8)(2,4,9,7)     =&gt; U R U' R' U R U' R' U' R U' R' U'
+(1,10,3,8)(2,4,9,5)     =&gt; R U' R' U' R U2 R' U' R U R' U'
+(1,10,3,8)(2,4,9)(5,7)  =&gt; U R' U2 R U R' U R U R U' R' U' R U R'
+(1,10,3,8)(2,4,5,9)     =&gt; R U' R' U' R U R'
+(1,10,3,8)(2,4,5)(7,9)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U' R U' R'
+(1,10,3,8)(2,4,5,7)     =&gt; U R U2 R' U R U R' U U R' U U R U R' U R
+(1,10,3,8)(2,4)         =&gt; U R U2 R' U R U R'
+(1,10,3,8)(2,4)(5,7,9)  =&gt; U2 R U R' U U2 R U R' U R U2 R' U
+(1,10,3,8)(2,4)(5,9,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U' R U' R'
+(1,10,8,3,6)(2,5,7,4,9) =&gt; R' U' R U' R' U2 R U' U2 R U' R'
+(1,10,8,3,6)(2,5)(4,9)  =&gt; U R U' R' U R U R' U2
+(1,10,8,3,6)(2,5,4,9,7) =&gt; R U R' U R U2 R' U2 R U' R' U' R U2 R' U' R U R'
+(1,10,8,3,6)(2,5,7)     =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U'
+(1,10,8,3,6)(2,5)(7,9)  =&gt; U2 R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,10,8,3,6)(2,5,9)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R'
+(1,10,8,3,6)(2,5,7,9,4) =&gt; U2 R U R' U2 R' U' R U' R' U2 R U'
+(1,10,8,3,6)(2,5,4)     =&gt; U R U' R' U2 R U' R' U'
+(1,10,8,3,6)(2,5,9,7,4) =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R'
+(1,10,8,3,6)(2,5,4,7,9) =&gt; U2 R U R' U R U2 R' U' R U' R'
+(1,10,8,3,6)(2,5)(4,7)  =&gt; U R U2 R' U R U R' U2 U R' U2 R U R' U R
+(1,10,8,3,6)(2,5,9,4,7) =&gt; U R U R' U R U R' U' R U2 R' U' R U' R' U'
+(1,10,6,3)(2,5,4,9)     =&gt; U R U' R' U R U R' U2 R' U' R U' R' U2 R U'
+(1,10,6,3)(2,5,7)(4,9)  =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R' U'
+(1,10,6,3)(2,5)(4,9,7)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' R'
+(1,10,6,3)(2,5,4,7)     =&gt; U R U2 R' U R U R' U2
+(1,10,6,3)(2,5,9)(4,7)  =&gt; U R U R' U R U R' R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,10,6,3)(2,5)(4,7,9)  =&gt; U2 R U R' U U R' U U R U R' U R U' R U2 R' U' R U' R' U'
+(1,10,6,3)(2,5,4)(7,9)  =&gt; U' R U2 R' U' R U' R' U R U R'
+(1,10,6,3)(2,5,9,4)     =&gt; U2 R U' R' U2 R U' R' U' R U' R' U'
+(1,10,6,3)(2,5,7,4)     =&gt; U' R U2 R' U' R U2 R' U2 R U' R'
+(1,10,6,3)(2,5)         =&gt; U R U2 R' U R U' R' U' R U' R' U R U R' U R U2 R' U
+(1,10,6,3)(2,5,7,9)     =&gt; U2 R U R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,10,6,3)(2,5,9,7)     =&gt; U R U R' U R U R' U' R' U2 R U R' U R
+(1,10)(2,5,4,9,7)(6,8)  =&gt; R U R' U R U2 R' U R U' R' U2
+(1,10)(2,5)(4,9)(6,8)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U R' U'
+(1,10)(2,5,7,4,9)(6,8)  =&gt; U R U' R' U R U R' U' R U2 R' U' R U' R' U'
+(1,10)(2,5,4)(6,8)      =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U'
+(1,10)(2,5,9,7,4)(6,8)  =&gt; U R U R' U R U R' U2
+(1,10)(2,5,7,9,4)(6,8)  =&gt; U2 R U R' U2 U R' U2 R U R' U R
+(1,10)(2,5,4,7,9)(6,8)  =&gt; U2 R U R' U2 R U R' U R U2 R' U
+(1,10)(2,5,9,4,7)(6,8)  =&gt; U R U R' U R U' R' U' R U' R' U R U R' U R U2 R' U
+(1,10)(2,5)(4,7)(6,8)   =&gt; U R' U2 R U R' U R U2 R U' R' U' R U2 R' U'
+(1,10)(2,5)(6,8)(7,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2
+(1,10)(2,5,7)(6,8)      =&gt; U R U' R' U' R U2 R' U'
+(1,10)(2,5,9)(6,8)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U' U' R U' R' U' R U' R'
+(1,10,3,8)(2,5,9,7)     =&gt; R U R' U R U R' U' R U' R'
+(1,10,3,8)(2,5)         =&gt; U R U2 R' U R U R' U' R U2 R' U' R U' R' U'
+(1,10,3,8)(2,5,7,9)     =&gt; U2 R U R' U2
+(1,10,3,8)(2,5,7,4)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R'
+(1,10,3,8)(2,5,4)(7,9)  =&gt; U R U R' U R U' U' R' U' R U' R' U' R U' R'
+(1,10,3,8)(2,5,9,4)     =&gt; U R U R' U R U R' U R U2 R' U' R U' R'
+(1,10,3,8)(2,5,7)(4,9)  =&gt; U' R U' R' U'
+(1,10,3,8)(2,5,4,9)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U2 R'
+(1,10,3,8)(2,5)(4,9,7)  =&gt; U R U' R' U R U R' U U R U R' U R U2 R' U
+(1,10,3,8)(2,5,9)(4,7)  =&gt; U R U R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
+(1,10,3,8)(2,5,4,7)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U' R' U' R U2 R'
+(1,10,3,8)(2,5)(4,7,9)  =&gt; U R' U2 R U R' U R2 U' R' U'
+(1,10,6,3)(4,9)         =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U' R U' R' U'
+(1,10,6,3)(4,9,5,7)     =&gt; R U R' U R U2 R' U R U' R' U
+(1,10,6,3)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U R'
+(1,10,6,3)(4,7)         =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R'
+(1,10,6,3)(4,7,9,5)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U
+(1,10,6,3)(4,7,5,9)     =&gt; U R U R' U R U R' R' U' R U' R' U2 R U'
+(1,10,6,3)(7,9)         =&gt; U R U R' U R U2 R' U' R U R'
+(1,10,6,3)(5,9)         =&gt; U R U R' U R U R' U
+(1,10,6,3)(5,7)         =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U' R'
+(1,10,6,3)(4,5)         =&gt; U R U2 R' U R U' R' U' R U' R'
+(1,10,6,3)(4,5,7,9)     =&gt; U2 R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,10,6,3)(4,5,9,7)     =&gt; R U R' U R U' R'
+(1,10)(4,9,7)(6,8)      =&gt; U' R U' R' U2
+(1,10)(4,9)(5,7)(6,8)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U2 R' U'
+(1,10)(4,9,5)(6,8)      =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U' R' U'
+(1,10)(4,7,5)(6,8)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U'
+(1,10)(4,7)(5,9)(6,8)   =&gt; R U R' U R U R' U' R U' R' U'
+(1,10)(4,7,9)(6,8)      =&gt; U2 R U R' U
+(1,10)(6,8)             =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U'
+(1,10)(5,9,7)(6,8)      =&gt; U R U R' U R U R' U R U2 R' U' R U' R' U'
+(1,10)(5,7,9)(6,8)      =&gt; U R U R' U R U' U' R' U' R U' R' U' R U' R' U'
+(1,10)(4,5)(6,8)(7,9)   =&gt; U R' U2 R U R' U R2 U' R' U2
+(1,10)(4,5,7)(6,8)      =&gt; U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,10)(4,5,9)(6,8)      =&gt; U R U R' U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,10,8,3,6)(4,9,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' R' U'
+(1,10,8,3,6)(4,9)(5,7)  =&gt; U R U' R' U R U' R' U' R U' R'
+(1,10,8,3,6)(4,9,7)     =&gt; R U' R' U' R U2 R' U' R U R'
+(1,10,8,3,6)(4,7,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' R U' R' U' U' R U' R' U'
+(1,10,8,3,6)(4,7,9)     =&gt; U2 R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
+(1,10,8,3,6)(4,7)(5,9)  =&gt; U R U R' U R U R' U R U R' U R U2 R' U
+(1,10,8,3,6)(4,5)(7,9)  =&gt; U2 R U R' U R' U2 R U R' U R
+(1,10,8,3,6)(4,5,9)     =&gt; U R U R' U R U R' U2 R' U U R U R' U R U R U R' U R U2 R' U
+(1,10,8,3,6)(4,5,7)     =&gt; U R U2 R' U R U R' U
+(1,10,8,3,6)(5,7,9)     =&gt; U' R U2 R' U' R U' R' U R U R' U'
+(1,10,8,3,6)            =&gt; U' R U2 R' U' R U2 R' U2 R U' R' U'
+(1,10,8,3,6)(5,9,7)     =&gt; U R U R' U R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
+(1,10,3,8)(4,7)         =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U2 R'
+(1,10,3,8)(4,7,9,5)     =&gt; U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
+(1,10,3,8)(4,7,5,9)     =&gt; U R U R' U R U R' U R' U2 R U R' U R
+(1,10,3,8)(5,9)         =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R' U'
+(1,10,3,8)(5,7)         =&gt; U' R U2 R' U' R U2 R' U' R U2 R'
+(1,10,3,8)(7,9)         =&gt; U' U' R U' R' U' R U' R'
+(1,10,3,8)(4,9)         =&gt; R' U' R U' R' U2 R U' U2 R U' R' U'
+(1,10,3,8)(4,9,5,7)     =&gt; U R U' R' U R U R2 U' R U' R' U2 R U'
+(1,10,3,8)(4,9,7,5)     =&gt; U R U' R' U R U R' U
+(1,10,3,8)(4,5,9,7)     =&gt; U R' U2 R U R' U R U' R U' R' U' R U' R'
+(1,10,3,8)(4,5)         =&gt; U R U U R' U R U R' U R U R' U R U2 R' U
+(1,10,3,8)(4,5,7,9)     =&gt; U2 R U R' U R U2 R' U' R U' R' U'
+(1,10,8,3,6)(2,9,5,7,4) =&gt; R' U' R U' R' U2 R2 U R' U'
+(1,10,8,3,6)(2,9,4)     =&gt; R U R' U R U R' U U R U R'
+(1,10,8,3,6)(2,9,7,5,4) =&gt; R U R' U R U R' U U R U R' U' R' U' R U' R' U2 R U'
+(1,10,8,3,6)(2,9)(5,7)  =&gt; U' R U2 R' U' R U' R' U2 R U' R'
+(1,10,8,3,6)(2,9,7)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U' R U2 R' U' R U R'
+(1,10,8,3,6)(2,9,5)     =&gt; U R U R' U R U2 R' U R U R' U R U' R' U'
+(1,10,8,3,6)(2,9,4,5,7) =&gt; R U R' U R U R' U2 R U R' U U R' U2 R U R' U R
+(1,10,8,3,6)(2,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R'
+(1,10,8,3,6)(2,9,7,4,5) =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U' R U R'
+(1,10,8,3,6)(2,9,5,4,7) =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U R' U'
+(1,10,8,3,6)(2,9)(4,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U' R'
+(1,10,8,3,6)(2,9,4,7,5) =&gt; R U R' U R U R' U U R U R' U U R U2 R' U' R U' R'
+(1,10)(2,9,7,5,4)(6,8)  =&gt; R U R' U R U R' U2 R U R' R' U2 R U R' U R
+(1,10)(2,9,5,7,4)(6,8)  =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U' R' U'
+(1,10)(2,9,4)(6,8)      =&gt; R U R' U R U2 R' U2 R U' R' U' R U R' U'
+(1,10)(2,9,5,4,7)(6,8)  =&gt; R U R' U R U R' U U R U R' U U
+(1,10)(2,9,4,7,5)(6,8)  =&gt; U R U R' U R U2 R' U R U' R' U' R U R' U'
+(1,10)(2,9)(4,7)(6,8)   =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R'
+(1,10)(2,9)(4,5)(6,8)   =&gt; R U R' U R U R' U' U' R U' R' U' R U' R'
+(1,10)(2,9,7,4,5)(6,8)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U'
+(1,10)(2,9,4,5,7)(6,8)  =&gt; R U R' U R U R' U U R U R' U R' U' R U' R' U2 R U'
+(1,10)(2,9,7)(6,8)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2
+(1,10)(2,9)(5,7)(6,8)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R'
+(1,10)(2,9,5)(6,8)      =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U' R U' R' U'
+(1,10,3,8)(2,9,7,4)     =&gt; R U R' U R U R' U U R U2 R' U R U2 R' U
+(1,10,3,8)(2,9,4)(5,7)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U'
+(1,10,3,8)(2,9,5,4)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U' R U R' U'
+(1,10,3,8)(2,9,5,7)     =&gt; R U R' U R U R' U U R U R' U R U2 R' U' R U' R'
+(1,10,3,8)(2,9)         =&gt; U R U R' U R U2 R' U R U' R' U' R U R'
+(1,10,3,8)(2,9,7,5)     =&gt; R U R' U R U R' U U R U R' U'
+(1,10,3,8)(2,9)(4,7,5)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U R'
+(1,10,3,8)(2,9,4,7)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U'
+(1,10,3,8)(2,9,5)(4,7)  =&gt; R U R' U R U R' U U R U R' U U R' U' R U' R' U2 R U'
+(1,10,3,8)(2,9)(4,5,7)  =&gt; R U R' U R U2 R' U2 R U' R' U' R U R'
+(1,10,3,8)(2,9,7)(4,5)  =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U' R'
+(1,10,3,8)(2,9,4,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U' R' U'
+(1,10,6,3)(2,9,7,5)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U R'
+(1,10,6,3)(2,9)         =&gt; R U R' U R U R' U U R U R2 U' R U' R' U2 R U'
+(1,10,6,3)(2,9,5,7)     =&gt; R U R' U R U R' U U R U R' U U R U R' U R U2 R' U
+(1,10,6,3)(2,9)(4,5,7)  =&gt; R U R' U R U R' U U R U R' U
+(1,10,6,3)(2,9,7)(4,5)  =&gt; R' U' R U' R' U2 R2 U R'
+(1,10,6,3)(2,9,4,5)     =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R' U'
+(1,10,6,3)(2,9,4)(5,7)  =&gt; R U R' U R U R' U' U' R U' R' U' R U' R' U'
+(1,10,6,3)(2,9,5,4)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U2
+(1,10,6,3)(2,9,7,4)     =&gt; U R U R' U R U2 R' U R U R' U R U' R'
+(1,10,6,3)(2,9,5)(4,7)  =&gt; R U R' U R U R' U U R U R' U U2 R' U2 R U R' U R
+(1,10,6,3)(2,9)(4,7,5)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R' U' R U' R'
+(1,10,6,3)(2,9,4,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R' U'
+</code></pre></div></div>
+
+<ul>
+  <li>文章同时发表于 <a href="https://blog.csdn.net/seavers/article/details/132921616">https://blog.csdn.net/seavers/article/details/132921616?spm=1001.2014.3001.5502</a></li>
+</ul>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+<span class="byline author vcard">Posted by <span class="fn">lianghaijun</span></span>
+
+      
+
+
+
+
+
+
+
+
+
+<time datetime="2023-09-16T15:22:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    数学
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2018-09-18-maven-archetype-multimodule.html" title="Previous Post: maven构建archetype多模块工程模板的问题">&laquo; maven构建archetype多模块工程模板的问题</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
+    
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2023 - lianghaijun -
+  <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
+</p>
+</footer>
+  <script src="/blog/static/jquery.min.js"></script>
+<script src="/blog/static/blog.js?tag=20160209"></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+
+
+</body>
+</html>

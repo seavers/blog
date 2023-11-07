@@ -107,7 +107,7 @@ figure.code{width: 48%; display:inline-block}
 
 <!--more-->
 
-<h2 id="section">简述</h2>
+<h2 id="简述">简述</h2>
 
 <ul>
   <li>ruby为动态语言,弱类型,一切皆对象(就是可以.)</li>
@@ -116,9 +116,9 @@ figure.code{width: 48%; display:inline-block}
   <li>ruby支持[]语法创建变长数组, {}语法创建Hash对象, 支持闭包</li>
 </ul>
 
-<h2 id="section-1">常用的语法结构</h2>
+<h2 id="常用的语法结构">常用的语法结构</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">#encoding:utf-8</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#encoding:utf-8</span>
 <span class="nb">require</span> <span class="s1">'nokogiri'</span>
 
 <span class="c1"># comment</span>
@@ -129,7 +129,7 @@ figure.code{width: 48%; display:inline-block}
 	<span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="k">end</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span>
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span><span class="o">..</span><span class="mi">10</span>
 	<span class="nb">puts</span> <span class="n">i</span><span class="p">.</span><span class="nf">to_s</span> <span class="o">+</span> <span class="s1">'.'</span>
 <span class="k">end</span>
 
@@ -150,27 +150,25 @@ figure.code{width: 48%; display:inline-block}
 <span class="k">end</span>
 
 <span class="k">case</span> <span class="n">x</span>
-<span class="k">when</span> <span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">10</span>              <span class="c1">#匹配数字</span>
+<span class="k">when</span> <span class="mi">1</span><span class="o">..</span><span class="mi">10</span>              <span class="c1">#匹配数字</span>
     <span class="nb">puts</span> <span class="s2">"First branch"</span>
 <span class="k">when</span> <span class="n">foobar</span><span class="p">()</span>           <span class="c1">#批量方法返回的值</span>
     <span class="nb">puts</span> <span class="s2">"Second branch"</span>
-<span class="k">when</span> <span class="sr">/^hel.*/</span>           <span class="c1">#匹配正则表达式</span>
-    <span class="nb">puts</span> <span class="s2">"Third branch"</span>
+<span class="k">when</span> <span class="sr">/^hel.*/</span><span class="err">           #匹配正则表达式
+    p</span><span class="sr">u</span><span class="n">ts</span> <span class="s2">"Third branch"</span>
 <span class="k">else</span>  
     <span class="nb">puts</span> <span class="s2">"Last branch"</span>
 <span class="k">end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<h2 id="section-2">方法符号</h2>
+<h2 id="方法符号">方法符号</h2>
 
 <p>语法上除了一些常见的顺序,选择,循环,变量,函数,模块,类, 还有一些特有的内容</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1"># 查看一个变量可以调用哪些方法</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 查看一个变量可以调用哪些方法</span>
 <span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mi">108</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="s1">'string'</span><span class="p">.</span><span class="nf">methods</span>
 <span class="o">=&gt;</span> <span class="p">[</span><span class="ss">:&lt;=&gt;</span><span class="p">,</span> <span class="ss">:==</span><span class="p">,</span> <span class="ss">:===</span><span class="p">,</span> <span class="ss">:eql?</span><span class="p">,</span> <span class="ss">:hash</span><span class="p">,</span> <span class="ss">:casecmp</span><span class="p">,</span> <span class="p">:</span><span class="o">+</span><span class="p">,</span> <span class="p">:</span><span class="o">*</span><span class="p">,</span> <span class="ss">:%</span><span class="p">,</span> <span class="ss">:[]</span><span class="p">,</span> <span class="ss">:[]=</span><span class="p">,</span> <span class="ss">:insert</span><span class="p">,</span> <span class="ss">:length</span><span class="p">,</span> <span class="ss">:size</span><span class="p">,</span> <span class="ss">:bytesize</span><span class="p">,</span> <span class="ss">:empty?</span><span class="p">,</span> <span class="p">:</span><span class="o">=~</span><span class="p">,</span> <span class="ss">:match</span><span class="p">,</span> <span class="ss">:succ</span><span class="p">,</span> <span class="ss">:succ!</span><span class="p">,</span> <span class="ss">:next</span><span class="p">,</span> <span class="ss">:next!</span><span class="p">,</span> <span class="ss">:upto</span><span class="p">,</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">:rindex</span><span class="p">,</span> <span class="ss">:replace</span><span class="p">,</span> <span class="ss">:clear</span><span class="p">,</span> <span class="ss">:chr</span><span class="p">,</span> <span class="ss">:getbyte</span><span class="p">,</span> <span class="ss">:setbyte</span><span class="p">,</span> <span class="ss">:byteslice</span><span class="p">,</span> <span class="ss">:to_i</span><span class="p">,</span> <span class="ss">:to_f</span><span class="p">,</span> <span class="ss">:to_s</span><span class="p">,</span> <span class="ss">:to_str</span><span class="p">,</span> <span class="ss">:inspect</span><span class="p">,</span> <span class="ss">:dump</span><span class="p">,</span> <span class="ss">:upcase</span><span class="p">,</span> <span class="ss">:downcase</span><span class="p">,</span> <span class="ss">:capitalize</span><span class="p">,</span> <span class="ss">:swapcase</span><span class="p">,</span> <span class="ss">:upcase!</span><span class="p">,</span> <span class="ss">:downcase!</span><span class="p">,</span> <span class="ss">:capitalize!</span><span class="p">,</span> <span class="ss">:swapcase!</span><span class="p">,</span> <span class="ss">:hex</span><span class="p">,</span> <span class="ss">:oct</span><span class="p">,</span> <span class="ss">:split</span><span class="p">,</span> <span class="ss">:lines</span><span class="p">,</span> <span class="ss">:bytes</span><span class="p">,</span> <span class="ss">:chars</span><span class="p">,</span> <span class="ss">:codepoints</span><span class="p">,</span> <span class="ss">:reverse</span><span class="p">,</span> <span class="ss">:reverse!</span><span class="p">,</span> <span class="ss">:concat</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:prepend</span><span class="p">,</span> <span class="ss">:crypt</span><span class="p">,</span> <span class="ss">:intern</span><span class="p">,</span> <span class="ss">:to_sym</span><span class="p">,</span> <span class="ss">:ord</span><span class="p">,</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:start_with?</span><span class="p">,</span> <span class="ss">:end_with?</span><span class="p">,</span> <span class="ss">:scan</span><span class="p">,</span> <span class="ss">:ljust</span><span class="p">,</span> <span class="ss">:rjust</span><span class="p">,</span> <span class="ss">:center</span><span class="p">,</span> <span class="ss">:sub</span><span class="p">,</span> <span class="ss">:gsub</span><span class="p">,</span> <span class="ss">:chop</span><span class="p">,</span> <span class="ss">:chomp</span><span class="p">,</span> <span class="ss">:strip</span><span class="p">,</span> <span class="ss">:lstrip</span><span class="p">,</span> <span class="ss">:rstrip</span><span class="p">,</span> <span class="ss">:sub!</span><span class="p">,</span> <span class="ss">:gsub!</span><span class="p">,</span> <span class="ss">:chop!</span><span class="p">,</span> <span class="ss">:chomp!</span><span class="p">,</span> <span class="ss">:strip!</span><span class="p">,</span> <span class="ss">:lstrip!</span><span class="p">,</span> <span class="ss">:rstrip!</span><span class="p">,</span> <span class="ss">:tr</span><span class="p">,</span> <span class="ss">:tr_s</span><span class="p">,</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:squeeze</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:tr!</span><span class="p">,</span> <span class="ss">:tr_s!</span><span class="p">,</span> <span class="ss">:delete!</span><span class="p">,</span> <span class="ss">:squeeze!</span><span class="p">,</span> <span class="ss">:each_line</span><span class="p">,</span> <span class="ss">:each_byte</span><span class="p">,</span> <span class="ss">:each_char</span><span class="p">,</span> <span class="ss">:each_codepoint</span><span class="p">,</span> <span class="ss">:sum</span><span class="p">,</span> <span class="ss">:slice</span><span class="p">,</span> <span class="ss">:slice!</span><span class="p">,</span> <span class="ss">:partition</span><span class="p">,</span> <span class="ss">:rpartition</span><span class="p">,</span> <span class="ss">:encoding</span><span class="p">,</span> <span class="ss">:force_encoding</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:valid_encoding?</span><span class="p">,</span> <span class="ss">:ascii_only?</span><span class="p">,</span> <span class="ss">:unpack</span><span class="p">,</span> <span class="ss">:encode</span><span class="p">,</span> <span class="ss">:encode!</span><span class="p">,</span> <span class="ss">:to_r</span><span class="p">,</span> <span class="ss">:to_c</span><span class="p">,</span> <span class="p">:</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">:</span><span class="o">&gt;=</span><span class="p">,</span> <span class="ss">:&lt;</span><span class="p">,</span> <span class="ss">:&lt;=</span><span class="p">,</span> <span class="ss">:between?</span><span class="p">,</span> <span class="ss">:nil?</span><span class="p">,</span> <span class="p">:</span><span class="o">!~</span><span class="p">,</span> <span class="ss">:class</span><span class="p">,</span> <span class="ss">:singleton_class</span><span class="p">,</span> <span class="ss">:clone</span><span class="p">,</span> <span class="ss">:dup</span><span class="p">,</span> <span class="ss">:taint</span><span class="p">,</span> <span class="ss">:tainted?</span><span class="p">,</span> <span class="ss">:untaint</span><span class="p">,</span> <span class="ss">:untrust</span><span class="p">,</span> <span class="ss">:untrusted?</span><span class="p">,</span> <span class="ss">:trust</span><span class="p">,</span> <span class="ss">:freeze</span><span class="p">,</span> <span class="ss">:frozen?</span><span class="p">,</span> <span class="ss">:methods</span><span class="p">,</span> <span class="ss">:singleton_methods</span><span class="p">,</span> <span class="ss">:protected_methods</span><span class="p">,</span> <span class="ss">:private_methods</span><span class="p">,</span> <span class="ss">:public_methods</span><span class="p">,</span> <span class="ss">:instance_variables</span><span class="p">,</span> <span class="ss">:instance_variable_get</span><span class="p">,</span> <span class="ss">:instance_variable_set</span><span class="p">,</span> <span class="ss">:instance_variable_defined?</span><span class="p">,</span> <span class="ss">:remove_instance_variable</span><span class="p">,</span> <span class="ss">:instance_of?</span><span class="p">,</span> <span class="ss">:kind_of?</span><span class="p">,</span> <span class="ss">:is_a?</span><span class="p">,</span> <span class="ss">:tap</span><span class="p">,</span> <span class="ss">:send</span><span class="p">,</span> <span class="ss">:public_send</span><span class="p">,</span> <span class="ss">:respond_to?</span><span class="p">,</span> <span class="ss">:extend</span><span class="p">,</span> <span class="ss">:display</span><span class="p">,</span> <span class="ss">:method</span><span class="p">,</span> <span class="ss">:public_method</span><span class="p">,</span> <span class="ss">:define_singleton_method</span><span class="p">,</span> <span class="ss">:object_id</span><span class="p">,</span> <span class="ss">:to_enum</span><span class="p">,</span> <span class="ss">:enum_for</span><span class="p">,</span> <span class="ss">:equal?</span><span class="p">,</span> <span class="p">:</span><span class="o">!</span><span class="p">,</span> <span class="p">:</span><span class="o">!=</span><span class="p">,</span> <span class="ss">:instance_eval</span><span class="p">,</span> <span class="ss">:instance_exec</span><span class="p">,</span> <span class="ss">:__send__</span><span class="p">,</span> <span class="ss">:__id__</span><span class="p">]</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>其中:</p>
 
@@ -181,9 +179,9 @@ figure.code{width: 48%; display:inline-block}
   <li>下划线: 如__send__, __id__, 为特殊命名方式, 因send太常见,可能被覆盖,用__send__可避免</li>
 </ul>
 
-<h2 id="section-3">字符串操作</h2>
+<h2 id="字符串操作">字符串操作</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">## 简单</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 简单</span>
 <span class="s1">'hello'</span><span class="p">.</span><span class="nf">length</span>   <span class="c1">## 5</span>
 <span class="s1">'hello'</span><span class="p">.</span><span class="nf">start_with?</span><span class="p">(</span><span class="s1">'he'</span><span class="p">)</span>   <span class="c1">## true</span>
 <span class="s1">'hello'</span><span class="p">.</span><span class="nf">end_with?</span><span class="p">(</span><span class="s1">'he'</span><span class="p">)</span>     <span class="c1">## false</span>
@@ -195,44 +193,41 @@ figure.code{width: 48%; display:inline-block}
 <span class="c1"># 子字符串</span>
 <span class="s1">'hello world'</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>     <span class="c1">## 'l'</span>
 <span class="s1">'hello world'</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>   <span class="c1">## 'lo wo'</span>
-<span class="s1">'hello world'</span><span class="p">[</span><span class="mi">3</span><span class="p">.</span><span class="nf">.</span><span class="mi">5</span><span class="p">]</span>  <span class="c1">## 'lo '</span>
+<span class="s1">'hello world'</span><span class="p">[</span><span class="mi">3</span><span class="o">..</span><span class="mi">5</span><span class="p">]</span>  <span class="c1">## 'lo '</span>
 
 <span class="c1"># 查找</span>
 <span class="s1">'hello world'</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="s1">'orl'</span><span class="p">)</span>   <span class="c1">## 7</span>
-<span class="s1">'hello world'</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="sr">/[ole]+/</span><span class="p">)</span>  <span class="c1">## 1</span>
+<span class="s1">'hello world'</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="sr">/[ole]+/</span><span class="err">)  ## 1
 
-<span class="c1"># 替换</span>
-<span class="s1">'hello world'</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="s1">'o'</span><span class="p">,</span> <span class="s1">'e'</span><span class="p">)</span>  <span class="c1">## 'helle werld'</span>
-<span class="s1">'hello world'</span><span class="p">.</span><span class="nf">gsub</span><span class="p">(</span><span class="sr">/[a-z]+/</span><span class="p">,</span> <span class="s1">'ok'</span><span class="p">)</span>   <span class="c1">## 'ok ok'</span>
+# 替换
+'h</span><span class="sr">e</span><span class="n">llo</span> <span class="n">world</span><span class="s1">'.gsub('</span><span class="n">o</span><span class="s1">', '</span><span class="n">e</span><span class="s1">')  ## '</span><span class="n">helle</span> <span class="n">werld</span><span class="s1">'
+'</span><span class="n">hello</span> <span class="n">world</span><span class="s1">'.gsub(/[a-z]+/, '</span><span class="n">ok</span><span class="s1">')   ## '</span><span class="n">ok</span> <span class="n">ok</span><span class="s1">'
 
-<span class="c1"># 分拆</span>
-<span class="s1">'hello world'</span><span class="p">.</span><span class="nf">lines</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>     <span class="c1">## ["hello ", "world"]</span>
-<span class="s2">" now's  the time"</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">)</span>   <span class="c1">#=&gt; ["now's", "the", "time"]</span>
-<span class="s2">"hello"</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="sr">//</span><span class="p">)</span>               <span class="c1">#=&gt; ["h", "e", "l", "l", "o"]</span>
+# 分拆
+'</span><span class="n">hello</span> <span class="n">world</span><span class="s1">'.lines('</span> <span class="s1">')     ## ["hello ", "world"]
+" now'</span><span class="n">s</span>  <span class="n">the</span> <span class="n">time</span><span class="s2">".split(' ')   #=&gt; ["</span><span class="n">now</span><span class="err">'</span><span class="n">s</span><span class="s2">", "</span><span class="n">the</span><span class="s2">", "</span><span class="n">time</span><span class="s2">"]
+"</span><span class="n">hello</span><span class="s2">".split(//)               #=&gt; ["</span><span class="n">h</span><span class="s2">", "</span><span class="n">e</span><span class="s2">", "</span><span class="n">l</span><span class="s2">", "</span><span class="n">l</span><span class="s2">", "</span><span class="n">o</span><span class="s2">"]
 
-</code></pre>
-</div>
+</span></code></pre></div></div>
 
-<h2 id="section-4">数组操作</h2>
+<h2 id="数组操作">数组操作</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">].</span><span class="nf">length</span>    <span class="c1">## 3</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">].</span><span class="nf">length</span>    <span class="c1">## 3</span>
 <span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">].</span><span class="nf">include?</span><span class="p">(</span><span class="s1">'four'</span><span class="p">)</span>   <span class="c1">## false</span>
 <span class="p">[</span><span class="s1">'1'</span><span class="p">,</span><span class="s1">'2'</span><span class="p">,</span><span class="s1">'3'</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s1">'4'</span>            <span class="c1">## ['1','2','3','4']</span>
-<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">][</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">3</span><span class="p">]</span>                 <span class="c1">## [2,3]</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">][</span><span class="mi">1</span><span class="o">..</span><span class="mi">3</span><span class="p">]</span>                 <span class="c1">## [2,3]</span>
 <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">].</span><span class="nf">sort</span>					<span class="c1">## [1,2,3,4]</span>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">].</span><span class="nf">uniq</span>					<span class="c1">## [1,3,4]</span>
 <span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">].</span><span class="nf">join</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span> <span class="c1">## 'one,two,three'</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<h2 id="section-5">函数</h2>
+<h2 id="函数">函数</h2>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>def process
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def process
 
 end
-</code></pre>
-</div>
+</code></pre></div></div>
 
 </div>
 
@@ -257,7 +252,7 @@ end
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ruby/'>ruby</a>
+    ruby
   
 </span>
 
@@ -282,30 +277,106 @@ end
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -313,13 +384,14 @@ end
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>

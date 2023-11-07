@@ -94,7 +94,7 @@
 
 <p>随手写了一个demo:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nt">&lt;h3&gt;</span>inline测试<span class="nt">&lt;/h3&gt;</span>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;h3&gt;</span>inline测试<span class="nt">&lt;/h3&gt;</span>
 <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">"width:110px"</span><span class="nt">&gt;</span><span class="ni">&amp;nbsp;</span>
 <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">style=</span><span class="s">"
     background: #ccc;
@@ -119,28 +119,63 @@
 "</span><span class="nt">&gt;</span>inline<span class="nt">&lt;/i&gt;</span>
 <span class="nt">&lt;/div&gt;</span>
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
-<p>经测试
-1. inline元素, 有效的: background, margin-left, margin-right, padding, border
-2. inline元素, 无效的: width, height, margin-top, margin-bottom
-3. 因width, height无效, 因此下列属性也无效: text-align, text-indent, min|max-width|height, overflow
-4. 原文字相关的依然有效, 如word-spacing,  word-wrap,  white-space, letter-spacing
-5. 下面两个有效, line-height, vertical-align, box-shadow
-6. float,position及与之相关top,left, 不考虑, 已经不是inline了</p>
+<p>经测试</p>
+<ol>
+  <li>inline元素, 有效的: background, margin-left, margin-right, padding, border</li>
+  <li>inline元素, 无效的: width, height, margin-top, margin-bottom</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>因width, height无效, 因此下列属性也无效: text-align, text-indent, min</td>
+          <td>max-width</td>
+          <td>height, overflow</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>原文字相关的依然有效, 如word-spacing,  word-wrap,  white-space, letter-spacing</li>
+  <li>下面两个有效, line-height, vertical-align, box-shadow</li>
+  <li>float,position及与之相关top,left, 不考虑, 已经不是inline了</li>
+</ol>
 
 <p>其中 border, line-height, 这两个可以多多利用</p>
 
-<p><em>思考:</em>
-1. inline元素的宽高是不能定义, 即宽高度是由inline元素inline内容的元素决定的,(ie6,ie7下高度会受inline-block元素的影响)
-2. 即宽高完全是自适应而得出的, 因此也不存在overflow的问题, min|max-width|height也没有影响
-3. margin四个属性, left|right 与 top|bottom 有不同的待遇
-4. margin-top, margin-bottom, 可以用line-height模拟, 但有很大不同, 与inline-block也不兼容,  另 margin:0 auto的居中效果, 也没有作用</p>
+<p><em>思考:</em></p>
+<ol>
+  <li>inline元素的宽高是不能定义, 即宽高度是由inline元素inline内容的元素决定的,(ie6,ie7下高度会受inline-block元素的影响)</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>即宽高完全是自适应而得出的, 因此也不存在overflow的问题, min</td>
+          <td>max-width</td>
+          <td>height也没有影响</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>margin四个属性, left</td>
+          <td>right 与 top</td>
+          <td>bottom 有不同的待遇</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>margin-top, margin-bottom, 可以用line-height模拟, 但有很大不同, 与inline-block也不兼容,  另 margin:0 auto的居中效果, 也没有作用</li>
+</ol>
 
-<p>*其次: *
-1. div元素, 使用 display:inline 以上几条也成立
-2. button元素, 使用display:inline, 样式没有变化, 等于于inline-block</p>
+<p>*其次: *</p>
+<ol>
+  <li>div元素, 使用 display:inline 以上几条也成立</li>
+  <li>button元素, 使用display:inline, 样式没有变化, 等于于inline-block</li>
+</ol>
 
 <p>*最后: *
 mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
@@ -177,7 +212,7 @@ mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/css/'>css</a>
+    css
   
 </span>
 
@@ -202,30 +237,106 @@ mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
   </footer>
 </article>
 
-  <section>
-    <h1>Comments</h1>
-    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
-<div class="ds-thread" data-title=""></div>
-<script type="text/javascript">
-  var duoshuoQuery = {short_name:"lianghaijun"};
-  (function() {
-    var ds = document.createElement('script');
-    ds.type = 'text/javascript';ds.async = true;
-    ds.src = 'http://static.duoshuo.com/embed.js';
-    ds.charset = 'UTF-8';
-    (document.getElementsByTagName('head')[0] 
-    || document.getElementsByTagName('body')[0]).appendChild(ds);
-  })();
-</script>
-<!-- Duoshuo Comment END -->
-</div>
-  </section>
-
 </div>
 
 <aside class="sidebar">
   
+    <section>
+  <h1>Categories</h1>
+  <ul id="categories">
     
+	
+        <li class='category'><a href="/blog/categories/windows/">windows (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/java/">java (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/game/">game (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/思考/">思考 (9)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ubuntu/">ubuntu (20)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/php/">php (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/javascript/">javascript (10)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/css/">css (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/maven/">maven (6)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/git/">git (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/cubieboard/">cubieboard (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/android/">android (2)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/nginx/">nginx (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/octopress/">octopress (3)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/html5/">html5 (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/hive/">hive (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/chrome/">chrome (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/ruby/">ruby (5)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/mybatis/">mybatis (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/jekyll/">jekyll (1)</a></li>
+    
+	
+        <li class='category'><a href="/blog/categories/数学/">数学 (1)</a></li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a>
+      </li>
+    
+  </ul>
+</section>
+
   
 </aside>
 
@@ -233,13 +344,14 @@ mdn中说: 默认 inline-level 的元素 (inline + inline-block)</p>
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - lianghaijun -
+  Copyright &copy; 2023 - lianghaijun -
   <span class="credit">Powered by <a target="_blank" href="http://jekyllrb.com">jekyll</a></span>
+  <span style="float:right"> </a></span>
 </p>
 </footer>
   <script src="/blog/static/jquery.min.js"></script>
 <script src="/blog/static/blog.js?tag=20160209"></script>
-<script src='http://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
+<script src='https://hm.baidu.com/h.js?f1e7ae48ee023d8ed983af30c485b5ce'></script>
 
 
 </body>
