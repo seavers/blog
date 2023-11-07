@@ -3,46 +3,52 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>大海Online的博客</title>
+  <title>Blog Archive - 大海Online的博客</title>
   <meta name="author" content="lianghaijun">
 
   
   <meta name="description" content="
+
   
   
+    Blog Archive
     
-    
-      
   
-    
-      利用群论来研究魔方
-    
-    
-      
-        
-
-
-
-
-
-
-
-
-
-
-      
-    
+  
   
 
 
-  文章灵感来源于：
 
-  https://zhuanlan.zhihu.com/p/760...">
+  
+  2023
+
+
+  
+利用群论来研究魔方
+Sep 16 2023
+
+
+  posted in 数学
+
+
+
+
+
+
+
+  
+  2018
+
+
+  
+maven构建archetype多模块工程模板的问题
+Se...">
   
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
+  <link rel="canonical" href="http://www.lianghaijun.com/archives">
   <link href="/blog/static/screen.css" media="screen, projection" rel="stylesheet">
   <link href="" rel="alternate" title="大海Online的博客" type="application/atom+xml">
 </head>
@@ -69,2507 +75,1251 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article role="article">
   
-  
-    
-    <article>
-      
   <header>
-    
-      <h1 class="entry-title"><a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2023-09-16T15:22:00+08:00" pubdate data-updated="true"></time>
-      </p>
+    <h1 class="entry-title">Blog Archive</h1>
     
   </header>
+  
+  <div id="blog-archives">
 
 
-  <div class="entry-content"><p>文章灵感来源于：</p>
-<ul>
-  <li><a href="https://zhuanlan.zhihu.com/p/76038006">https://zhuanlan.zhihu.com/p/76038006</a></li>
-  <li>并参考了：<a href="https://www.gap-system.org/Doc/Examples/rubik.html">https://www.gap-system.org/Doc/Examples/rubik.html</a></li>
-  <li>使用了这里的小程序：<a href="https://www.jaapsch.net/puzzles/cubie.htm">https://www.jaapsch.net/puzzles/cubie.htm</a></li>
-</ul>
 
-<h2 id="先汇制一张魔方图">先汇制一张，魔方图</h2>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>               +--------------+
-               |  1    2    3 |
-               |  4  top    5 |
-               |  6    7    8 |
-+--------------+--------------+--------------+--------------+
-|              |            8 |  8    5    3 |              |
-|     left     |    front   9 |  9 right  13 |     rear     |
-|              |           10 | 10   11   12 |              |
-+--------------+--------------+--------------+--------------+
-               |              |
-               |    bottom    |
-               |              |
-               +--------------+      
-</code></pre></div></div>
+  
+  <h2>2023</h2>
 
-<p>这里做了几个简化</p>
-<ul>
-  <li>同一个块的两个棱或三个角，不做区分，视为同一数字</li>
-  <li>仅考虑顶部和右手边的图块，主要是顶部和8、9、10，这是我拼魔方经常研究的地方</li>
-</ul>
+<article>
+  
+<h1><a href="/blog/2023-09-16-cubie-rubik-using-group-theory.html">利用群论来研究魔方</a></h1>
+<time datetime="2023-09-16T15:22:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>16</span> <span class='year'>2023</span></time>
 
-<p>这里仅研究，1-10 这10个块的还原方法</p>
+<footer>
+  <span class="categories">posted in 数学</span>
+</footer>
 
-<p>让我们参考 <a href="https://www.gap-system.org/Doc/Examples/rubik.html">gap</a> 的程序，来建立模型</p>
 
-<h2 id="创建一个群">创建一个群</h2>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; cube := Group((1,3,8,6)(2,5,7,4),(8,3,12,10)(5,13,11,9));
-Group([ (1,3,8,6)(2,5,7,4), (3,12,10,8)(5,13,11,9) ])    
-</code></pre></div></div>
-<ul>
-  <li>这里通过Group构造了一个群，由置换构造而来的群
-    <ul>
-      <li>比如：这里(1,3,8,6)的置换，表示顶部4个角块的一次置换</li>
-    </ul>
-  </li>
-  <li>所以这个群，只有两元素
-    <ul>
-      <li>一个是(1,3,8,6)(2,5,7,4) 两个置换组合而成的TOP的转换，这里命名为 U ，（参考：<a href="http://www.rubik.com.cn/notation.htm">http://www.rubik.com.cn/notation.htm</a> ）</li>
-      <li>一个是(8,3,12,10)(5,13,11,9)，两个置换组合而成的RIGHT的转换，这里命名为 R</li>
-    </ul>
-  </li>
-  <li>群里只有乘法一种运算，表示为置换的乘法
-    <ul>
-      <li>比如 U*U=U^2 =&gt; (1,3,8,6)(2,5,7,4) = (1,8)(3,6)(2,7)(5,4)</li>
-    </ul>
-  </li>
-</ul>
+</article>
 
-<h2 id="简化旋转的表示方法">简化旋转的表示方法</h2>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; f := FreeGroup("U", "R");
-&lt;free group on the generators [ U, R ]&gt;
 
-gap&gt; hom := GroupHomomorphismByImages( f, cube, GeneratorsOfGroup(f), GeneratorsOfGroup(cube) );
-[ U, R ] -&gt; [ (1,3,8,6)(2,5,7,4), (3,12,10,8)(5,13,11,9) ]
-</code></pre></div></div>
-<ul>
-  <li>FreeGroup(“U”, “R”)是创建了两个元素的群，为了简化cube中两个元素的表示，分别代表Top、Right的旋转</li>
-  <li>GroupHomomorphismByImages是表示创建群同态，将U、R用于表示cube中定义的两个旋转</li>
-</ul>
 
-<h2 id="做一些测试">做一些测试</h2>
-<ul>
-  <li>比如我们要实现 5、9 两个块的交换，即实现 (5,9)
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; pre := PreImagesRepresentative(hom, (5,9));
-U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-1*U^-1*R*U*R^-1*U*R*U^-2*R^-1*U*R*U^-1*R^-1*U^-2*R*U^-1*R^-1*U^-1*R*U*R^-1*U^-1
-</code></pre></div>    </div>
-  </li>
-  <li>PreImagesRepresentative用于群的求解，计算出(5,9)的计算公式</li>
-  <li>
-    <p>答案也很好理解，比如：U、U^2、U^-1 分别表示 U的一次、两次、三次旋转</p>
-  </li>
-  <li>按照公式可逆旋转一次，验证一下
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; v := Image(hom, pre);
-(2,4)(5,9)
-</code></pre></div>    </div>
-  </li>
-  <li>结果是 (2,4), (5,9) 两个置换，符合预期。 因为(5,9)无法单独置换</li>
-</ul>
+  
+  <h2>2018</h2>
 
-<h2 id="在gap中使用-ur-的转换标识">在gap中使用 U、R 的转换标识</h2>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gap&gt; U:=f.1;
-gap&gt; R:=f.2;
-gap&gt; Image(hom, R*U^-1*R^-1*U^-1*R*U^-1*R^-1*U*R*U*R^-1*U);
-(1,8)(2,4)(3,6)(5,9)
-</code></pre></div></div>
-<p>可以自行构造转换方案来计算转换结果，可以用于批量验证自己的想法</p>
+<article>
+  
+<h1><a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a></h1>
+<time datetime="2018-09-18T20:40:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>18</span> <span class='year'>2018</span></time>
 
-<p>然后，精彩来了…</p>
+<footer>
+  <span class="categories">posted in maven</span>
+</footer>
 
-<h2 id="枚举所有的转动可能">枚举所有的转动可能</h2>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
-    if LargestMovedPoint(x) &lt;=7 then
-        f := PreImagesRepresentative( hom, x);
-        Print(LargestMovedPoint(x), " ", x, "\t===&gt;\t", Length(f), "\t", f, "\n");
-    fi;
-od;    
-</code></pre></div></div>
-<ul>
-  <li>这里我们枚举了cube中所有可能</li>
-  <li>LargestMovedPoint(x)是判断x中数字的最大值，7表示，我们只考虑1-7这7个数字转动的情况</li>
-  <li>然后进行求解公式，并打出来</li>
-  <li>Length(zz)表示求解公式的步数，几步可以转动完成</li>
-</ul>
 
-<p>我们将看到这样的结果</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0 ()	===&gt;	0	&lt;identity ...&gt;
-7 (4,7,5)	===&gt;	10	U^-1*R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-1
-7 (4,5,7)	===&gt;	10	U*R^-1*U^2*R*U*R^-1*U*R*U
-7 (2,5,7)	===&gt;	10	R*U*R^-1*U*R*U^-2*R^-1*U^-2
-5 (2,5,4)	===&gt;	10	U*R*U*R^-1*U*R*U^-2*R^-1*U
-7 (2,5)(4,7)	===&gt;	18	U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-2*U^2*R*U*R^-1*U*R*U
-7 (2,7,5)	===&gt;	10	R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-2
-7 (2,7,4)	===&gt;	20	U*R*U*R^-1*U*R*U^-2*(R^-1*U^2)^2*R*U*R^-1*U*R*U
-7 (2,7)(4,5)	===&gt;	20	(U*R*U*R^-1*U*R*U^-2*R^-1)^2*U^-2
-7 (2,4,7)	===&gt;	20	U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-1*U^-1*R*U*R^-1*U*R*U^-2*R^-1*U^-2
-5 (2,4,5)	===&gt;	10	U^-1*R*U^2*R^-1*U^-1*R*U^-1*R^-1*U^-1
-7 (2,4)(5,7)	===&gt;	20	U^-1*R*U^2*(R^-1*U^-1*R*U^-1*R^-1*U^-1)^2*U^-1*R*U^-2
-</code></pre></div></div>
-<ul>
-  <li>举个例子
-    <ul>
-      <li>要转换实现(4,7,5)，这样三个棱块的转换，可以使用 <code>U^-1*R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-1</code> 这个公式</li>
-      <li>我们使用下面的JS方法，做个转换
-        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'U^-1*R^-1*U^-1*R*U^-1*R^-1*U^-2*R*U^-1'.replaceAll('*', ' ').replaceAll(/\((.*)\)\^2/g, "$1 $1").replaceAll('^-1', "'").replaceAll("^2", "2").replaceAll("^-2", "2");
-</code></pre></div>        </div>
-        <p>答案是：U’ R’ U’ R U’ R’ U2 R U’   (参考 <a href="http://www.rubik.com.cn/notation.htm">http://www.rubik.com.cn/notation.htm</a> 这里的表示法)</p>
-      </li>
-      <li>下面是转换小工具</li>
-    </ul>
-  </li>
-</ul>
-<div style="margin-bottom: 40px">
-  <div>输入：<input style="width:80%" oninput="javascript:document.getElementById('transform_result').innerHTML=this.value.replaceAll('*', ' ').replaceAll(/\((.*)\)\^2/g, '$1 $1').replaceAll('^-1', '\'').replaceAll('^2', '2').replaceAll('^-2', '2')" placeholder="输入GAP的结果" /></div>
-  <div>输出：<span id="transform_result"></span></div>
+</article>
+
+
+
+  
+  <h2>2016</h2>
+
+<article>
+  
+<h1><a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a></h1>
+<time datetime="2016-02-12T12:40:08+08:00" pubdate><span class='month'>Feb</span> <span class='day'>12</span> <span class='year'>2016</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a></h1>
+<time datetime="2016-02-07T15:08:29+08:00" pubdate><span class='month'>Feb</span> <span class='day'>07</span> <span class='year'>2016</span></time>
+
+<footer>
+  <span class="categories">posted in jekyll</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2014</h2>
+
+<article>
+  
+<h1><a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a></h1>
+<time datetime="2014-11-25T08:34:29+08:00" pubdate><span class='month'>Nov</span> <span class='day'>25</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in mybatis</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a></h1>
+<time datetime="2014-01-19T13:01:18+08:00" pubdate><span class='month'>Jan</span> <span class='day'>19</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in ruby</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2014-01-12-ruby-enumerable.html">ruby Enumerator</a></h1>
+<time datetime="2014-01-12T17:33:56+08:00" pubdate><span class='month'>Jan</span> <span class='day'>12</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in ruby</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2014-01-05-ruby-string-array.html">ruby 字符串与数组</a></h1>
+<time datetime="2014-01-05T18:55:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>05</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in ruby</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2014-01-04-ruby-study-notes.html">ruby 学习笔记</a></h1>
+<time datetime="2014-01-04T21:39:33+08:00" pubdate><span class='month'>Jan</span> <span class='day'>04</span> <span class='year'>2014</span></time>
+
+<footer>
+  <span class="categories">posted in ruby</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2013</h2>
+
+<article>
+  
+<h1><a href="/blog/2013-12-31-iteye-blog-migration.html">iteye 博客迁移</a></h1>
+<time datetime="2013-12-31T15:16:16+08:00" pubdate><span class='month'>Dec</span> <span class='day'>31</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in octopress</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-12-23-ruby-spider.html">ruby spider</a></h1>
+<time datetime="2013-12-23T21:19:09+08:00" pubdate><span class='month'>Dec</span> <span class='day'>23</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ruby</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-12-16-fullscreen-picture-viewer.html">全屏图片查看器 fullscreen picture viewer</a></h1>
+<time datetime="2013-12-16T23:54:34+08:00" pubdate><span class='month'>Dec</span> <span class='day'>16</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in chrome</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-12-13-hive-skill.html">hive 常用技巧</a></h1>
+<time datetime="2013-12-13T10:52:07+08:00" pubdate><span class='month'>Dec</span> <span class='day'>13</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in hive</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-12-04-linux-repeat.html">linux repeat</a></h1>
+<time datetime="2013-12-04T15:32:01+08:00" pubdate><span class='month'>Dec</span> <span class='day'>04</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-12-02-utuntu-group.html">utuntu group</a></h1>
+<time datetime="2013-12-02T14:28:53+08:00" pubdate><span class='month'>Dec</span> <span class='day'>02</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-28-octopress-deploy.html">octopress 自动部署方案</a></h1>
+<time datetime="2013-11-28T22:20:52+08:00" pubdate><span class='month'>Nov</span> <span class='day'>28</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in octopress</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-28-sed.html">sed</a></h1>
+<time datetime="2013-11-28T16:50:01+08:00" pubdate><span class='month'>Nov</span> <span class='day'>28</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-27-xianjian.html">html5版仙剑</a></h1>
+<time datetime="2013-11-27T23:20:11+08:00" pubdate><span class='month'>Nov</span> <span class='day'>27</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in html5</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-27-about-octopress.html">about octopress</a></h1>
+<time datetime="2013-11-27T18:30:41+08:00" pubdate><span class='month'>Nov</span> <span class='day'>27</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in octopress</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-27-hello-octopress.html">hello octopress</a></h1>
+<time datetime="2013-11-27T17:56:47+08:00" pubdate><span class='month'>Nov</span> <span class='day'>27</span> <span class='year'>2013</span></time>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-26-1981188.html">小清新网站标准</a></h1>
+<time datetime="2013-11-26T23:19:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>26</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-26-1980761.html">wget 整站下载</a></h1>
+<time datetime="2013-11-26T10:22:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>26</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-06-1972028.html">ubuntu ipconfig</a></h1>
+<time datetime="2013-11-06T13:45:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>06</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-06-1972001.html">ubuntu 注册 wins</a></h1>
+<time datetime="2013-11-06T12:17:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>06</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-11-04-1969731.html">ubuntu 五笔</a></h1>
+<time datetime="2013-11-04T15:36:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>04</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-10-17-1959997.html">pycompile not found</a></h1>
+<time datetime="2013-10-17T16:10:00+08:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-09-22-1944892.html">maven的全局去除依赖</a></h1>
+<time datetime="2013-09-22T15:01:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>22</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in maven</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-08-13-1923887.html">Class.forName 返回 String[].class</a></h1>
+<time datetime="2013-08-13T11:38:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>13</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-08-09-1922745.html">ibatis typehandler</a></h1>
+<time datetime="2013-08-09T18:57:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>09</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-07-15-1906461.html">下列签名无效： NODATA 1 NODATA 2</a></h1>
+<time datetime="2013-07-15T11:42:00+08:00" pubdate><span class='month'>Jul</span> <span class='day'>15</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-06-28-1895665.html">ubuntu安装maven3</a></h1>
+<time datetime="2013-06-28T13:39:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>28</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in maven</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-06-26-1894735.html">git 与 svn 同步</a></h1>
+<time datetime="2013-06-26T15:44:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>26</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in git</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-06-22-1892343.html">nginx expires 绝对过期时间</a></h1>
+<time datetime="2013-06-22T00:09:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>22</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in nginx</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-06-21-1892316.html">curlftpfs</a></h1>
+<time datetime="2013-06-21T22:06:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>21</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-06-21-1891105.html">umount</a></h1>
+<time datetime="2013-06-21T13:53:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>21</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-06-03-1881714.html">思考方法论</a></h1>
+<time datetime="2013-06-03T19:56:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>03</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-05-08-1863348.html">ubuntu 无法载入支持的服务器方式列表  请检查您的gvfs安装</a></h1>
+<time datetime="2013-05-08T11:10:00+08:00" pubdate><span class='month'>May</span> <span class='day'>08</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-05-02-1858898.html">批量转换GBK到UTF-8</a></h1>
+<time datetime="2013-05-02T18:58:00+08:00" pubdate><span class='month'>May</span> <span class='day'>02</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-04-30-1857184.html">android 整合 maven 环境</a></h1>
+<time datetime="2013-04-30T14:33:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>30</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in android</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-04-29-1857067.html">android开发环境</a></h1>
+<time datetime="2013-04-29T23:06:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>29</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in android</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-04-26-1855578.html">java rsa code</a></h1>
+<time datetime="2013-04-26T23:08:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>26</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-04-25-1853687.html">maven 多环境配置</a></h1>
+<time datetime="2013-04-25T17:29:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>25</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in maven</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-04-20-1850803.html">raspberry 网络设置</a></h1>
+<time datetime="2013-04-20T19:52:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>20</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in cubieboard</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-04-06-1842638.html">ubuntu下的apache</a></h1>
+<time datetime="2013-04-06T15:06:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>06</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-04-01-1840440.html">ubuntu下安装phpmyadmin</a></h1>
+<time datetime="2013-04-01T23:22:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>01</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-26-1836490.html">ubuntu 支持无线网卡</a></h1>
+<time datetime="2013-03-26T08:23:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>26</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-23-1835389.html">ubuntu name server</a></h1>
+<time datetime="2013-03-23T14:47:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>23</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-22-1834993.html">maven常用技巧</a></h1>
+<time datetime="2013-03-22T17:19:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>22</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in maven</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-21-1833467.html">sunxi-bsp 脚本分析</a></h1>
+<time datetime="2013-03-21T15:36:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>21</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in cubieboard</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-20-1832923.html">cubieboard上手</a></h1>
+<time datetime="2013-03-20T20:19:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>20</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in cubieboard</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-20-1832792.html">ubuntu 下使用 tf 卡</a></h1>
+<time datetime="2013-03-20T16:45:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>20</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-07-1825519.html">使用符号链接提高工作效率</a></h1>
+<time datetime="2013-03-07T14:23:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>07</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-03-01-1820183.html">包管理软件</a></h1>
+<time datetime="2013-03-01T22:38:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>01</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-02-28-1817854.html">chrome  support for sass</a></h1>
+<time datetime="2013-02-28T15:51:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>28</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in css</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-02-21-1811277.html">ubuntu 与 windows 的互联与共享</a></h1>
+<time datetime="2013-02-21T18:23:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>21</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-02-17-1801066.html">git的本质</a></h1>
+<time datetime="2013-02-17T00:33:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>17</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in git</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2013-02-01-1782749.html">关于平台</a></h1>
+<time datetime="2013-02-01T16:15:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>01</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2012</h2>
+
+<article>
+  
+<h1><a href="/blog/2012-12-18-1750012.html">组件版本管理</a></h1>
+<time datetime="2012-12-18T22:49:00+08:00" pubdate><span class='month'>Dec</span> <span class='day'>18</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-12-07-1743767.html">insertBefore</a></h1>
+<time datetime="2012-12-07T15:10:00+08:00" pubdate><span class='month'>Dec</span> <span class='day'>07</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-12-07-1743758.html">isFunction</a></h1>
+<time datetime="2012-12-07T15:03:00+08:00" pubdate><span class='month'>Dec</span> <span class='day'>07</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-11-19-1729814.html">function 工具集</a></h1>
+<time datetime="2012-11-19T22:09:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>19</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-10-02-1689147.html">maven jetty 配置</a></h1>
+<time datetime="2012-10-02T10:48:00+08:00" pubdate><span class='month'>Oct</span> <span class='day'>02</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in maven</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-09-19-1681794.html">判断两个字符串的相似度(js)</a></h1>
+<time datetime="2012-09-19T20:48:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>19</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-09-12-1676290.html">js的简单串行加载方案</a></h1>
+<time datetime="2012-09-12T00:29:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>12</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-07-22-1603820.html">parseURL</a></h1>
+<time datetime="2012-07-22T23:00:00+08:00" pubdate><span class='month'>Jul</span> <span class='day'>22</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-06-29-1570934.html">硬盘里还能存点啥?</a></h1>
+<time datetime="2012-06-29T13:21:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>29</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-06-07-1553882.html">mini javascript loader</a></h1>
+<time datetime="2012-06-07T00:56:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>07</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-03-03-1439239.html">inline元素上支持的css属性</a></h1>
+<time datetime="2012-03-03T22:39:00+08:00" pubdate><span class='month'>Mar</span> <span class='day'>03</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in css</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-02-21-1416013.html">利用bat反编译jar包生成源码jar包</a></h1>
+<time datetime="2012-02-21T22:27:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>21</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2012-01-12-1343766.html">sync.js</a></h1>
+<time datetime="2012-01-12T21:11:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>12</span> <span class='year'>2012</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2011</h2>
+
+<article>
+  
+<h1><a href="/blog/2011-10-01-1184400.html">with语句的本质</a></h1>
+<time datetime="2011-10-01T23:41:00+08:00" pubdate><span class='month'>Oct</span> <span class='day'>01</span> <span class='year'>2011</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2011-09-17-1174269.html">display, position, float 之间的关系</a></h1>
+<time datetime="2011-09-17T22:52:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>17</span> <span class='year'>2011</span></time>
+
+<footer>
+  <span class="categories">posted in css</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2011-06-23-1982081.html">手机游戏 cat physics 分数记录</a></h1>
+<time datetime="2011-06-23T19:48:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>23</span> <span class='year'>2011</span></time>
+
+<footer>
+  <span class="categories">posted in game</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2011-06-12-1078292.html">javascript模拟html5新增特性 - placeholder属性</a></h1>
+<time datetime="2011-06-12T00:11:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>12</span> <span class='year'>2011</span></time>
+
+<footer>
+  <span class="categories">posted in javascript</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2011-02-11-904122.html">version compare</a></h1>
+<time datetime="2011-02-11T21:34:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>11</span> <span class='year'>2011</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2011-02-10-903168.html">php 学习笔记 (1)</a></h1>
+<time datetime="2011-02-10T22:02:00+08:00" pubdate><span class='month'>Feb</span> <span class='day'>10</span> <span class='year'>2011</span></time>
+
+<footer>
+  <span class="categories">posted in php</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2011-01-05-860004.html">linux进阶命令</a></h1>
+<time datetime="2011-01-05T20:11:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>05</span> <span class='year'>2011</span></time>
+
+<footer>
+  <span class="categories">posted in ubuntu</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2010</h2>
+
+<article>
+  
+<h1><a href="/blog/2010-11-21-819050.html">SimpleDateFormat 不是线程安全的``</a></h1>
+<time datetime="2010-11-21T19:53:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>21</span> <span class='year'>2010</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2010-06-20-1982082.html">一道智力题</a></h1>
+<time datetime="2010-06-20T21:47:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>20</span> <span class='year'>2010</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2010-06-19-694660.html">无状态缓冲带来的可伸缩性</a></h1>
+<time datetime="2010-06-19T17:13:00+08:00" pubdate><span class='month'>Jun</span> <span class='day'>19</span> <span class='year'>2010</span></time>
+
+<footer>
+  <span class="categories">posted in 思考</span>
+</footer>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2010-04-06-634841.html">统计使用~~~勿入~~~~</a></h1>
+<time datetime="2010-04-06T19:27:00+08:00" pubdate><span class='month'>Apr</span> <span class='day'>06</span> <span class='year'>2010</span></time>
+
+
+</article>
+
+
+
+  
+  <h2>2009</h2>
+
+<article>
+  
+<h1><a href="/blog/2009-01-27-1982083.html">手机游戏 resco bubbles 个人记录 score</a></h1>
+<time datetime="2009-01-27T23:29:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>27</span> <span class='year'>2009</span></time>
+
+<footer>
+  <span class="categories">posted in game</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2008</h2>
+
+<article>
+  
+<h1><a href="/blog/2008-01-14-1982084.html">利用bat反编译jar包生成源码jar包</a></h1>
+<time datetime="2008-01-14T21:29:00+08:00" pubdate><span class='month'>Jan</span> <span class='day'>14</span> <span class='year'>2008</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2007</h2>
+
+<article>
+  
+<h1><a href="/blog/2007-08-23-1982085.html">c3p0.properties  .vs.   c3p0-config.xml</a></h1>
+<time datetime="2007-08-23T21:11:00+08:00" pubdate><span class='month'>Aug</span> <span class='day'>23</span> <span class='year'>2007</span></time>
+
+<footer>
+  <span class="categories">posted in java</span>
+</footer>
+
+
+</article>
+
+
+
+  
+  <h2>2006</h2>
+
+<article>
+  
+<h1><a href="/blog/2006-11-02-1982086.html">缓冲区溢出漏洞</a></h1>
+<time datetime="2006-11-02T23:49:00+08:00" pubdate><span class='month'>Nov</span> <span class='day'>02</span> <span class='year'>2006</span></time>
+
+
+</article>
+
+
+
+<article>
+  
+<h1><a href="/blog/2006-09-09-1982087.html">windowsNT系统</a></h1>
+<time datetime="2006-09-09T23:39:00+08:00" pubdate><span class='month'>Sep</span> <span class='day'>09</span> <span class='year'>2006</span></time>
+
+<footer>
+  <span class="categories">posted in windows</span>
+</footer>
+
+
+</article>
+
 </div>
 
-<h2 id="我们验证一下">我们验证一下</h2>
-<p>我们使用这个工具进行验证，<a href="https://www.jaapsch.net/puzzles/cubie.htm">https://www.jaapsch.net/puzzles/cubie.htm</a>
-或者自己拿魔方验证一下，
-<img src="uploads/20230916/image.png" alt="cubie" />
-验证通过</p>
-
-<h2 id="校验更多">校验更多</h2>
-<p>刚才的公式，我们挑选一部进行校验</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(4,7,5) =&gt; U' R' U' R  U' R' U2 R  U'
-(4,5,7) =&gt; U  R' U2 R  U  R' U  R  U
-(2,7,5) =&gt;    R' U' R  U' R' U2 R  U2
-(2,5,7) =&gt;    R  U  R' U  R  U2 R' U2
-(2,5,4) =&gt; U  R  U  R' U  R  U2 R' U
-(2,4,5) =&gt; U' R  U2 R' U' R  U' R' U'
-
-(2,7,4) =&gt; U R U R' U R U2 R' U2 R' U2 2 R U R' U R U
-(2,7)(4,5) =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2
-(2,4)(5,7) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2
-(2,5)(4,7) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U
-</code></pre></div></div>
-
-<p>这些公式，再结合看看 <a href="http://www.rubik.com.cn/beginner2.htm">http://www.rubik.com.cn/beginner2.htm</a> ，我们能发现更多的魔方公式</p>
-
-<h2 id="再计算和校验">再计算和校验</h2>
-<p>这里只计算了一些步数比较小的，比较有研究价值</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
-    f := PreImagesRepresentative( hom, x);
-    if LargestMovedPoint(x) = 8 and Length(f) &lt;= 10 then
-        Print(LargestMovedPoint(x), " ", x, "\t===&gt;\t", Length(f), "\t", f, "\n");
-    fi;
-od;
-</code></pre></div></div>
-<p>结果：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8 (1,6,8,3)(2,4,7,5)	===&gt;	1	U'
-8 (1,6,8,3)(2,4,5,7)	===&gt;	9	U R U2 R' U' R U' R'
-8 (1,6,8,3)(2,4)	===&gt;	9	U R' U2 R U R' U R
-8 (1,6,8,3)(4,7)	===&gt;	9	R U R' U R U2 R' U
-8 (1,6,8,3)(5,7)	===&gt;	9	U R U R' U R U2 R'
-8 (1,8)(2,7)(3,6)(4,5)	===&gt;	2	U2
-8 (1,8)(2,7,4)(3,6)	===&gt;	10	U R U2 R' U' R U' R' U'
-8 (1,8)(2,7,5)(3,6)	===&gt;	10	U R' U2 R U R' U R U'
-8 (1,8)(2,4,5)(3,6)	===&gt;	8	R U R' U R U2 R'
-8 (1,8)(2,4,7)(3,6)	===&gt;	10	U R U R' U R U2 R' U'
-8 (1,8)(3,6)(4,5,7)	===&gt;	8	R' U' R U' R' U2 R
-8 (1,8)(3,6)(4,7,5)	===&gt;	8	R' U2 R U R' U R
-8 (1,8)(2,5,4)(3,6)	===&gt;	8	R U2 R' U' R U' R'
-8 (1,8)(2,5,7)(3,6)	===&gt;	10	U R' U' R U' R' U2 R U'
-8 (1,3,8,6)(2,5,7,4)	===&gt;	1	U
-8 (1,3,8,6)(2,7,5,4)	===&gt;	9	R U R' U R U2 R' U'
-8 (1,3,8,6)(2,4)	===&gt;	9	R' U' R U' R' U2 R U'
-8 (1,3,8,6)(5,7)	===&gt;	9	R U2 R' U' R U' R' U'
-8 (1,3,8,6)(4,7)	===&gt;	9	U' R U2 R' U' R U' R'
-</code></pre></div></div>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
-    f := PreImagesRepresentative( hom, x);
-    if LargestMovedPoint(x) = 9 then
-        Print(LargestMovedPoint(x), " ", x, "\t===&gt;\t", Length(f), "\t", f, "\n");
-    fi;
-od;  
-</code></pre></div></div>
-<p>举两个比较特殊的例子</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  (1,3,8,6)(2,5)(4,7,9) =&gt; R U' R' U2 R U2 R'
-  (1,6,8,3)(2,9,5)(4,7) =&gt; R U2 R' U2 R U  R'
-</code></pre></div></div>
-
-<h2 id="计算更多可能">计算更多可能</h2>
-<p>我们来打印出各种可能（只看1-10的变换）</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>for x in cube do
-    f := PreImagesRepresentative( hom, x);
-    if LargestMovedPoint(x) &lt;= 10 then
-        Print(x, " =&gt; ", f, "\n");
-    fi;
-od;
-</code></pre></div></div>
-
-<p>通过以下程序转换</p>
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">package</span> <span class="nn">test</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.nio.file.Files</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.nio.file.Path</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.List</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span> <span class="o">{</span>
-
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">IOException</span> <span class="o">{</span>
-        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">lines</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">readAllLines</span><span class="o">(</span><span class="nc">Path</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"input.txt"</span><span class="o">));</span>
-        <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">lines</span><span class="o">.</span><span class="na">stream</span><span class="o">().</span><span class="na">map</span><span class="o">(</span><span class="n">s</span> <span class="o">-&gt;</span> <span class="n">s</span><span class="o">.</span><span class="na">replace</span><span class="o">(</span><span class="sc">'*'</span><span class="o">,</span> <span class="sc">' '</span><span class="o">).</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">"\\((.+)\\)\\\\^2"</span><span class="o">,</span> <span class="s">"$1 $1"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"^-1"</span><span class="o">,</span> <span class="s">"'"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"^2"</span><span class="o">,</span> <span class="s">"2"</span><span class="o">).</span><span class="na">replace</span><span class="o">(</span><span class="s">"^-2"</span><span class="o">,</span> <span class="s">"2"</span><span class="o">)).</span><span class="na">toList</span><span class="o">();</span>
-        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">String</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="s">"\n"</span><span class="o">,</span> <span class="n">result</span><span class="o">));</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></div>
-
-<p>得到：</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(5,7,9)                 =&gt; R U' R' U R U R' U U R U R' U R' U' R U' R' U2 R U'
-(5,9,7)                 =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U R'
-(4,7,9)                 =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R' U'
-(4,7)(5,9)              =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2 R U' R' U' R U R' U'
-(4,7,5)                 =&gt; U' R' U' R U' R' U2 R U'
-(4,9,7)                 =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U R'
-(4,9,5)                 =&gt; U R U2 R' U2 R U R'
-(4,9)(5,7)              =&gt; U R' U2 R U R' U R U R U' R' U2 R U2 R' U'
-(4,5,7)                 =&gt; U R' U2 R U R' U R U
-(4,5,9)                 =&gt; R U' R' U2 R U2 R' U'
-(4,5)(7,9)              =&gt; U2 R U' R' U2 R U' R' U' R U R'
-(3,8)(5,9,7)(6,10)      =&gt; U' R U R'
-(3,8)(5,7,9)(6,10)      =&gt; R U' R' U
-(3,8)(6,10)             =&gt; U R' U2 R U R' U R U' R U' R' U2 R U' R'
-(3,8)(4,7)(5,9)(6,10)   =&gt; U R' U2 R U R' U R U R U' R' U
-(3,8)(4,7,9)(6,10)      =&gt; R U' R2 U' R U' R' U2 R U'
-(3,8)(4,7,5)(6,10)      =&gt; U2 R U' R' U2 R U' R'
-(3,8)(4,5,9)(6,10)      =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U' R U' R' U'
-(3,8)(4,5)(6,10)(7,9)   =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U R U R'
-(3,8)(4,5,7)(6,10)      =&gt; R U R' U2 R U R' U2
-(3,8)(4,9,7)(6,10)      =&gt; U R' U2 R U R' U R2 U R'
-(3,8)(4,9)(5,7)(6,10)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U' U' R U' R' U' R U' R' U'
-(3,8)(4,9,5)(6,10)      =&gt; U R U R' U R U R' U U R U R' U U2 R' U2 R U R' U R
-(3,10,8,6)(7,9)         =&gt; R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R'
-(3,10,8,6)(5,7)         =&gt; R U2 R' U R U R' U' R U2 R' U' R U' R'
-(3,10,8,6)(5,9)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U R' U'
-(3,10,8,6)(4,7,5,9)     =&gt; U' R U2 R' U' R U' R' U R U' R' U' R U' U' R' U' R U' R' U'
-(3,10,8,6)(4,7,9,5)     =&gt; U R' U2 R U R' U R U2 R U R' U'
-(3,10,8,6)(4,7)         =&gt; R U' R' U2 R U' R' U'
-(3,10,8,6)(4,9)         =&gt; U R U R' U2 R' U' R U' R' U2 R U'
-(3,10,8,6)(4,9,7,5)     =&gt; U R U R' U R U' U2 R' U' R U2 R' U' R U R'
-(3,10,8,6)(4,9,5,7)     =&gt; U R U R' U'
-(3,10,8,6)(4,5,7,9)     =&gt; R U R' U R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(3,10,8,6)(4,5,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U' R U2 R' U' R U R'
-(3,10,8,6)(4,5)         =&gt; R U2 R' U R U' R' U' R U' R' U'
-(3,6,8,10)(4,7,5,9)     =&gt; U R U' R' U'
-(3,6,8,10)(4,7)         =&gt; U R U R' U2 R U R'
-(3,6,8,10)(4,7,9,5)     =&gt; R U' R' U R U2 R' U R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(3,6,8,10)(7,9)         =&gt; R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R'
-(3,6,8,10)(5,9)         =&gt; U R U' R' U R' U U R U R' U R U' R U2 R' U' R U' R' U'
-(3,6,8,10)(5,7)         =&gt; R U R' U R U2 R' U R U' R' U' R U2 R'
-(3,6,8,10)(4,5)         =&gt; U R U R' U R U R' U' R U2 R'
-(3,6,8,10)(4,5,9,7)     =&gt; U R U' R' U2 R' U' R U' R' U2 R U'
-(3,6,8,10)(4,5,7,9)     =&gt; R U' R' U R U2 R' U R U2 U R' U' R U' R' U'
-(3,6,8,10)(4,9)         =&gt; U R' U2 R U R' U R U2 R U' R' U'
-(3,6,8,10)(4,9,7,5)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U' R'
-(3,6,8,10)(4,9,5,7)     =&gt; U' R U2 R' U' R U' R' U R U' R' U' R U2 R' U' R U R' U'
-(2,5,9)                 =&gt; R U R' U R U2 R' U R U' R' U2 R U2 R'
-(2,5)(7,9)              =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U' R U R'
-(2,5,7)                 =&gt; R U R' U R U2 R' U2
-(2,5,9,7,4)             =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U' R' U' R U R'
-(2,5,4)                 =&gt; U R U R' U R U2 R' U
-(2,5,7,9,4)             =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R' U'
-(2,5,9,4,7)             =&gt; U R U' R' U R U R' U2 R U R2 U' R U' R' U2 R U'
-(2,5,4,7,9)             =&gt; U R U R' U R U R' U2 R U2 R'
-(2,5)(4,7)              =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U
-(2,5,7,4,9)             =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2 R U2 R'
-(2,5)(4,9)              =&gt; U' R U2 R' U' R U' R' U' R U' R' U2 R U2 R' U'
-(2,5,4,9,7)             =&gt; U R U2 R' U2 R U R' U2 R' U2 R U R' U R
-(2,5,7)(3,8)(6,10)      =&gt; R U R' U2 R U R' U U2 R U R' U R U2 R' U
-(2,5)(3,8)(6,10)(7,9)   =&gt; R' U' R U' R' U2 R U R U R'
-(2,5,9)(3,8)(6,10)      =&gt; U' R U R' U U R' U U R U R' U R
-(2,5)(3,8)(4,9)(6,10)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U2 R U' R' U2 R U' R' U' R U' R' U'
-(2,5,7,4,9)(3,8)(6,10)  =&gt; U R U R' U R U R' U2 R U R2 U' R U' R' U2 R U'
-(2,5,4,9,7)(3,8)(6,10)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U R'
-(2,5,9,7,4)(3,8)(6,10)  =&gt; U2 U R U R' U R U R' U R U2 R' U
-(2,5,7,9,4)(3,8)(6,10)  =&gt; R U' R' U2 R U R' U R U2 R' U
-(2,5,4)(3,8)(6,10)      =&gt; R U R' U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(2,5)(3,8)(4,7)(6,10)   =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R'
-(2,5,9,4,7)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U' R U' R' U'
-(2,5,4,7,9)(3,8)(6,10)  =&gt; R U' R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(2,5,9,7)(3,10,8,6)     =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R' U' R U R'
-(2,5,7,9)(3,10,8,6)     =&gt; R U R' U R U R' U' R' U' R U' R' U2 R U'
-(2,5)(3,10,8,6)         =&gt; R U2 R' U R U R' U
-(2,5,9)(3,10,8,6)(4,7)  =&gt; U' R U2 R' U' R U' R' U R U' R'
-(2,5,4,7)(3,10,8,6)     =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U'
-(2,5)(3,10,8,6)(4,7,9)  =&gt; R U R' U R U R' U U R' U U R U R' U R U R U R' U R U2 R' U
-(2,5,9,4)(3,10,8,6)     =&gt; R' U' R U' R' U2 R2 U' R' U' R U' U' R' U' R U' R' U'
-(2,5,4)(3,10,8,6)(7,9)  =&gt; R U R' U R U R' U U R U2 R' U' R U' R'
-(2,5,7,4)(3,10,8,6)     =&gt; U R U R' U R U2 R' U R U' R' U2 R U' R' U'
-(2,5,7)(3,10,8,6)(4,9)  =&gt; U R U2 R' U R U2 R' U
-(2,5)(3,10,8,6)(4,9,7)  =&gt; U R U R' U R' U2 R U R' U R
-(2,5,4,9)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R'
-(2,5,7,4)(3,6,8,10)     =&gt; U R' U2 R U R' U R2 U' R' U' R U2 R'
-(2,5,4)(3,6,8,10)(7,9)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' U' R U' R' U' R U' R'
-(2,5,9,4)(3,6,8,10)     =&gt; U R U' R' U R' U U R U R' U R
-(2,5,7)(3,6,8,10)(4,9)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U'
-(2,5)(3,6,8,10)(4,9,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U' R U' R'
-(2,5,4,9)(3,6,8,10)     =&gt; R U R' U R U R' U' R U R'
-(2,5,7,9)(3,6,8,10)     =&gt; R U' R' U R U2 R' U R U R' U
-(2,5)(3,6,8,10)         =&gt; U' R U' R' U' R U2 R'
-(2,5,9,7)(3,6,8,10)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' R'
-(2,5,9)(3,6,8,10)(4,7)  =&gt; U2 R U2 R' U
-(2,5)(3,6,8,10)(4,7,9)  =&gt; R' U' R U' R' U' U' R U' R U' R' U'
-(2,5,4,7)(3,6,8,10)     =&gt; U R U R' U U R U R' U R U R' U R U2 R' U
-(2,9,7)(3,8)(6,10)      =&gt; R U R' U R U2 R' U R U R'
-(2,9,5)(3,8)(6,10)      =&gt; R' U' R U' R' U2 R U2 R U' R' U
-(2,9)(3,8)(5,7)(6,10)   =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U' U' R' U' R U' R'
-(2,9,4)(3,8)(6,10)      =&gt; R U R' U R U U R' U R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(2,9,7,5,4)(3,8)(6,10)  =&gt; U R U R' U R U' R'
-(2,9,5,7,4)(3,8)(6,10)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U
-(2,9)(3,8)(4,7)(6,10)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U' U' R' U' R U' R'
-(2,9,5,4,7)(3,8)(6,10)  =&gt; R U R' U R U U R' U R U R' U' R' U' R U' R' U2 R U'
-(2,9,4,7,5)(3,8)(6,10)  =&gt; U R' U2 R U R' U R2 U' R' U' U' R U' R' U' R U' R' U'
-(2,9,7,4,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U R'
-(2,9,4,5,7)(3,8)(6,10)  =&gt; U' R U' R' U' U' R U' R' U' R U' R' U'
-(2,9)(3,8)(4,5)(6,10)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U' U' R' U' R U' R'
-(2,9,5,7)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' R U R' U'
-(2,9,7,5)(3,10,8,6)     =&gt; U' R U' R' U' R U2 R' U' R U R'
-(2,9)(3,10,8,6)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R'
-(2,9)(3,10,8,6)(4,5,7)  =&gt; U2 R U' R'
-(2,9,4,5)(3,10,8,6)     =&gt; R U' R' U R U' R' U' R U' R'
-(2,9,7)(3,10,8,6)(4,5)  =&gt; R U' R' U R U R' U R' U' R U' R' U2 R U'
-(2,9,4)(3,10,8,6)(5,7)  =&gt; U2 R U' R' U' R U' U' R' U' R U' R' U'
-(2,9,7,4)(3,10,8,6)     =&gt; U R' U2 R U R' U R2 U' R' U' R U2 R' U' R U R'
-(2,9,5,4)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U R' U'
-(2,9,4,7)(3,10,8,6)     =&gt; R U' R' U R U R' U2
-(2,9,5)(3,10,8,6)(4,7)  =&gt; U' R U2 R' U2
-(2,9)(3,10,8,6)(4,7,5)  =&gt; U R' U2 R U R' U R U' R U' R'
-(2,9,5)                 =&gt; R U2 R' U2 R U R' U' R U2 R' U' R U' R'
-(2,9)(5,7)              =&gt; R' U' R U' R' U2 R U2 U' R U' R' U2 R U2 R'
-(2,9,7)                 =&gt; R U2 R' U2 R U R' U
-(2,9,4,5,7)             =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U2 R' U'
-(2,9,7,4,5)             =&gt; R U2 R' U2 R U' R' U' R U' R' U'
-(2,9)(4,5)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U2 R U2 R'
-(2,9)(4,7)              =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2 R U2 R'
-(2,9,4,7,5)             =&gt; R U2 R' U2 R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(2,9,5,4,7)             =&gt; R U2 R' U2 R U R2 U' R U' R' U2 R U'
-(2,9,5,7,4)             =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2 R U' R' U' R U R' U'
-(2,9,4)                 =&gt; U R U R' U R U2 R' U R U' R' U2 R U2 R' U'
-(2,9,7,5,4)             =&gt; R U U R' U2 R U R' U2 R U R' U R U2 R' U
-(2,9,4)(3,6,8,10)(5,7)  =&gt; U R U R' U R U2 R' U2 R U' R' U'
-(2,9,5,4)(3,6,8,10)     =&gt; R U R2 U2 R U R' U R
-(2,9,7,4)(3,6,8,10)     =&gt; R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
-(2,9)(3,6,8,10)         =&gt; R U R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
-(2,9,5,7)(3,6,8,10)     =&gt; R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(2,9,7,5)(3,6,8,10)     =&gt; U R' U2 R U R' U R U R U' R' U' R U' R'
-(2,9,7)(3,6,8,10)(4,5)  =&gt; R U' R' U' R U' R'
-(2,9)(3,6,8,10)(4,5,7)  =&gt; R U R' U R' U' R U' R' U2 R U'
-(2,9,4,5)(3,6,8,10)     =&gt; R U R2 U U R U R' U R U R U R' U R U2 R' U
-(2,9,4,7)(3,6,8,10)     =&gt; R U R' U R U2 R' U' R U' R' U'
-(2,9,5)(3,6,8,10)(4,7)  =&gt; R U R' U' R U R' U R U2 R' U
-(2,9)(3,6,8,10)(4,7,5)  =&gt; R U R' U2
-(2,7)(3,8)(5,9)(6,10)   =&gt; R U R' U R U2 R' U2 R U' R' U
-(2,7,5)(3,8)(6,10)      =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R'
-(2,7,9)(3,8)(6,10)      =&gt; R U' R' U' R U' U' R' U' R U' R'
-(2,7,4)(3,8)(6,10)      =&gt; R U R' U2 R U' R' U' R U' R'
-(2,7,9,5,4)(3,8)(6,10)  =&gt; U R U R' U R U2 R' U R U' R' U
-(2,7,5,9,4)(3,8)(6,10)  =&gt; U' R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(2,7,4,5,9)(3,8)(6,10)  =&gt; U R' U2 R U R' U R U R U' R' U' R U' U' R' U' R U' R'
-(2,7)(3,8)(4,5)(6,10)   =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U2 R U' R'
-(2,7,9,4,5)(3,8)(6,10)  =&gt; R U R' U R U2 R' U R U' R' U' U' R U' R' U' R U' R' U'
-(2,7,4,9,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U
-(2,7)(3,8)(4,9)(6,10)   =&gt; U R U R' U R U R' U' U' R U' R' U' R U' R' U'
-(2,7,5,4,9)(3,8)(6,10)  =&gt; U R U R' U R U R' U U R U R' U
-(2,7)(3,10,8,6)         =&gt; R U2 R' U R U R' U2 U R' U2 R U R' U R
-(2,7,9,5)(3,10,8,6)     =&gt; R U R' U R U R' U R U R' U R U2 R' U
-(2,7,5,9)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R'
-(2,7,4)(3,10,8,6)(5,9)  =&gt; U R U R' U R U2 R' U2 R U R' U'
-(2,7,5,4)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U'
-(2,7,9,4)(3,10,8,6)     =&gt; R U R' U R U R' U' R U2 R' U' R U' R' U'
-(2,7,4,9)(3,10,8,6)     =&gt; U R U R' U R U2 R' U' R U' R'
-(2,7)(3,10,8,6)(4,9,5)  =&gt; R U R' U R U2 R' U' R U R' U'
-(2,7,5)(3,10,8,6)(4,9)  =&gt; U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(2,7)(3,10,8,6)(4,5,9)  =&gt; U R U' R' U R U2 R' U R U R' U R' U' R U' R' U2 R U'
-(2,7,4,5)(3,10,8,6)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U'
-(2,7,9)(3,10,8,6)(4,5)  =&gt; R U R' U R U R'
-(2,7,9)                 =&gt; U' R U' R' U2 R U2 R'
-(2,7,5)                 =&gt; R' U' R U' R' U2 R U2
-(2,7)(5,9)              =&gt; U' R U' R' U' U' R U' R' U' R U R' U'
-(2,7,4)                 =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U
-(2,7,5,9,4)             =&gt; U R U' R' U R U R' U U R U R' U U R U R' U R U2 R' U
-(2,7,9,5,4)             =&gt; R U' R' U R U R' U2 R U' R' U' R U' R'
-(2,7)(4,9)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2 R U2 R' U'
-(2,7,5,4,9)             =&gt; U R U U R' U2 R U R' U2 R U2 R' U' R U' R'
-(2,7,4,9,5)             =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R' U' R U R' U'
-(2,7,4,5,9)             =&gt; U R' U2 R U R' U R2 U' R' U2 R U2 R'
-(2,7,9,4,5)             =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R' U'
-(2,7)(4,5)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2
-(2,7,9,4)(3,6,8,10)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U'
-(2,7,4)(3,6,8,10)(5,9)  =&gt; U2 R U' R' U' R U2 R' U' R U R' U'
-(2,7,5,4)(3,6,8,10)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U2 R'
-(2,7,9)(3,6,8,10)(4,5)  =&gt; U R' U2 R U R' U R U' R U' R' U' R U R'
-(2,7)(3,6,8,10)(4,5,9)  =&gt; U R U' R' U R U2 R' U' R U' R'
-(2,7,4,5)(3,6,8,10)     =&gt; U R U R' U U R U R' U U R U2 R' U' R U' R'
-(2,7,5)(3,6,8,10)(4,9)  =&gt; U' R U2 R' U' R U2 R' U'
-(2,7,4,9)(3,6,8,10)     =&gt; U2 R U' R' U' R U R'
-(2,7)(3,6,8,10)(4,9,5)  =&gt; U R' U2 R U R' U R U' R U' R' U' R U2 R' U' R U R' U'
-(2,7,9,5)(3,6,8,10)     =&gt; R U' R' U R U2 R' U R U R' U2 U R' U2 R U R' U R
-(2,7)(3,6,8,10)         =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R'
-(2,7,5,9)(3,6,8,10)     =&gt; U R U' R' U R U2 R' U' R U' R' U R U R' U R U2 R' U
-(2,4,7,9,5)             =&gt; R U' R' U R U R' U2 R U R' R' U2 R U R' U R U R U R' U R U2 R' U
-(2,4,7)                 =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2
-(2,4,7,5,9)             =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U2 U' R U' R' U2 R U2 R'
-(2,4,5)                 =&gt; U' R U2 R' U' R U' R' U'
-(2,4,5,7,9)             =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U2 R'
-(2,4,5,9,7)             =&gt; R U R' U R U R' U2 R U' R' U' R U R'
-(2,4,9,7,5)             =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' U' R U' R' U' R U R'
-(2,4,9,5,7)             =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U' R U R' U'
-(2,4,9)                 =&gt; U R U2 R' U2 R U R' U' R U2 R' U' R U' R' U'
-(2,4)(7,9)              =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R'
-(2,4)(5,9)              =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2 R U' R' U' R U R' U'
-(2,4)(5,7)              =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2
-(2,4,7,5)(3,6,8,10)     =&gt; U R U R' U2 R U R' U' R U2 R' U' R U' R' U'
-(2,4,7)(3,6,8,10)(5,9)  =&gt; U R U' R' U2 R U2 R' U' R U' R' U'
-(2,4,7,9)(3,6,8,10)     =&gt; R U' R' U R U2 R' U R U R2 U' R U' R' U2 R U'
-(2,4,9,5)(3,6,8,10)     =&gt; U R U R' U R U U R' U R U R2 U2 R U R' U R
-(2,4,9)(3,6,8,10)(5,7)  =&gt; U R U R' U R U U R' U R U R' U2
-(2,4,9,7)(3,6,8,10)     =&gt; U R U R' U R U2 R' U R U' R' U' R U' R'
-(2,4,5)(3,6,8,10)(7,9)  =&gt; R U R' U R U2 R' U' U' R U' R' U' R U' R'
-(2,4,5,7)(3,6,8,10)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U' R' U' R U2 R'
-(2,4,5,9)(3,6,8,10)     =&gt; U R U' R' U R' U U R U R' U R U R U R' U R U2 R' U
-(2,4)(3,6,8,10)         =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R'
-(2,4)(3,6,8,10)(5,9,7)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U' R'
-(2,4)(3,6,8,10)(5,7,9)  =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R' U' R U R' U'
-(2,4,7,9)(3,10,8,6)     =&gt; U R U R' U R U2 R' U R U R' U R U R'
-(2,4,7)(3,10,8,6)(5,9)  =&gt; U R U' R' U R U2 R' U R U R' U2
-(2,4,7,5)(3,10,8,6)     =&gt; R U2 R' U R U R2 U' R U' R' U2 R U'
-(2,4)(3,10,8,6)(5,9,7)  =&gt; U R U' R' U R U2 R' U R U R2 U2 R U R' U R
-(2,4)(3,10,8,6)         =&gt; R U2 R' U R U R' U U R U R' U R U2 R' U
-(2,4)(3,10,8,6)(5,7,9)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U R' U'
-(2,4,9,5)(3,10,8,6)     =&gt; R' U' R U' R' U' U' R U' R U R' U'
-(2,4,9,7)(3,10,8,6)     =&gt; U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(2,4,9)(3,10,8,6)(5,7)  =&gt; U R U R' U2 R U2 R' U' R U' R' U'
-(2,4,5,9)(3,10,8,6)     =&gt; R' U' R U' R' U2 R2 U' R'
-(2,4,5)(3,10,8,6)(7,9)  =&gt; R U R' U R U R' U U R U2 R' U' R U' R' U R U R' U R U2 R' U
-(2,4,5,7)(3,10,8,6)     =&gt; R U2 R' U R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(2,4,5,9,7)(3,8)(6,10)  =&gt; U' R U R' U' R U2 R' U' R U' R' U'
-(2,4,5,7,9)(3,8)(6,10)  =&gt; R U R' U' R U' R' U'
-(2,4,5)(3,8)(6,10)      =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2 R U' R'
-(2,4,7,9,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U' R U' R' U
-(2,4,7,5,9)(3,8)(6,10)  =&gt; U' R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(2,4,7)(3,8)(6,10)      =&gt; R U R' U R U R' U2 R U' R'
-(2,4)(3,8)(5,7)(6,10)   =&gt; U R U R' U R U2 R' U' R U' R' U2 R U' R'
-(2,4)(3,8)(5,9)(6,10)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U
-(2,4)(3,8)(6,10)(7,9)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U R'
-(2,4,9,7,5)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U2 R U R'
-(2,4,9)(3,8)(6,10)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U' R U' U' R' U' R U' R'
-(2,4,9,5,7)(3,8)(6,10)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U
-(1,6,8,3)(2,4,7,5)      =&gt; U'
-(1,6,8,3)(2,4,7,9)      =&gt; U R' U2 R U R' U R U' R U' R' U2 R U2 R'
-(1,6,8,3)(2,4,7)(5,9)   =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U R' U'
-(1,6,8,3)(2,4,5)(7,9)   =&gt; R U' R' U R U R' U U R U R' U U2 R' U2 R U R' U R
-(1,6,8,3)(2,4,5,9)      =&gt; U R U' R' U R U R' U2 R U R' U' R' U' R U' R' U2 R U'
-(1,6,8,3)(2,4,5,7)      =&gt; U R U2 R' U' R U' R'
-(1,6,8,3)(2,4,9,5)      =&gt; U R U U R' U2 R U R' U R' U2 R U R' U R
-(1,6,8,3)(2,4,9)(5,7)   =&gt; U2 R U' R' U2 R U2 R'
-(1,6,8,3)(2,4,9,7)      =&gt; U R U2 R' U2 R U R' U R U2 R' U' R U' R'
-(1,6,8,3)(2,4)          =&gt; U R' U2 R U R' U R
-(1,6,8,3)(2,4)(5,9,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R'
-(1,6,8,3)(2,4)(5,7,9)   =&gt; R U' R' U R U R' U U R U R' U
-(1,6,10,8)(2,4,7)(5,9)  =&gt; U' R U R' U'
-(1,6,10,8)(2,4,7,9)     =&gt; R U' R'
-(1,6,10,8)(2,4,7,5)     =&gt; R U R' U2 R U R' U' R U2 R' U' R U' R'
-(1,6,10,8)(2,4,5,9)     =&gt; U R' U2 R U R' U R U R U' R'
-(1,6,10,8)(2,4,5)(7,9)  =&gt; R U' R' U2 R U2 R' U' R U' R'
-(1,6,10,8)(2,4,5,7)     =&gt; U2 R U' R' U2 R U' R' U'
-(1,6,10,8)(2,4)(5,9,7)  =&gt; U' R U R' U R' U2 R U R' U R
-(1,6,10,8)(2,4)(5,7,9)  =&gt; R U' R' U2 R' U2 R U R' U R
-(1,6,10,8)(2,4)         =&gt; R U R' U2 R U R' U
-(1,6,10,8)(2,4,9,5)     =&gt; U R' U2 R U R' U R2 U R' U'
-(1,6,10,8)(2,4,9,7)     =&gt; U R U R' U R U R' U2 R U R' U' R' U' R U' R' U2 R U'
-(1,6,10,8)(2,4,9)(5,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R'
-(1,6)(2,4,7,9,5)(3,10)  =&gt; R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R' U'
-(1,6)(2,4,7)(3,10)      =&gt; R U2 R' U R U R' U' R U2 R' U' R U' R' U'
-(1,6)(2,4,7,5,9)(3,10)  =&gt; R U R' U R U2 R' U R U' R' U' R U R'
-(1,6)(2,4,5,9,7)(3,10)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U' R U' R'
-(1,6)(2,4,5,7,9)(3,10)  =&gt; R U R' U R U2 R' U R U2 R' U
-(1,6)(2,4,5)(3,10)      =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U2 R'
-(1,6)(2,4,9,7,5)(3,10)  =&gt; U R U' R' U' R U' R'
-(1,6)(2,4,9,5,7)(3,10)  =&gt; U R U R2 U2 R U R' U R
-(1,6)(2,4,9)(3,10)      =&gt; U R U R' U2
-(1,6)(2,4)(3,10)(7,9)   =&gt; U R' U2 R U R' U R U' U' R U' R' U' R U' R'
-(1,6)(2,4)(3,10)(5,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U' R U2 R' U' R U R' U'
-(1,6)(2,4)(3,10)(5,7)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U2 R'
-(1,6,3,8,10)(2,4,5,9,7) =&gt; U R U' R' U2
-(1,6,3,8,10)(2,4,5)     =&gt; U R U R' U2 R U R' U'
-(1,6,3,8,10)(2,4,5,7,9) =&gt; U R' U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R'
-(1,6,3,8,10)(2,4,7,9,5) =&gt; R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R' U'
-(1,6,3,8,10)(2,4,7,5,9) =&gt; U R U' R2 U2 R U R' U R
-(1,6,3,8,10)(2,4,7)     =&gt; R U R' U R U2 R' U R U' R' U' R U2 R' U'
-(1,6,3,8,10)(2,4)(5,7)  =&gt; U R U R' U R U R' U' R U2 R' U'
-(1,6,3,8,10)(2,4)(5,9)  =&gt; U R U R' U' R U' R'
-(1,6,3,8,10)(2,4)(7,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U2
-(1,6,3,8,10)(2,4,9,7,5) =&gt; U R' U2 R U R' U R U2 R U' R' U2
-(1,6,3,8,10)(2,4,9,5,7) =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' R U' R' U'
-(1,6,3,8,10)(2,4,9)     =&gt; R U' R' U' U' R U' R' U' R U' R'
-(1,6,8,3)(4,7,5,9)      =&gt; R U R' U R U2 R' U R U' R' U2 R U2 R' U'
-(1,6,8,3)(4,7,9,5)      =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U' R U R' U'
-(1,6,8,3)(4,7)          =&gt; R U R' U R U2 R' U
-(1,6,8,3)(5,9)          =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U' R' U' R U R' U'
-(1,6,8,3)(5,7)          =&gt; U R U R' U R U2 R'
-(1,6,8,3)(7,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U' R' U' R U R'
-(1,6,8,3)(4,5,9,7)      =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R' U' R U R'
-(1,6,8,3)(4,5,7,9)      =&gt; U R U R' U R U R' U2 R U2 R' U'
-(1,6,8,3)(4,5)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R
-(1,6,8,3)(4,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2 R U2 R' U'
-(1,6,8,3)(4,9,7,5)      =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R'
-(1,6,8,3)(4,9,5,7)      =&gt; U R U2 R' U U R U2 R' U R U2 R' U
-(1,6,10,8)(4,7)         =&gt; U R U R' U R U2 R' U R U R' U R U R' U2 R U' R' U'
-(1,6,10,8)(4,7,9,5)     =&gt; R U' R' U R U R' U R U2 R' U
-(1,6,10,8)(4,7,5,9)     =&gt; U' R U2 R' U R U2 R' U
-(1,6,10,8)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U' R U' R' U' R U2 R' U' R U R'
-(1,6,10,8)(4,9)         =&gt; U R U R' U R U R' U U R U R' U U R U2 R' U' R U' R'
-(1,6,10,8)(4,9,5,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U R' U'
-(1,6,10,8)(5,9)         =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U R' U'
-(1,6,10,8)(7,9)         =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U R'
-(1,6,10,8)(5,7)         =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U' U' R U' R' U'
-(1,6,10,8)(4,5)         =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U'
-(1,6,10,8)(4,5,9,7)     =&gt; U' R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,6,10,8)(4,5,7,9)     =&gt; U R U R' U R U2 R' U R U' R' U' R U' U' R' U' R U' R' U'
-(1,6)(3,10)(4,7)(5,9)   =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R' U' R U R' U'
-(1,6)(3,10)(4,7,9)      =&gt; R U R' U R U R' U R U2 R' U' R U' R'
-(1,6)(3,10)(4,7,5)      =&gt; R U2 R' U R U R'
-(1,6)(3,10)(4,5,9)      =&gt; U' R U2 R' U' R U' R' U R U' R' U'
-(1,6)(3,10)(4,5,7)      =&gt; R U' R' U' R U2 R'
-(1,6)(3,10)(4,5)(7,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' U' R U' R' U' R U' R'
-(1,6)(3,10)(5,9,7)      =&gt; U R U R' U R U2 R' U2 R U' R' U' R U' R'
-(1,6)(3,10)(5,7,9)      =&gt; R U R' U R U R' U2 R U2 R' U' R U' R' U'
-(1,6)(3,10)             =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R' U' R U2 R'
-(1,6)(3,10)(4,9,7)      =&gt; R U R' U R U' U' R' U' R U' R' U' R U' R'
-(1,6)(3,10)(4,9,5)      =&gt; U R U R' U' R U R' U R U2 R' U
-(1,6)(3,10)(4,9)(5,7)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U'
-(1,6,3,8,10)            =&gt; U R U R' U2 R U2 R' U R U2 R' U
-(1,6,3,8,10)(5,7,9)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' U' R U' R' U' R U' R' U'
-(1,6,3,8,10)(5,9,7)     =&gt; U R U' R' U' R U R' U R U2 R' U
-(1,6,3,8,10)(4,9,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U2
-(1,6,3,8,10)(4,9,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U' R U' R' U'
-(1,6,3,8,10)(4,9)(5,7)  =&gt; R U R' U R U R' U' R U R' U'
-(1,6,3,8,10)(4,7,9)     =&gt; R U' R' U R U2 R' U R U R'
-(1,6,3,8,10)(4,7,5)     =&gt; U' R U' R' U' R U2 R' U'
-(1,6,3,8,10)(4,7)(5,9)  =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' R' U'
-(1,6,3,8,10)(4,5,9)     =&gt; U R U R' U' R U' R' U R U R' U R U2 R' U
-(1,6,3,8,10)(4,5)(7,9)  =&gt; R' U' R U' R' U' U' R U' R U' R' U2
-(1,6,3,8,10)(4,5,7)     =&gt; U R U R' U U R U R' U R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,6,10,8)(2,9,5)(4,7)  =&gt; R U R' U R U2 R' U R U R' U'
-(1,6,10,8)(2,9)(4,7,5)  =&gt; R' U' R U' R' U2 R U2 R U' R'
-(1,6,10,8)(2,9,4,7)     =&gt; R U R' U R U U R' U R U U R' U R U2 R' U
-(1,6,10,8)(2,9,7,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U R'
-(1,6,10,8)(2,9,5,7)     =&gt; U R U R' U R U' R' U'
-(1,6,10,8)(2,9)         =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R'
-(1,6,10,8)(2,9,4,5)     =&gt; R U R' U R U U R' U R U R' U2 R' U' R U' R' U2 R U'
-(1,6,10,8)(2,9)(4,5,7)  =&gt; R U R' U R U U R' U R U R' U R U2 R' U' R U' R'
-(1,6,10,8)(2,9,7)(4,5)  =&gt; R U R' U R U U R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,6,10,8)(2,9,5,4)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U R' U'
-(1,6,10,8)(2,9,7,4)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U' R U R'
-(1,6,10,8)(2,9,4)(5,7)  =&gt; R U R' U R U U R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,6)(2,9)(3,10)(4,7)   =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U R'
-(1,6)(2,9,5,4,7)(3,10)  =&gt; U' R U' R' U' R U2 R' U' R U R' U'
-(1,6)(2,9,4,7,5)(3,10)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U'
-(1,6)(2,9,4)(3,10)      =&gt; U2 R U' R' U'
-(1,6)(2,9,7,5,4)(3,10)  =&gt; U' R U2 R' U' R U2 R' U' R U' R'
-(1,6)(2,9,5,7,4)(3,10)  =&gt; R U' R' U R U R' U' R U2 R' U' R U' R'
-(1,6)(2,9,7)(3,10)      =&gt; R U' R' U R U R' U U R U R' U R U2 R' U
-(1,6)(2,9,5)(3,10)      =&gt; R U' R' U R U R2 U' R U' R' U2 R U'
-(1,6)(2,9)(3,10)(5,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U R'
-(1,6)(2,9,7,4,5)(3,10)  =&gt; R U' R' U R U R' U
-(1,6)(2,9)(3,10)(4,5)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U' R U R'
-(1,6)(2,9,4,5,7)(3,10)  =&gt; U R' U2 R U R' U R U' R U' R' U'
-(1,6,8,3)(2,9)(4,7,5)   =&gt; R U2 R' U2 R U R' U' R U2 R' U' R U' R' U'
-(1,6,8,3)(2,9,4,7)      =&gt; R U2 R' U U R U R' U R U R' U R U2 R' U
-(1,6,8,3)(2,9,5)(4,7)   =&gt; R U2 R' U2 R U R'
-(1,6,8,3)(2,9,7,4)      =&gt; U' R U2 R' U' R U2 R' U2 R U' R' U' R U R'
-(1,6,8,3)(2,9,5,4)      =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U R' U'
-(1,6,8,3)(2,9,4)(5,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U2 R U2 R' U'
-(1,6,8,3)(2,9,4,5)      =&gt; R U2 R' U2 R U R' U' R' U' R U' R' U2 R U'
-(1,6,8,3)(2,9,7)(4,5)   =&gt; R U2 R' U2 R U R' U2 R' U2 R U R' U R U R U R' U R U2 R' U
-(1,6,8,3)(2,9)(4,5,7)   =&gt; R U U R' U2 R U R' U2 R U2 R' U' R U' R'
-(1,6,8,3)(2,9)          =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U2 R'
-(1,6,8,3)(2,9,7,5)      =&gt; R U2 R' U2 R U R' U2 R' U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,6,8,3)(2,9,5,7)      =&gt; R U U R' U2 R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,6,3,8,10)(2,9,7)     =&gt; R U R2 U' R U' R' U2 R U'
-(1,6,3,8,10)(2,9)(5,7)  =&gt; R U R' U2 R U R' U R U2 R' U
-(1,6,3,8,10)(2,9,5)     =&gt; R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,6,3,8,10)(2,9,4,7,5) =&gt; R U R' U2 U R' U2 R U R' U R
-(1,6,3,8,10)(2,9)(4,7)  =&gt; R U R' U' R' U U R U R' U R U R U R' U R U2 R' U
-(1,6,3,8,10)(2,9,5,4,7) =&gt; U R' U2 R U R' U R U R U' R' U' R U' R' U'
-(1,6,3,8,10)(2,9,5,7,4) =&gt; R U' R' U' R U' R' U'
-(1,6,3,8,10)(2,9,4)     =&gt; R U R' U' R U2 R' U' R U' R'
-(1,6,3,8,10)(2,9,7,5,4) =&gt; R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6,3,8,10)(2,9,7,4,5) =&gt; R U R' U R U2 R' U' R U' R' U2
-(1,6,3,8,10)(2,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U' R U' R'
-(1,6,3,8,10)(2,9,4,5,7) =&gt; R U R' U
-(1,6,10,8)(2,5,9)(4,7)  =&gt; R U R' U R U2 R' U2 R U' R'
-(1,6,10,8)(2,5,4,7)     =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U'
-(1,6,10,8)(2,5)(4,7,9)  =&gt; R U' R' U' R U' U' R' U' R U' R' U'
-(1,6,10,8)(2,5)         =&gt; R U R' U2 R U' R' U' R U' R' U'
-(1,6,10,8)(2,5,7,9)     =&gt; U R U R' U R U2 R' U R U' R'
-(1,6,10,8)(2,5,9,7)     =&gt; U R' U2 R U R' U R U2 R U' R' U' R U2 R' U' R U R'
-(1,6,10,8)(2,5,9,4)     =&gt; U R' U2 R U R' U R U R U' R' U' R U' U' R' U' R U' R' U'
-(1,6,10,8)(2,5,7,4)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U2 R U' R' U'
-(1,6,10,8)(2,5,4)(7,9)  =&gt; U R U' R' U' R U2 R' U' R U R'
-(1,6,10,8)(2,5,4,9)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R'
-(1,6,10,8)(2,5)(4,9,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U' R U R'
-(1,6,10,8)(2,5,7)(4,9)  =&gt; U R U R' U R U R' U2 R U R'
-(1,6)(2,5)(3,10)(4,7)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R'
-(1,6)(2,5,4,7,9)(3,10)  =&gt; U' R U' R' U' R U R'
-(1,6)(2,5,9,4,7)(3,10)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U'
-(1,6)(2,5,9)(3,10)      =&gt; U R' U2 R U R' U R2 U' R' U' R U R'
-(1,6)(2,5,7)(3,10)      =&gt; R U2 R' U R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6)(2,5)(3,10)(7,9)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' U' R U' R' U' R U' R'
-(1,6)(2,5)(3,10)(4,9)   =&gt; U R U R' U R U2 R' U' R U' R' U'
-(1,6)(2,5,7,4,9)(3,10)  =&gt; U R U R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,6)(2,5,4,9,7)(3,10)  =&gt; R' U' R U' R' U2 R U' R U' R' U' R U' R'
-(1,6)(2,5,9,7,4)(3,10)  =&gt; U R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R'
-(1,6)(2,5,4)(3,10)      =&gt; R U2 R' U R U R' U U R' U U R U R' U R
-(1,6)(2,5,7,9,4)(3,10)  =&gt; R U R' U R U R' U'
-(1,6,8,3)(2,5)(4,7,9)   =&gt; U' R U' R' U2 R U2 R' U'
-(1,6,8,3)(2,5,4,7)      =&gt; R' U' R U' R' U2 R U
-(1,6,8,3)(2,5,9)(4,7)   =&gt; U R U' R' U R U R' U2 R U R'
-(1,6,8,3)(2,5)          =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R
-(1,6,8,3)(2,5,9,7)      =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U R'
-(1,6,8,3)(2,5,7,9)      =&gt; R U' R' U R U R' U2 R U' R' U' R U' R' U'
-(1,6,8,3)(2,5)(4,9,7)   =&gt; U R U' R' U2 R U' R' U' R U R'
-(1,6,8,3)(2,5,7)(4,9)   =&gt; U R U2 R' U2 R U R' U2 R U2 R' U' R U' R' U'
-(1,6,8,3)(2,5,4,9)      =&gt; R' U' R U' R' U2 R R U' R' U2 R U2 R'
-(1,6,8,3)(2,5,9,4)      =&gt; U R' U2 R U R' U R2 U' R' U2 R U2 R' U'
-(1,6,8,3)(2,5,4)(7,9)   =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U' R U R'
-(1,6,8,3)(2,5,7,4)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U
-(1,6,3,8,10)(2,5)(7,9)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U2
-(1,6,3,8,10)(2,5,9)     =&gt; U R U R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,6,3,8,10)(2,5,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U2 R' U'
-(1,6,3,8,10)(2,5,7,9,4) =&gt; U R' U2 R U R' U R U' R U' R' U' R U R' U'
-(1,6,3,8,10)(2,5,9,7,4) =&gt; U R U' R' U R U2 R' U' R U' R' U'
-(1,6,3,8,10)(2,5,4)     =&gt; U R U R' U2 R U R' U2 R U2 R' U' R U' R' U'
-(1,6,3,8,10)(2,5,4,9,7) =&gt; U' R U2 R' U' R U2 R' U2
-(1,6,3,8,10)(2,5)(4,9)  =&gt; U2 R U' R' U' R U R' U'
-(1,6,3,8,10)(2,5,7,4,9) =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U' R'
-(1,6,3,8,10)(2,5,4,7,9) =&gt; R U' R' U R U U R' U R U R' U R U R' U R U2 R' U
-(1,6,3,8,10)(2,5)(4,7)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U2 R' U'
-(1,6,3,8,10)(2,5,9,4,7) =&gt; U R U' R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,6,8,3)(2,7,9)(4,5)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2 R U2 R'
-(1,6,8,3)(2,7,4,5)      =&gt; U2 R' U' R U' R' U2 R U'
-(1,6,8,3)(2,7)(4,5,9)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U2 U' R U' R' U2 R U2 R' U'
-(1,6,8,3)(2,7,5,4)      =&gt; U' R U2 R' U' R U' R' U2
-(1,6,8,3)(2,7,9,4)      =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U2 R' U'
-(1,6,8,3)(2,7,4)(5,9)   =&gt; R U R' U R U R' U2 R U' R' U' R U R' U'
-(1,6,8,3)(2,7)(4,9,5)   =&gt; U R U2 R' U2 R U R' U2 R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6,8,3)(2,7,4,9)      =&gt; R U R' U R U R' U2 R U2 R'
-(1,6,8,3)(2,7,5)(4,9)   =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2 R U2 R' U'
-(1,6,8,3)(2,7,9,5)      =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
-(1,6,8,3)(2,7,5,9)      =&gt; U R U R' U R U2 R' U' R U' R' U2 R U2 R'
-(1,6,8,3)(2,7)          =&gt; U2 R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6,3,8,10)(2,7)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U' R U2 R' U'
-(1,6,3,8,10)(2,7,4,5,9) =&gt; U R U' R' U R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,6,3,8,10)(2,7,9,4,5) =&gt; R U' R' U R U2 R' U R U R' U2 R U2 R' U' R U' R'
-(1,6,3,8,10)(2,7,5,4,9) =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U' R U' R'
-(1,6,3,8,10)(2,7)(4,9)  =&gt; U R U R' U R U U R' U R U R' U
-(1,6,3,8,10)(2,7,4,9,5) =&gt; U R U R' U R U2 R' U R U' R' U' R U' R' U'
-(1,6,3,8,10)(2,7,9,5,4) =&gt; R U R' U R U2 R' U' U' R U' R' U' R U' R' U'
-(1,6,3,8,10)(2,7,4)     =&gt; U R U R' U U R U R' U U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6,3,8,10)(2,7,5,9,4) =&gt; U R U' R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6,3,8,10)(2,7,5)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R' U'
-(1,6,3,8,10)(2,7)(5,9)  =&gt; U R U' R' U R' U' R U' R' U2 R U'
-(1,6,3,8,10)(2,7,9)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R'
-(1,6)(2,7,9,4,5)(3,10)  =&gt; R U R' U R U R' U R' U2 R U R' U R
-(1,6)(2,7,4,5,9)(3,10)  =&gt; U R U' R' U R U2 R' U R U R' U
-(1,6)(2,7)(3,10)(4,5)   =&gt; R U R' U R U2 R' U2 R U' R' U' R U2 R'
-(1,6)(2,7)(3,10)(5,9)   =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R' U' R U R' U'
-(1,6)(2,7,5)(3,10)      =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U2 R'
-(1,6)(2,7,9)(3,10)      =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U R'
-(1,6)(2,7,5,4,9)(3,10)  =&gt; U R U R' U R' U' R U' R' U2 R U'
-(1,6)(2,7,4,9,5)(3,10)  =&gt; U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6)(2,7)(3,10)(4,9)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U'
-(1,6)(2,7,5,9,4)(3,10)  =&gt; R' U' R U' R' U2 R2 U' R' U'
-(1,6)(2,7,9,5,4)(3,10)  =&gt; R U R' U R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,6)(2,7,4)(3,10)      =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R'
-(1,6,10,8)(2,7,4)(5,9)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U R' U'
-(1,6,10,8)(2,7,9,4)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U' R U' R' U'
-(1,6,10,8)(2,7,5,4)     =&gt; R U R' U2 R U R2 U' R U' R' U2 R U'
-(1,6,10,8)(2,7,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U' R'
-(1,6,10,8)(2,7)(4,5,9)  =&gt; U' R U R' U2 R' U' R U' R' U2 R U'
-(1,6,10,8)(2,7,4,5)     =&gt; R U R' U R U R' U2 R U' R' U'
-(1,6,10,8)(2,7)         =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U'
-(1,6,10,8)(2,7,5,9)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R'
-(1,6,10,8)(2,7,9,5)     =&gt; R U' R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,6,10,8)(2,7)(4,9,5)  =&gt; U' R U2 R' U' R U' R' U2 R U R' U'
-(1,6,10,8)(2,7,5)(4,9)  =&gt; U R U R' U R U R' U2 R U R' U U R' U2 R U R' U R
-(1,6,10,8)(2,7,4,9)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R'
-(1,8)(2,7)(3,6)(4,5)    =&gt; U2
-(1,8)(2,7,9,4,5)(3,6)   =&gt; U R' U2 R U R' U R U' R U' R' U2 R U2 R' U'
-(1,8)(2,7,4,5,9)(3,6)   =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U2 R'
-(1,8)(2,7,9,5,4)(3,6)   =&gt; R U' R' U R U R' U U R U R' U R U R' U R U2 R' U
-(1,8)(2,7,5,9,4)(3,6)   =&gt; U R U' R' U R U R' U U R U R' U R U2 R' U' R U' R'
-(1,8)(2,7,4)(3,6)       =&gt; U R U2 R' U' R U' R' U'
-(1,8)(2,7,5,4,9)(3,6)   =&gt; U R U2 R' U2 R U R' U U2 R U R' U R U2 R' U
-(1,8)(2,7)(3,6)(4,9)    =&gt; U2 R U' R' U2 R U2 R' U'
-(1,8)(2,7,4,9,5)(3,6)   =&gt; U R U2 R' U2 R U R' U R U2 R' U' R U' R' U'
-(1,8)(2,7,5)(3,6)       =&gt; U R' U2 R U R' U R U'
-(1,8)(2,7)(3,6)(5,9)    =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
-(1,8)(2,7,9)(3,6)       =&gt; R U' R' U R U R' U2 R U R'
-(1,8,6,10,3)(2,7,4,5,9) =&gt; U' R U R' U2
-(1,8,6,10,3)(2,7,9,4,5) =&gt; R U' R' U'
-(1,8,6,10,3)(2,7)(4,5)  =&gt; R U R' U2 R U R' U' R U2 R' U' R U' R' U'
-(1,8,6,10,3)(2,7,5,9,4) =&gt; U R' U2 R U R' U R U R U' R' U'
-(1,8,6,10,3)(2,7,9,5,4) =&gt; R U' R' U2 R U2 R' U' R U' R' U'
-(1,8,6,10,3)(2,7,4)     =&gt; R U R' U U R U R' U R U R' U R U2 R' U
-(1,8,6,10,3)(2,7)(5,9)  =&gt; U' R U R' U' R U R' U R U2 R' U
-(1,8,6,10,3)(2,7,9)     =&gt; U R U2 R' U
-(1,8,6,10,3)(2,7,5)     =&gt; R U R' U2 R U R'
-(1,8,6,10,3)(2,7,5,4,9) =&gt; U R U R' U R U2 R' U2 R U' R' U' R U R'
-(1,8,6,10,3)(2,7,4,9,5) =&gt; U R U R' U R U R' U U R U R' U R U2 R' U' R U' R'
-(1,8,6,10,3)(2,7)(4,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R' U'
-(1,8,3,10)(2,7,9)(4,5)  =&gt; U R U R' U R U2 R' U2 R U' R' U' U' R U' R' U' R U' R'
-(1,8,3,10)(2,7,4,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U2 R' U'
-(1,8,3,10)(2,7)(4,5,9)  =&gt; R U R' U R U2 R' U R U' R' U' R U R' U'
-(1,8,3,10)(2,7,4)(5,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U' R U' R' U'
-(1,8,3,10)(2,7,9,4)     =&gt; U R U R' U R U R' U' R U R' U'
-(1,8,3,10)(2,7,5,4)     =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U2 R' U'
-(1,8,3,10)(2,7)(4,9,5)  =&gt; U R U' R' U' R U' R' U'
-(1,8,3,10)(2,7,4,9)     =&gt; U R U R' U U R U R' U R U2 R' U
-(1,8,3,10)(2,7,5)(4,9)  =&gt; U R U R' U
-(1,8,3,10)(2,7,9,5)     =&gt; R U R' U R U' R' U' R U' R'
-(1,8,3,10)(2,7,5,9)     =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R'
-(1,8,3,10)(2,7)         =&gt; R U2 R' U R U R' U2 R' U' R U' R' U2 R U'
-(1,8,10,6)(2,7,4)(5,9)  =&gt; U R U' R' U
-(1,8,10,6)(2,7,5,4)     =&gt; U R U R' U U R U R' U U
-(1,8,10,6)(2,7,9,4)     =&gt; U R' U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R' U'
-(1,8,10,6)(2,7,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R'
-(1,8,10,6)(2,7)(4,5,9)  =&gt; U R U' R' U2 R U R' U R U2 R' U
-(1,8,10,6)(2,7,4,5)     =&gt; U R U R' U2 R U R' U U2 R U R' U R U2 R' U
-(1,8,10,6)(2,7)         =&gt; U R U R' U U R U R' U R U2 R' U' R U' R' U'
-(1,8,10,6)(2,7,5,9)     =&gt; U R U R' U' R U' R' U'
-(1,8,10,6)(2,7,9,5)     =&gt; R U' R' U R U2 R' U R U R' U2 R' U' R U' R' U2 R U'
-(1,8,10,6)(2,7)(4,9,5)  =&gt; U R' U2 R U R' U R U2 R U' R' U
-(1,8,10,6)(2,7,4,9)     =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U' R'
-(1,8,10,6)(2,7,5)(4,9)  =&gt; R U' R' U' U' R U' R' U' R U' R' U'
-(1,8)(2,4,5,9,7)(3,6)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U' R U R'
-(1,8)(2,4,5,7,9)(3,6)   =&gt; R U R' U R U2 R' U' R U' R' U2 R U2 R'
-(1,8)(2,4,5)(3,6)       =&gt; R U R' U R U2 R'
-(1,8)(2,4,7,5,9)(3,6)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U2 R'
-(1,8)(2,4,7)(3,6)       =&gt; U R U R' U R U2 R' U'
-(1,8)(2,4,7,9,5)(3,6)   =&gt; R U' R' U R U R' U2 R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8)(2,4)(3,6)(5,9)    =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R' U' R U R' U'
-(1,8)(2,4)(3,6)(7,9)    =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U R'
-(1,8)(2,4)(3,6)(5,7)    =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U'
-(1,8)(2,4,9,7,5)(3,6)   =&gt; U R U2 R' U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8)(2,4,9,5,7)(3,6)   =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
-(1,8)(2,4,9)(3,6)       =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U2 R'
-(1,8,6,10,3)(2,4,5)     =&gt; U R' U2 R U R' U R U' R U' R' U' R U2 R'
-(1,8,6,10,3)(2,4,5,7,9) =&gt; R U' R' U R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,8,6,10,3)(2,4,5,9,7) =&gt; U' R U' R' U' R U' R' U R U R' U R U2 R' U
-(1,8,6,10,3)(2,4,9,5,7) =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U' R U' R' U' R U2 R' U' R U R' U'
-(1,8,6,10,3)(2,4,9,7,5) =&gt; U R U R' U R U R' U2 R U R' U2 R U2 R' U' R U' R' U'
-(1,8,6,10,3)(2,4,9)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U R'
-(1,8,6,10,3)(2,4,7,5,9) =&gt; U' R U2 R' U' R U2 R' U' R U2 U' R'
-(1,8,6,10,3)(2,4,7,9,5) =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U R' U'
-(1,8,6,10,3)(2,4,7)     =&gt; U2 R U' R' U' R U2 R'
-(1,8,6,10,3)(2,4)(5,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U' R U2 R'
-(1,8,6,10,3)(2,4)(5,9)  =&gt; U' R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8,6,10,3)(2,4)(7,9)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U' R'
-(1,8,3,10)(2,4,5,9)     =&gt; U R U' R' U R U U R' U R U R' U R U R' U R U2 R' U
-(1,8,3,10)(2,4,5)(7,9)  =&gt; R U R' U R U R' U R U2 R' U' R U' R' U'
-(1,8,3,10)(2,4,5,7)     =&gt; R U2 R' U R U R' U'
-(1,8,3,10)(2,4)(5,9,7)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2
-(1,8,3,10)(2,4)         =&gt; R U' R' U' R U2 R' U'
-(1,8,3,10)(2,4)(5,7,9)  =&gt; R U R' U R U R2 U U R U R' U R U R U R' U R U2 R' U
-(1,8,3,10)(2,4,7)(5,9)  =&gt; U R U R' U R U2 R' U2 R U' R' U' R U' R' U'
-(1,8,3,10)(2,4,7,9)     =&gt; U' R U2 R' U' R U2 R' U' U' R U' R' U' R U' R'
-(1,8,3,10)(2,4,7,5)     =&gt; R U2 R' U R U R' U R' U2 R U R' U R
-(1,8,3,10)(2,4,9,5)     =&gt; R U R' U R U' U' R' U' R U' R' U' R U' R' U'
-(1,8,3,10)(2,4,9)(5,7)  =&gt; U R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,8,3,10)(2,4,9,7)     =&gt; U R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8,10,6)(2,4,7,5)     =&gt; U R U R' U2 R U' R' U' R U' R' U R U R' U R U2 R' U
-(1,8,10,6)(2,4,7,9)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R'
-(1,8,10,6)(2,4,7)(5,9)  =&gt; U R U' R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,8,10,6)(2,4,9,5)     =&gt; U R U R' U R U U R' U R U R' U' R' U' R U' R' U2 R U'
-(1,8,10,6)(2,4,9)(5,7)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R'
-(1,8,10,6)(2,4,9,7)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U R'
-(1,8,10,6)(2,4,5)(7,9)  =&gt; R U' R' U R U2 R' U R U R' U'
-(1,8,10,6)(2,4,5,7)     =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R'
-(1,8,10,6)(2,4,5,9)     =&gt; U R U' R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8,10,6)(2,4)(5,9,7)  =&gt; R' U' R U' R' U2 R U2 R U R'
-(1,8,10,6)(2,4)(5,7,9)  =&gt; R' U' R U' R' U' U' R U' R U' R' U
-(1,8,10,6)(2,4)         =&gt; U' R U' R' U2 R U' R'
-(1,8,6,10,3)(2,9)(4,5)  =&gt; R U R' U R U U R' U R U R' U2
-(1,8,6,10,3)(2,9,4,5,7) =&gt; R' U' R U' R' U2 R U2 R U' R' U'
-(1,8,6,10,3)(2,9,7,4,5) =&gt; U R U R' U R U R' U' R U' R'
-(1,8,6,10,3)(2,9,5,4,7) =&gt; R U R' U R U U R' U R U R2 U2 R U R' U R
-(1,8,6,10,3)(2,9)(4,7)  =&gt; U R' U2 R U R' U R U2 R U' R' U' R U R'
-(1,8,6,10,3)(2,9,4,7,5) =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U'
-(1,8,6,10,3)(2,9,7,5,4) =&gt; R U R' U R U2 R' U R U' R' U' R U' R'
-(1,8,6,10,3)(2,9,4)     =&gt; R U R' U R U U R' U R U R' U R U2 R' U' R U' R' U'
-(1,8,6,10,3)(2,9,5,7,4) =&gt; R U R' U R U U R' U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8,6,10,3)(2,9)(5,7)  =&gt; U R U' R' U' R U R'
-(1,8,6,10,3)(2,9,5)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U' R U R' U'
-(1,8,6,10,3)(2,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U' R U' R'
-(1,8,3,10)(2,9,4,5)     =&gt; R U2 U R' U R U R' U R U R' U R U2 R' U
-(1,8,3,10)(2,9)(4,5,7)  =&gt; R U' R' U R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8,3,10)(2,9,7)(4,5)  =&gt; R U' R' U R U R' U U R' U U R U R' U R
-(1,8,3,10)(2,9,7,5)     =&gt; U2 R U' R' U2
-(1,8,3,10)(2,9,5,7)     =&gt; U' R U2 R' U' R U2 R' U' R U' R' U'
-(1,8,3,10)(2,9)         =&gt; R U' R' U R U R' U' R U2 R' U' R U' R' U'
-(1,8,3,10)(2,9,5)(4,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U' R' U'
-(1,8,3,10)(2,9)(4,7,5)  =&gt; R U' R' U R U R' U2 R U2 R' U' R U' R'
-(1,8,3,10)(2,9,4,7)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U R' U'
-(1,8,3,10)(2,9,5,4)     =&gt; R U' R' U R U R'
-(1,8,3,10)(2,9,4)(5,7)  =&gt; R U' R' U R U R' U' R' U' R U' R' U2 R U'
-(1,8,3,10)(2,9,7,4)     =&gt; U R' U2 R U R' U R U' R U' R' U2
-(1,8)(2,9,4,5,7)(3,6)   =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U2 R' U'
-(1,8)(2,9,7,4,5)(3,6)   =&gt; U R' U2 R U R' U R U R U' R' U2 R U' R' U' R U R'
-(1,8)(2,9)(3,6)(4,5)    =&gt; U R U' R' U2 R U2 R'
-(1,8)(2,9,5)(3,6)       =&gt; R U2 R' U2 R U2 R' U R U2 R' U
-(1,8)(2,9)(3,6)(5,7)    =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U2 R'
-(1,8)(2,9,7)(3,6)       =&gt; R U' R' U2 R U' R' U' R U R'
-(1,8)(2,9,7,5,4)(3,6)   =&gt; R U2 R' U2 R U R' U R U2 R' U' R U' R'
-(1,8)(2,9,5,7,4)(3,6)   =&gt; R U2 R' U2 R U R' U2 R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8)(2,9,4)(3,6)       =&gt; R U2 R' U2 R U R' U2 R U2 R' U' R U' R' U'
-(1,8)(2,9,4,7,5)(3,6)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U2 R U2 R' U'
-(1,8)(2,9,5,4,7)(3,6)   =&gt; R U U R' U2 R U R' U R' U2 R U R' U R
-(1,8)(2,9)(3,6)(4,7)    =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U2 R'
-(1,8,10,6)(2,9,5)(4,7)  =&gt; R U R' U2 R U2 R' U' R U' R'
-(1,8,10,6)(2,9,4,7)     =&gt; R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,8,10,6)(2,9)(4,7,5)  =&gt; R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R'
-(1,8,10,6)(2,9,7)(4,5)  =&gt; U R' U2 R U R' U R U R U R'
-(1,8,10,6)(2,9,4,5)     =&gt; R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,8,10,6)(2,9)(4,5,7)  =&gt; R U R' U U R' U U R U R' U R
-(1,8,10,6)(2,9)         =&gt; R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,8,10,6)(2,9,7,5)     =&gt; R U R' U' R U2 R' U' R U' R' U'
-(1,8,10,6)(2,9,5,7)     =&gt; R U R' U U R' U U R U R' U R U R U R' U R U2 R' U
-(1,8,10,6)(2,9,5,4)     =&gt; R U R' U' R' U' R U' R' U2 R U'
-(1,8,10,6)(2,9,4)(5,7)  =&gt; U' R U2 R' (U' R U' R' (U' R U' R' U')2
-(1,8,10,6)(2,9,7,4)     =&gt; R U R'
-(1,8,6,10,3)(4,5,9)     =&gt; R U R' U R U2 R' U2 R U' R' U'
-(1,8,6,10,3)(4,5,7)     =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U2 R'
-(1,8,6,10,3)(4,5)(7,9)  =&gt; R U' R' U2 R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,8,6,10,3)(4,7,5)     =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R'
-(1,8,6,10,3)(4,7,9)     =&gt; R U' R' U R' U U R U R' U R
-(1,8,6,10,3)(4,7)(5,9)  =&gt; U' R U R2 U2 R U R' U R
-(1,8,6,10,3)(5,9,7)     =&gt; U' R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,8,6,10,3)            =&gt; R U R' U2 R U R' U U R' U2 R U R' U R
-(1,8,6,10,3)(5,7,9)     =&gt; U R U' R' U' R U2 R' U' R U R' U'
-(1,8,6,10,3)(4,9)(5,7)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U'
-(1,8,6,10,3)(4,9,5)     =&gt; U R U R' U R U R' U U R U R' U U R' U' R U' R' U2 R U'
-(1,8,6,10,3)(4,9,7)     =&gt; U R U R' U R U R' U2 R U R' U'
-(1,8,3,10)(4,5)         =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U'
-(1,8,3,10)(4,5,7,9)     =&gt; U' R U' R' U' R U R' U'
-(1,8,3,10)(4,5,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2
-(1,8,3,10)(4,7,5,9)     =&gt; U R' U2 R U R' U R2 U' R' U' R U R' U'
-(1,8,3,10)(4,7)         =&gt; R U2 R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,8,3,10)(4,7,9,5)     =&gt; R U R' U R U R' U R' U' R U' R' U2 R U'
-(1,8,3,10)(4,9,7,5)     =&gt; U R U R' U R U2 R' U' R U' R' U2
-(1,8,3,10)(4,9)         =&gt; U R U R' U2 U R' U2 R U R' U R
-(1,8,3,10)(4,9,5,7)     =&gt; R' U' R U' R' U2 R U' R U' R' U' R U' R' U'
-(1,8,3,10)(5,9)         =&gt; U R U' R' U R U2 R' U R U R' U' R U2 R' U' R U' R' U'
-(1,8,3,10)(5,7)         =&gt; R U2 R' U R U2 R' U R U2 R' U
-(1,8,3,10)(7,9)         =&gt; R U R' U R U R' U U
-(1,8)(3,6)(4,5)(7,9)    =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2 R U' R' U' R U R'
-(1,8)(3,6)(4,5,7)       =&gt; R' U' R U' R' U2 R
-(1,8)(3,6)(4,5,9)       =&gt; U R U' R' U R U R' U2 R U R' U'
-(1,8)(3,6)(4,7,5)       =&gt; R' U2 R U R' U R
-(1,8)(3,6)(4,7)(5,9)    =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U R' U'
-(1,8)(3,6)(4,7,9)       =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U2 R U2 R' U'
-(1,8)(3,6)(4,9,5)       =&gt; U R U' R' U2 R U' R' U' R U R' U'
-(1,8)(3,6)(4,9,7)       =&gt; U R U2 R' U2 R U R' U R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,8)(3,6)(4,9)(5,7)    =&gt; R' U' R U' R' U2 R R U' R' U2 R U2 R' U'
-(1,8)(3,6)(5,9,7)       =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U' R U R'
-(1,8)(3,6)(5,7,9)       =&gt; R U' R' U R U R' U2 R U R' U U R' U2 R U R' U R
-(1,8)(3,6)              =&gt; U R U R' U R U2 R' U R U R' U R U2 R'
-(1,8,10,6)(4,7,9,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U
-(1,8,10,6)(4,7,5,9)     =&gt; U R U R' U R U2 R' U R U' R' U' U' R U' R' U' R U' R' U'
-(1,8,10,6)(4,7)         =&gt; U R U R' U2 R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,8,10,6)(7,9)         =&gt; R U' R' U R U2 R' U R U2 R' U R U2 R' U
-(1,8,10,6)(5,9)         =&gt; U R U' R2 U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,8,10,6)(5,7)         =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U2 R U' R' U2 R U' R'
-(1,8,10,6)(4,9,5,7)     =&gt; U' R U2 R' U' R U2 R' U
-(1,8,10,6)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2 R U R'
-(1,8,10,6)(4,9)         =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U' R' U'
-(1,8,10,6)(4,5,7,9)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' U' R U' R' U' R U' R' U'
-(1,8,10,6)(4,5)         =&gt; U R U R' U2 R U R' R' U2 R U R' U R
-(1,8,10,6)(4,5,9,7)     =&gt; U' R U2 R' U' R U' R' U' R U R'
-(1,8)(2,5,7,9,4)(3,6)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U2 R U2 R' U'
-(1,8)(2,5,4)(3,6)       =&gt; R U2 R' U' R U' R'
-(1,8)(2,5,9,7,4)(3,6)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U2 R U' R' U' R U R'
-(1,8)(2,5,7)(3,6)       =&gt; U R' U' R U' R' U2 R U'
-(1,8)(2,5)(3,6)(7,9)    =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U R'
-(1,8)(2,5,9)(3,6)       =&gt; U' R U2 R' U' R U2 R' U2 R U2 R'
-(1,8)(2,5,7,4,9)(3,6)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' R U' R' U2 R U2 R'
-(1,8)(2,5)(3,6)(4,9)    =&gt; R U R' U R U R' U2 R U2 R' U'
-(1,8)(2,5,4,9,7)(3,6)   =&gt; U R U2 R' U2 R U R' U R' U' R U' R' U2 R U'
-(1,8)(2,5,4,7,9)(3,6)   =&gt; R U' R' U R U R' U2 R U R' U' R' U' R U' R' U2 R U'
-(1,8)(2,5,9,4,7)(3,6)   =&gt; U R U R' U R U2 R' U' R U' R' U2 R U2 R' U'
-(1,8)(2,5)(3,6)(4,7)    =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R
-(1,8,10,6)(2,5,7,4)     =&gt; R U R' U R U2 R' U R U' R' U2 R U' R'
-(1,8,10,6)(2,5,9,4)     =&gt; U R U' R2 U' R U' R' U2 R U'
-(1,8,10,6)(2,5,4)(7,9)  =&gt; R U R' U R U2 R' U2 R U R'
-(1,8,10,6)(2,5,7)(4,9)  =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R' U' R U' R' U'
-(1,8,10,6)(2,5)(4,9,7)  =&gt; U R U R' U R U2 R' U R U R'
-(1,8,10,6)(2,5,4,9)     =&gt; U R' U2 R U R' U R U2 R U' R' U' R U' U' R' U' R U' R'
-(1,8,10,6)(2,5,7,9)     =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R'
-(1,8,10,6)(2,5)         =&gt; U R U R' U R U R' U2 R U' R'
-(1,8,10,6)(2,5,9,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U R'
-(1,8,10,6)(2,5,4,7)     =&gt; U R U R' U2 R U' R' U' R U' R'
-(1,8,10,6)(2,5,9)(4,7)  =&gt; U R U' R' U' R U' U' R' U' R U' R'
-(1,8,10,6)(2,5)(4,7,9)  =&gt; R U' R' U R U2 R' U R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,8,3,10)(2,5,4)(7,9)  =&gt; R U R' U R U R' U U2 R U R' U R U2 R' U
-(1,8,3,10)(2,5,9,4)     =&gt; U R U' R' U R U2 R' U R U R'
-(1,8,3,10)(2,5,7,4)     =&gt; R U R' U R U2 R' U2 R U' R' U' R U2 R' U'
-(1,8,3,10)(2,5,9)(4,7)  =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U' R U' R'
-(1,8,3,10)(2,5,4,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U2 R' U'
-(1,8,3,10)(2,5)(4,7,9)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U R' U'
-(1,8,3,10)(2,5,7)(4,9)  =&gt; U R U R' U' R U2 R' U' R U' R'
-(1,8,3,10)(2,5,4,9)     =&gt; U R U R' U' R' U U R U R' U R U R U R' U R U2 R' U
-(1,8,3,10)(2,5)(4,9,7)  =&gt; U R U R2 U' R U' R' U2 R U'
-(1,8,3,10)(2,5,9,7)     =&gt; R' U' R U' R' U2 R2 U' R' U2
-(1,8,3,10)(2,5,7,9)     =&gt; U R U' R' U' U' R U' R' U' R U' R'
-(1,8,3,10)(2,5)         =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R' U'
-(1,8,6,10,3)(2,5,9)     =&gt; U' R U R' U R' U' R U' R' U2 R U'
-(1,8,6,10,3)(2,5)(7,9)  =&gt; R U' R' U2 R' U' R U' R' U2 R U'
-(1,8,6,10,3)(2,5,7)     =&gt; U R U R' U R U' U' R' U' R U' R' U' R U2 R'
-(1,8,6,10,3)(2,5,7,9,4) =&gt; R U' R' U R U2 R' U' R U' R'
-(1,8,6,10,3)(2,5,9,7,4) =&gt; U' R U' R' U' R U' R'
-(1,8,6,10,3)(2,5,4)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U2 R'
-(1,8,6,10,3)(2,5)(4,7)  =&gt; R U R' U R U R' U' R U2 R'
-(1,8,6,10,3)(2,5,9,4,7) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' U' R U' R' U'
-(1,8,6,10,3)(2,5,4,7,9) =&gt; R U' R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,8,6,10,3)(2,5,7,4,9) =&gt; U R U R' U R U R' U2 R U R' U R' U2 R U R' U R
-(1,8,6,10,3)(2,5,4,9,7) =&gt; U R' U2 R U R' U R2 U' R' U' R U' R'
-(1,8,6,10,3)(2,5)(4,9)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U'
-(1,3,8,6)(2,5,7,4)      =&gt; U
-(1,3,8,6)(2,5,4)(7,9)   =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U' R U R'
-(1,3,8,6)(2,5,9,4)      =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U2 R' U'
-(1,3,8,6)(2,5,7,9)      =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R'
-(1,3,8,6)(2,5,9,7)      =&gt; U R U' R' U R U R' U U R U R' U R U2 R' U' R U' R' U'
-(1,3,8,6)(2,5)          =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U'
-(1,3,8,6)(2,5,7)(4,9)   =&gt; U R U2 R' U2 R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,3,8,6)(2,5)(4,9,7)   =&gt; U R U2 R' U2 R U R' U
-(1,3,8,6)(2,5,4,9)      =&gt; U R' U2 R U R' U R U R U' R' U2 R U2 R'
-(1,3,8,6)(2,5,4,7)      =&gt; U R' U2 R U R' U R U2
-(1,3,8,6)(2,5,9)(4,7)   =&gt; R U' R' U2 R U2 R'
-(1,3,8,6)(2,5)(4,7,9)   =&gt; R U' R' U R U R' U2 R U R' U'
-(1,3,6,10)(2,5,9,4)     =&gt; U' R U R' U
-(1,3,6,10)(2,5,4)(7,9)  =&gt; R U' R' U2
-(1,3,6,10)(2,5,7,4)     =&gt; U' R U2 R' U' R U' R' U R U' R' U' R U2 R' U'
-(1,3,6,10)(2,5,9,7)     =&gt; U R' U2 R U R' U R U R U' R' U2
-(1,3,6,10)(2,5,7,9)     =&gt; R U' R' U R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,3,6,10)(2,5)         =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U' R U2 R' U'
-(1,3,6,10)(2,5,9)(4,7)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U' R U' R'
-(1,3,6,10)(2,5)(4,7,9)  =&gt; R U R' U' R U' R' U R U R' U R U2 R' U
-(1,3,6,10)(2,5,4,7)     =&gt; R U R' U2 R U R' U'
-(1,3,6,10)(2,5,7)(4,9)  =&gt; U R U R' U R U2 R' U2 R U' R' U' R U R' U'
-(1,3,6,10)(2,5,4,9)     =&gt; U R U R' U R U R' U U R U R' U R U2 R' U' R U' R' U'
-(1,3,6,10)(2,5)(4,9,7)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U' R' U2
-(1,3,10,6,8)(2,5,7,9,4) =&gt; U R U R' U R U2 R' U2 R U' R' U' U' R U' R' U' R U' R' U'
-(1,3,10,6,8)(2,5,4)     =&gt; R U2 R' U R U R' U R' U' R U' R' U2 R U'
-(1,3,10,6,8)(2,5,9,7,4) =&gt; U R U' R' U R U2 R' U R U2 R' U R U2 R' U
-(1,3,10,6,8)(2,5,9)     =&gt; U R U' R' U R U2 R' U R U R' U R' U2 R U R' U R
-(1,3,10,6,8)(2,5)(7,9)  =&gt; U R' U2 R U R' U R U2 R U R'
-(1,3,10,6,8)(2,5,7)     =&gt; R U' R' U2 R U' R'
-(1,3,10,6,8)(2,5,7,4,9) =&gt; U R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,3,10,6,8)(2,5)(4,9)  =&gt; U R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,3,10,6,8)(2,5,4,9,7) =&gt; U R U R'
-(1,3,10,6,8)(2,5,4,7,9) =&gt; R U R' U R U' R' U' R U' R' U'
-(1,3,10,6,8)(2,5,9,4,7) =&gt; R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R' U'
-(1,3,10,6,8)(2,5)(4,7)  =&gt; R U2 R' U R U' R' U' R U' R'
-(1,3)(2,5,9)(8,10)      =&gt; U R U' R'
-(1,3)(2,5,7)(8,10)      =&gt; U R U R' U U R U R' U
-(1,3)(2,5)(7,9)(8,10)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U' R U2 R' U' R U R'
-(1,3)(2,5,7,9,4)(8,10)  =&gt; R U' R' U R U2 R' U R U R' U R' U' R U' R' U2 R U'
-(1,3)(2,5,9,7,4)(8,10)  =&gt; U R U' R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,3)(2,5,4)(8,10)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U2 R U' R' U'
-(1,3)(2,5)(4,7)(8,10)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2 R U' R' U'
-(1,3)(2,5,9,4,7)(8,10)  =&gt; U R U' R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,3)(2,5,4,7,9)(8,10)  =&gt; R U' R' U R U2 R' U R U2 U R' U' R U' R'
-(1,3)(2,5,7,4,9)(8,10)  =&gt; U R' U2 R U R' U R U2 R U' R'
-(1,3)(2,5)(4,9)(8,10)   =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U' R U' R' U'
-(1,3)(2,5,4,9,7)(8,10)  =&gt; U R U R' U R U U R' U R U R' U R' U U R U R' U R
-(1,3,8,6)(2,7,4)(5,9)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' U' R U' R' U' R U R' U'
-(1,3,8,6)(2,7,9,4)      =&gt; R U R' U R U2 R' U' R U' R' U2 R U2 R' U'
-(1,3,8,6)(2,7,5,4)      =&gt; R U R' U R U2 R' U'
-(1,3,8,6)(2,7)(4,5,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U2 R' U'
-(1,3,8,6)(2,7,4,5)      =&gt; U R U R' U R U2 R' U2
-(1,3,8,6)(2,7,9)(4,5)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R'
-(1,3,8,6)(2,7,5,9)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U2 R U' R' U2 R U2 R'
-(1,3,8,6)(2,7,9,5)      =&gt; R U' R' U R U R' U2 R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,3,8,6)(2,7)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2
-(1,3,8,6)(2,7)(4,9,5)   =&gt; U R U2 R' U2 R U R' U U2 R' U2 R U R' U R U R U R' U R U2 R' U
-(1,3,8,6)(2,7,4,9)      =&gt; U' R U2 R' U' R U' R' U' R U' R' U2 R U2 R'
-(1,3,8,6)(2,7,5)(4,9)   =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U2 R' U'
-(1,3,6,10)(2,7,5,4)     =&gt; R U R' U2 R U R' U R' U2 R U R' U R
-(1,3,6,10)(2,7,9,4)     =&gt; R U' R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,3,6,10)(2,7,4)(5,9)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R R U' R' U' R U' R' U'
-(1,3,6,10)(2,7,4,9)     =&gt; U R U R' U R U R' U U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,6,10)(2,7)(4,9,5)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U' R U' R' U'
-(1,3,6,10)(2,7,5)(4,9)  =&gt; U R U R' U R U R' U U R U R' U R' U' R U' R' U2 R U'
-(1,3,6,10)(2,7)(4,5,9)  =&gt; U' R U2 R' U' R U2 R' U' R U2 U' R' U'
-(1,3,6,10)(2,7,9)(4,5)  =&gt; R U' R2 U2 R U R' U R
-(1,3,6,10)(2,7,4,5)     =&gt; U2 R U' R' U' R U2 R' U'
-(1,3,6,10)(2,7)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U' R U2 R' U'
-(1,3,6,10)(2,7,5,9)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U' R U' R'
-(1,3,6,10)(2,7,9,5)     =&gt; R' U' R U' R' U2 R U' U2 R U' R' U' R U' R' U'
-(1,3,10,6,8)(2,7,5,9,4) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U' R' U'
-(1,3,10,6,8)(2,7,9,5,4) =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U
-(1,3,10,6,8)(2,7,4)     =&gt; R U2 R' U R U R' U2
-(1,3,10,6,8)(2,7)(5,9)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 U'
-(1,3,10,6,8)(2,7,5)     =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R'
-(1,3,10,6,8)(2,7,9)     =&gt; R U R' U R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,10,6,8)(2,7,4,5,9) =&gt; R' U' R U' R' U2 R2 U' R' U' R U' U' R' U' R U' R'
-(1,3,10,6,8)(2,7,9,4,5) =&gt; R U R' U R U R2 U' R U' R' U2 R U'
-(1,3,10,6,8)(2,7)(4,5)  =&gt; U R U R' U R U2 R' U R U' R' U2 R U' R'
-(1,3,10,6,8)(2,7,5,4,9) =&gt; U R U R' U U R' U U R U R' U R
-(1,3,10,6,8)(2,7)(4,9)  =&gt; U R U R' U U R' U U R U R' U R U' R U2 R' U' R U' R' U'
-(1,3,10,6,8)(2,7,4,9,5) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U
-(1,3)(2,7)(4,5)(8,10)   =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U2 R U' R' U2 R U' R' U'
-(1,3)(2,7,9,4,5)(8,10)  =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U' U' R' U' R U' R' U'
-(1,3)(2,7,4,5,9)(8,10)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U' R'
-(1,3)(2,7,5,4,9)(8,10)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R'
-(1,3)(2,7)(4,9)(8,10)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R' U'
-(1,3)(2,7,4,9,5)(8,10)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U R' U'
-(1,3)(2,7,9,5,4)(8,10)  =&gt; R U' R' U R U2 R' U R U R' U2
-(1,3)(2,7,4)(8,10)      =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R' U'
-(1,3)(2,7,5,9,4)(8,10)  =&gt; U R U' R' U2 R' U U R U R' U R U R U R' U R U2 R' U
-(1,3)(2,7)(5,9)(8,10)   =&gt; R' U' R U' R' U2 R U2 R U R' U'
-(1,3)(2,7,9)(8,10)      =&gt; R' U' R U' R' U' U' R U' R U' R'
-(1,3)(2,7,5)(8,10)      =&gt; U' R U' R' U' U' R U' R' U'
-(1,3,6,10)(2,9,4)(5,7)  =&gt; R U R' U R U U R' U R U R' U
-(1,3,6,10)(2,9,7,4)     =&gt; R' U' R U' R' U2 R U2 R U' R' U2
-(1,3,6,10)(2,9,5,4)     =&gt; U R U R' U R U R' U' R U' R' U'
-(1,3,6,10)(2,9)(4,5,7)  =&gt; R U R' U R U U R' U R U R' U2 R U R' U R U2 R' U
-(1,3,6,10)(2,9,4,5)     =&gt; U R' U2 R U R' U R U2 R U' R' U' R U R' U'
-(1,3,6,10)(2,9,7)(4,5)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U R U' R' U2
-(1,3,6,10)(2,9,5,7)     =&gt; R U R' U R U2 R' U R U' R' U' R U' R' U'
-(1,3,6,10)(2,9,7,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2
-(1,3,6,10)(2,9)         =&gt; U R' U2 R U R' U R2 U' R' U' U' R U' R' U' R U' R'
-(1,3,6,10)(2,9,4,7)     =&gt; U R U' R' U' R U R' U'
-(1,3,6,10)(2,9)(4,7,5)  =&gt; U' R U' R' U' U' R U' R' U' R U' R'
-(1,3,6,10)(2,9,5)(4,7)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R R U' R' U' R U' R' U'
-(1,3,10,6,8)(2,9,7,5,4) =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' R U R'
-(1,3,10,6,8)(2,9,4)     =&gt; R U' R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,3,10,6,8)(2,9,5,7,4) =&gt; R U U2 R' U R U2 R' U R U2 R' U
-(1,3,10,6,8)(2,9,5,4,7) =&gt; U2 R U' R' U
-(1,3,10,6,8)(2,9)(4,7)  =&gt; R U' R' U R U R' U2 R' U' R U' R' U2 R U'
-(1,3,10,6,8)(2,9,4,7,5) =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U' R' U' R U' R' U'
-(1,3,10,6,8)(2,9)(4,5)  =&gt; U2 R U' R' U' R U' U' R' U' R U' R'
-(1,3,10,6,8)(2,9,4,5,7) =&gt; R U' R' U R U R' U2 R U2 R' U' R U' R' U'
-(1,3,10,6,8)(2,9,7,4,5) =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U R'
-(1,3,10,6,8)(2,9)(5,7)  =&gt; R U' R' U R U R' U'
-(1,3,10,6,8)(2,9,7)     =&gt; U' R U2 R' U'
-(1,3,10,6,8)(2,9,5)     =&gt; U R' U2 R U R' U R U' R U' R' U
-(1,3,8,6)(2,9,7,4)      =&gt; R U2 R' U2 R U R' U R' U' R U' R' U2 R U'
-(1,3,8,6)(2,9,5,4)      =&gt; U R' U2 R U R' U R U R U' R' U2 R U' R' U' R U R' U'
-(1,3,8,6)(2,9,4)(5,7)   =&gt; U R U' R' U2 R U2 R' U'
-(1,3,8,6)(2,9)(4,7,5)   =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U2 R'
-(1,3,8,6)(2,9,4,7)      =&gt; R U2 R' U2 R U' R' U' R U' R'
-(1,3,8,6)(2,9,5)(4,7)   =&gt; R U' R' U2 R U' R' U' R U R' U'
-(1,3,8,6)(2,9,5,7)      =&gt; R U2 R' U2 R U R' U R U2 R' U' R U' R' U'
-(1,3,8,6)(2,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U2 R U2 R'
-(1,3,8,6)(2,9,7,5)      =&gt; U R U R' U R U R' U2 R U' R' U' R U R'
-(1,3,8,6)(2,9,7)(4,5)   =&gt; R U2 R' U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,8,6)(2,9)(4,5,7)   =&gt; U R U R' U R U2 R' U R U' R' U2 R U2 R'
-(1,3,8,6)(2,9,4,5)      =&gt; R U2 R' U2 R U R' R' U2 R U R' U R
-(1,3)(2,9)(4,5)(8,10)   =&gt; U R U R' U R U2 R' U2 R U' R'
-(1,3)(2,9,7,4,5)(8,10)  =&gt; R U R' U R U' U2 R' U' R U2 R' U' R U R'
-(1,3)(2,9,4,5,7)(8,10)  =&gt; R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,3)(2,9,5,7,4)(8,10)  =&gt; U R' U2 R U R' U R U R U R' U'
-(1,3)(2,9,7,5,4)(8,10)  =&gt; R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,3)(2,9,4)(8,10)      =&gt; R U2 R' U R U2 R' U
-(1,3)(2,9,4,7,5)(8,10)  =&gt; R U R' U2 R' U' R U' R' U2 R U'
-(1,3)(2,9,5,4,7)(8,10)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U2 R U R' U'
-(1,3)(2,9)(4,7)(8,10)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R'
-(1,3)(2,9)(5,7)(8,10)   =&gt; R U R' U R U2 R' U' R U' R'
-(1,3)(2,9,7)(8,10)      =&gt; R U R' U R' U2 R U R' U R
-(1,3)(2,9,5)(8,10)      =&gt; R U R' U'
-(1,3,6,10)(2,4)(5,9,7)  =&gt; R U R' U R U2 R' U2 R U' R' U2
-(1,3,6,10)(2,4)         =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U2 R' U'
-(1,3,6,10)(2,4)(5,7,9)  =&gt; R U' R' U R' U' R U' R' U2 R U'
-(1,3,6,10)(2,4,5,7)     =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R' U'
-(1,3,6,10)(2,4,5)(7,9)  =&gt; U R U R' U R U2 R' U R U' R' U2
-(1,3,6,10)(2,4,5,9)     =&gt; U U2 R U R' U2 R U R' U R U2 R' U
-(1,3,6,10)(2,4,7)(5,9)  =&gt; U' R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,3,6,10)(2,4,7,5)     =&gt; R U R' U2 R U2 R' U R U2 R' U
-(1,3,6,10)(2,4,7,9)     =&gt; R U R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,3,6,10)(2,4,9,7)     =&gt; U R U R' U R U R' U2 R U R' R' U2 R U R' U R
-(1,3,6,10)(2,4,9)(5,7)  =&gt; U R U R' U R U R' U' U' R U' R' U' R U' R'
-(1,3,6,10)(2,4,9,5)     =&gt; U R U R' U R U R' U U R U R' U U
-(1,3,10,6,8)(2,4)(5,7)  =&gt; R U2 R' U R U R2 U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,3,10,6,8)(2,4)(7,9)  =&gt; R U R' U R U R' U U2 R' U2 R U R' U R
-(1,3,10,6,8)(2,4)(5,9)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U
-(1,3,10,6,8)(2,4,5,9,7) =&gt; U R U R' U R U2 R' U2 R U R'
-(1,3,10,6,8)(2,4,5)     =&gt; R U2 R' U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,10,6,8)(2,4,5,7,9) =&gt; R U R' U R U R' U' R U2 R' U' R U' R'
-(1,3,10,6,8)(2,4,9,5,7) =&gt; U R U R' U' R' U' R U' R' U2 R U'
-(1,3,10,6,8)(2,4,9,7,5) =&gt; R U R' U R U2 R' U' R U R'
-(1,3,10,6,8)(2,4,9)     =&gt; U R U R' U R U2 R' U' R U' R' U' R U' U' R' U' R U' R'
-(1,3,10,6,8)(2,4,7,5,9) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U' U' R' U' R U' R'
-(1,3,10,6,8)(2,4,7)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U2 R U' R'
-(1,3,10,6,8)(2,4,7,9,5) =&gt; R U R' U R U R' U
-(1,3,8,6)(2,4)(5,7,9)   =&gt; R U' R' U R U R' U U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,3,8,6)(2,4)          =&gt; R' U' R U' R' U2 R U'
-(1,3,8,6)(2,4)(5,9,7)   =&gt; U' R U' R' U' U' R U' R' U' R U R'
-(1,3,8,6)(2,4,5,7)      =&gt; U2 R U R' U R U2 R' U
-(1,3,8,6)(2,4,5,9)      =&gt; U R U' R' U R U R' U2 R U R' R' U2 R U R' U R
-(1,3,8,6)(2,4,5)(7,9)   =&gt; R U' R' U R U R' U U R U R' U U R' U' R U' R' U2 R U'
-(1,3,8,6)(2,4,9)(5,7)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U2 R U2 R'
-(1,3,8,6)(2,4,9,5)      =&gt; U R U2 R' U2 R U R2 U' R U' R' U2 R U'
-(1,3,8,6)(2,4,9,7)      =&gt; U R' U2 R U R' U R2 U' R' U2 R U' R' U' R U R'
-(1,3,8,6)(2,4,7)(5,9)   =&gt; U R U' R' U R U R' U2 R U' R' U' R U' R'
-(1,3,8,6)(2,4,7,9)      =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' U' R'
-(1,3,8,6)(2,4,7,5)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U'
-(1,3)(2,4,5,7,9)(8,10)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R'
-(1,3)(2,4,5,9,7)(8,10)  =&gt; U2 R U' R' U' R U2 R' U' R U R'
-(1,3)(2,4,5)(8,10)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2 R U' R' U'
-(1,3)(2,4,7,9,5)(8,10)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U R' U'
-(1,3)(2,4,7,5,9)(8,10)  =&gt; U R U' R' U' R' U' R U' R' U2 R U'
-(1,3)(2,4,7)(8,10)      =&gt; U R U R' U2 R U R2 U' R U' R' U2 R U'
-(1,3)(2,4,9)(8,10)      =&gt; U' R U2 R' U' R U2 R'
-(1,3)(2,4,9,5,7)(8,10)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U2 R U R' U'
-(1,3)(2,4,9,7,5)(8,10)  =&gt; U R' U2 R U R' U R U' R U' R' U' R U2 R' U' R U R'
-(1,3)(2,4)(7,9)(8,10)   =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U' R' U' R U2 R' U' R U R'
-(1,3)(2,4)(5,7)(8,10)   =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U' R U' R' U'
-(1,3)(2,4)(5,9)(8,10)   =&gt; U' R U2 R' U' R U' R' U' R U R' U'
-(1,3,8,6)(7,9)          =&gt; R U' R' U R U R' U U R U R' U U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,8,6)(5,7)          =&gt; R U2 R' U' R U' R' U'
-(1,3,8,6)(5,9)          =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U2 R U' R' U' R U R' U'
-(1,3,8,6)(4,7)          =&gt; U' R U2 R' U' R U' R'
-(1,3,8,6)(4,7,9,5)      =&gt; R U R' U R U' U' R' U2 R U' R' U2 R U' R' U' R U R' U'
-(1,3,8,6)(4,7,5,9)      =&gt; U' R U2 R' U' R U2 R' U' U' R U2 R' U'
-(1,3,8,6)(4,9)          =&gt; U R U2 R' U2 R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,8,6)(4,9,7,5)      =&gt; U R U2 R' U2 R U' R' U' R U' R' U'
-(1,3,8,6)(4,9,5,7)      =&gt; U R U2 R' U2 R U R' U' R U2 R' U' R U' R'
-(1,3,8,6)(4,5,7,9)      =&gt; R U' R' U R U R' U U R U R' U R U2 R' U' R U' R'
-(1,3,8,6)(4,5,9,7)      =&gt; U R U' R' U R U R' U2 R U R' U U2 R U R' U R U2 R' U
-(1,3,8,6)(4,5)          =&gt; R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3)(8,10)             =&gt; R U R' U R U2 R' U R U' R' U2 R U' R' U'
-(1,3)(5,9,7)(8,10)      =&gt; U R U' R' U2 R U2 R' U' R U' R'
-(1,3)(5,7,9)(8,10)      =&gt; R U R' U R U2 R' U2 R U R' U'
-(1,3)(4,9,7)(8,10)      =&gt; U R U R' U R U2 R' U R U R' U R U' U2 R' U' R U2 R' U' R U R'
-(1,3)(4,9,5)(8,10)      =&gt; U R U R' U R U2 R' U R U R' U'
-(1,3)(4,9)(5,7)(8,10)   =&gt; U R' U2 R U R' U R U2 R U' R' U' R U' U' R' U' R U' R' U'
-(1,3)(4,7,9)(8,10)      =&gt; R U' R' U R U2 R' U R U2 U R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,3)(4,7,5)(8,10)      =&gt; U R U R' U R U R' U2 R U' R' U'
-(1,3)(4,7)(5,9)(8,10)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U R' U'
-(1,3)(4,5,7)(8,10)      =&gt; U R U R' U2 R U' R' U' R U' R' U'
-(1,3)(4,5,9)(8,10)      =&gt; U R U' R' U' R U' U' R' U' R U' R' U'
-(1,3)(4,5)(7,9)(8,10)   =&gt; R' U' R U' R' U2 R2 U' R' U' R U2 R' U' R U R'
-(1,3,10,6,8)(5,7,9)     =&gt; U R U R' U R U2 R' U R U R' U R U R' U
-(1,3,10,6,8)(5,9,7)     =&gt; U R U' R' U R U2 R' U R U R' U'
-(1,3,10,6,8)            =&gt; R' U' R U' R' U2 R U' U' R U' R' U2 R U' R'
-(1,3,10,6,8)(4,5,9)     =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U' R U' R' U'
-(1,3,10,6,8)(4,5,7)     =&gt; R U2 R' U R U R2 U2 R U R' U R
-(1,3,10,6,8)(4,5)(7,9)  =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U R'
-(1,3,10,6,8)(4,9,7)     =&gt; R' U' R U' R' U' U' R U' R U R'
-(1,3,10,6,8)(4,9)(5,7)  =&gt; U R U R' U' R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,10,6,8)(4,9,5)     =&gt; U R U R' U2 R U2 R' U' R U' R'
-(1,3,10,6,8)(4,7)(5,9)  =&gt; R' U' R U' R' U2 R2 U' R' U
-(1,3,10,6,8)(4,7,9)     =&gt; U R U' R' U' U' R U' R' U' R U' R' U'
-(1,3,10,6,8)(4,7,5)     =&gt; R U2 R' U R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,3,6,10)(4,7,5,9)     =&gt; U' R U R' U' R U2 R' U' R U' R'
-(1,3,6,10)(4,7,9,5)     =&gt; R U R' U' R U' R'
-(1,3,6,10)(4,7)         =&gt; U R U R' U R U' U' R' U' R U' R' U' R U2 R' U'
-(1,3,6,10)(7,9)         =&gt; R U' R' U R U2 R' U' R U' R' U'
-(1,3,6,10)(5,9)         =&gt; U' R U' R' U' R U' R' U'
-(1,3,6,10)(5,7)         =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U2 R' U'
-(1,3,6,10)(4,5)         =&gt; R U R' U R U R' U' R U2 R' U'
-(1,3,6,10)(4,5,9,7)     =&gt; U' R U R2 U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,6,10)(4,5,7,9)     =&gt; R U' R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,3,6,10)(4,9)         =&gt; U R U R' U R U R' U2 R U R' U U2 R U R' U R U2 R' U
-(1,3,6,10)(4,9,5,7)     =&gt; U R' U2 R U R' U R R U' R' U' R U' R' U'
-(1,3,6,10)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U2
-(1,10,8,3,6)(2,7,5,4,9) =&gt; U' R U' R'
-(1,10,8,3,6)(2,7,4,9,5) =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U R' U'
-(1,10,8,3,6)(2,7)(4,9)  =&gt; U' R U' R' U' R U' U' R' U' R U' R' U'
-(1,10,8,3,6)(2,7,9,5,4) =&gt; U2 R U R' U'
-(1,10,8,3,6)(2,7,4)     =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U' R' U'
-(1,10,8,3,6)(2,7,5,9,4) =&gt; U R U R' U R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,10,8,3,6)(2,7)(4,5)  =&gt; U R U2 R' U R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,10,8,3,6)(2,7,4,5,9) =&gt; U R U R' U R U R' U' R' U' R U' R' U2 R U'
-(1,10,8,3,6)(2,7,9,4,5) =&gt; U2 R U2 R' U R U2 R' U
-(1,10,8,3,6)(2,7,9)     =&gt; U R' U2 R U R' U R2 U' R'
-(1,10,8,3,6)(2,7,5)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U2 R U' R' U'
-(1,10,8,3,6)(2,7)(5,9)  =&gt; U R' U2 R U R' U R U' R U R' U'
-(1,10,6,3)(2,7,4,9)     =&gt; U R U' R' U R U R' U'
-(1,10,6,3)(2,7,5)(4,9)  =&gt; U R U' R' U R U R' U2 R U2 R' U' R U' R' U'
-(1,10,6,3)(2,7)(4,9,5)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U
-(1,10,6,3)(2,7,5,4)     =&gt; U R U2 R' U R U R2 U2 R U R' U R
-(1,10,6,3)(2,7,4)(5,9)  =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R' U
-(1,10,6,3)(2,7,9,4)     =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U' R' U'
-(1,10,6,3)(2,7)         =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' R U' R' U2 R U' R'
-(1,10,6,3)(2,7,5,9)     =&gt; U R U R' U R U R' U' R U2 R' U' R U' R'
-(1,10,6,3)(2,7,9,5)     =&gt; U2 R U R' U' R' U' R U' R' U2 R U'
-(1,10,6,3)(2,7,4,5)     =&gt; U R U' R' U2 R U' R'
-(1,10,6,3)(2,7,9)(4,5)  =&gt; U2 R U R' U' R' U' R U' R' U2 R U2 R U2 R' U' R U' R' U'
-(1,10,6,3)(2,7)(4,5,9)  =&gt; U R U R' U R U R' U' R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,10)(2,7)(4,9)(6,8)   =&gt; U R' U2 R U R' U R U R U' R' U' R U R' U'
-(1,10)(2,7,4,9,5)(6,8)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U' R U' R' U'
-(1,10)(2,7,5,4,9)(6,8)  =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R'
-(1,10)(2,7,4)(6,8)      =&gt; U R U2 R' U R U2 R' U R U2 R' U
-(1,10)(2,7,9,5,4)(6,8)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U' R U' R' U'
-(1,10)(2,7,5,9,4)(6,8)  =&gt; R U' R' U' R U R' U'
-(1,10)(2,7,9)(6,8)      =&gt; U2 R U R' U' R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,10)(2,7)(5,9)(6,8)   =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R R U' R' U' R U' R' U'
-(1,10)(2,7,5)(6,8)      =&gt; U R U2 R' U R U R' U'
-(1,10)(2,7,9,4,5)(6,8)  =&gt; U2 R U R' U' R U2 R' U' R U' R'
-(1,10)(2,7)(4,5)(6,8)   =&gt; U R U R' U R U2 R' U2 R U' R' U' R U2 R' U'
-(1,10)(2,7,4,5,9)(6,8)  =&gt; U2 R U' R' U2 R U' R' U' R U' R'
-(1,10,3,8)(2,7,5,4)     =&gt; U R U' R' U' R U2 R'
-(1,10,3,8)(2,7,9,4)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U'
-(1,10,3,8)(2,7,4)(5,9)  =&gt; U R U R' U R U R' U2 R U2 R' U' R U' R' U'
-(1,10,3,8)(2,7)(4,5,9)  =&gt; U R U R' U R U R' U'
-(1,10,3,8)(2,7,4,5)     =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U2 R'
-(1,10,3,8)(2,7,9)(4,5)  =&gt; R' U' R U' R' U2 R U2 R U' R' U' R U R'
-(1,10,3,8)(2,7)(4,9,5)  =&gt; U R U' R' U R U R' U' R U2 R' U' R U' R'
-(1,10,3,8)(2,7,5)(4,9)  =&gt; R U R' U R U2 R' U R U' R' U'
-(1,10,3,8)(2,7,4,9)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U R'
-(1,10,3,8)(2,7,5,9)     =&gt; U R U R' U R U2 R' U R U2 R' U
-(1,10,3,8)(2,7)         =&gt; U R' U2 R U R' U R U2 R U' R' U' R U2 R'
-(1,10,3,8)(2,7,9,5)     =&gt; U2 R U R2 U2 R U R' U R
-(1,10,8,3,6)(2,4,9)     =&gt; R U R' U R U2 R' U R U' R'
-(1,10,8,3,6)(2,4,9,5,7) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U R' U'
-(1,10,8,3,6)(2,4,9,7,5) =&gt; U R U' R' U R U R' U R' U' R U' R' U2 R U'
-(1,10,8,3,6)(2,4,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U' R' U'
-(1,10,8,3,6)(2,4,7,5,9) =&gt; U R U R' U R U R'
-(1,10,8,3,6)(2,4,7,9,5) =&gt; U R U R' U R U2 R' U' R U R' U'
-(1,10,8,3,6)(2,4)(7,9)  =&gt; U2 R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,10,8,3,6)(2,4)(5,9)  =&gt; R U R' U R U' R' U'
-(1,10,8,3,6)(2,4)(5,7)  =&gt; U R U2 R' U R U' R' U' R U' R' U'
-(1,10,8,3,6)(2,4,5,7,9) =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R'
-(1,10,8,3,6)(2,4,5)     =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R' U'
-(1,10,8,3,6)(2,4,5,9,7) =&gt; U R U R' U R U R' U2 R U2 R' U' R U' R'
-(1,10,6,3)(2,4,9,5)     =&gt; U' R U' R' U
-(1,10,6,3)(2,4,9)(5,7)  =&gt; U' R U' R' U' R U' U' R' U' R U' R'
-(1,10,6,3)(2,4,9,7)     =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R2 U R'
-(1,10,6,3)(2,4,5)(7,9)  =&gt; U2 R U R'
-(1,10,6,3)(2,4,5,7)     =&gt; R' U' R U' R' U2 R U' R U' R' U2 R U' R'
-(1,10,6,3)(2,4,5,9)     =&gt; U R U R' U R U' R' U' R U' R' U'
-(1,10,6,3)(2,4,7,5)     =&gt; U R U2 R' U R U R' U' R U R' U R U2 R' U
-(1,10,6,3)(2,4,7,9)     =&gt; U2 R U R' U U R' U U R U R' U R
-(1,10,6,3)(2,4,7)(5,9)  =&gt; U R U R' U R U2 R' U R' U' R U' R' U2 R U' U2 R U' R' U
-(1,10,6,3)(2,4)         =&gt; U R U2 R' U R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,10,6,3)(2,4)(5,7,9)  =&gt; U R' U2 R U R' U R2 U' R' U
-(1,10,6,3)(2,4)(5,9,7)  =&gt; U R' U2 R U R' U R U' R U R'
-(1,10)(2,4,9,5,7)(6,8)  =&gt; U R U' R' U R U R'
-(1,10)(2,4,9,7,5)(6,8)  =&gt; R' U' R U' R' U2 R U' U2 R U' R' U2
-(1,10)(2,4,9)(6,8)      =&gt; U R U' R' U R U R' U2 R U2 R' U' R U' R'
-(1,10)(2,4,5)(6,8)      =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U'
-(1,10)(2,4,5,7,9)(6,8)  =&gt; R' U' R U' R' U2 R R U' R' U2 R U' R' U' R U' R'
-(1,10)(2,4,5,9,7)(6,8)  =&gt; U R U R' U R U R' U' R U R' U R U2 R' U
-(1,10)(2,4)(6,8)(7,9)   =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R2 U' R' U2
-(1,10)(2,4)(5,7)(6,8)   =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' U' R' U' R U' R' U' R U2 R' U'
-(1,10)(2,4)(5,9)(6,8)   =&gt; U R' U2 R U R' U R U' R U' R' U' R U' R' U'
-(1,10)(2,4,7,9,5)(6,8)  =&gt; U' U' R U' R' U' R U' R' U'
-(1,10)(2,4,7)(6,8)      =&gt; U' R U2 R' U' R U2 R' U' R U2 R' U'
-(1,10)(2,4,7,5,9)(6,8)  =&gt; U R U R' U R U' R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,10,3,8)(2,4,7,5)     =&gt; U R U R' U R U2 R' U2 R U' R' U' R U2 R'
-(1,10,3,8)(2,4,7)(5,9)  =&gt; U R U R' U R U R' U R' U2 R U R' U R U' R U2 R' U' R U' R' U'
-(1,10,3,8)(2,4,7,9)     =&gt; U2 R U R' U R' U' R U' R' U2 R U'
-(1,10,3,8)(2,4,9,7)     =&gt; U R U' R' U R U' R' U' R U' R' U'
-(1,10,3,8)(2,4,9,5)     =&gt; R U' R' U' R U2 R' U' R U R' U'
-(1,10,3,8)(2,4,9)(5,7)  =&gt; U R' U2 R U R' U R U R U' R' U' R U R'
-(1,10,3,8)(2,4,5,9)     =&gt; R U' R' U' R U R'
-(1,10,3,8)(2,4,5)(7,9)  =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U' R U' R'
-(1,10,3,8)(2,4,5,7)     =&gt; U R U2 R' U R U R' U U R' U U R U R' U R
-(1,10,3,8)(2,4)         =&gt; U R U2 R' U R U R'
-(1,10,3,8)(2,4)(5,7,9)  =&gt; U2 R U R' U U2 R U R' U R U2 R' U
-(1,10,3,8)(2,4)(5,9,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R2 U' R' U' R U' R'
-(1,10,8,3,6)(2,5,7,4,9) =&gt; R' U' R U' R' U2 R U' U2 R U' R'
-(1,10,8,3,6)(2,5)(4,9)  =&gt; U R U' R' U R U R' U2
-(1,10,8,3,6)(2,5,4,9,7) =&gt; R U R' U R U2 R' U2 R U' R' U' R U2 R' U' R U R'
-(1,10,8,3,6)(2,5,7)     =&gt; U R' U2 R U R' U R U2 R U' R' U2 R U' R' U'
-(1,10,8,3,6)(2,5)(7,9)  =&gt; U2 R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,10,8,3,6)(2,5,9)     =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U R U' R'
-(1,10,8,3,6)(2,5,7,9,4) =&gt; U2 R U R' U2 R' U' R U' R' U2 R U'
-(1,10,8,3,6)(2,5,4)     =&gt; U R U' R' U2 R U' R' U'
-(1,10,8,3,6)(2,5,9,7,4) =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R'
-(1,10,8,3,6)(2,5,4,7,9) =&gt; U2 R U R' U R U2 R' U' R U' R'
-(1,10,8,3,6)(2,5)(4,7)  =&gt; U R U2 R' U R U R' U2 U R' U2 R U R' U R
-(1,10,8,3,6)(2,5,9,4,7) =&gt; U R U R' U R U R' U' R U2 R' U' R U' R' U'
-(1,10,6,3)(2,5,4,9)     =&gt; U R U' R' U R U R' U2 R' U' R U' R' U2 R U'
-(1,10,6,3)(2,5,7)(4,9)  =&gt; U R' U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R' U'
-(1,10,6,3)(2,5)(4,9,7)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' R'
-(1,10,6,3)(2,5,4,7)     =&gt; U R U2 R' U R U R' U2
-(1,10,6,3)(2,5,9)(4,7)  =&gt; U R U R' U R U R' R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,10,6,3)(2,5)(4,7,9)  =&gt; U2 R U R' U U R' U U R U R' U R U' R U2 R' U' R U' R' U'
-(1,10,6,3)(2,5,4)(7,9)  =&gt; U' R U2 R' U' R U' R' U R U R'
-(1,10,6,3)(2,5,9,4)     =&gt; U2 R U' R' U2 R U' R' U' R U' R' U'
-(1,10,6,3)(2,5,7,4)     =&gt; U' R U2 R' U' R U2 R' U2 R U' R'
-(1,10,6,3)(2,5)         =&gt; U R U2 R' U R U' R' U' R U' R' U R U R' U R U2 R' U
-(1,10,6,3)(2,5,7,9)     =&gt; U2 R U R' U2 R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,10,6,3)(2,5,9,7)     =&gt; U R U R' U R U R' U' R' U2 R U R' U R
-(1,10)(2,5,4,9,7)(6,8)  =&gt; R U R' U R U2 R' U R U' R' U2
-(1,10)(2,5)(4,9)(6,8)   =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U2 R U' R' U' R U R' U'
-(1,10)(2,5,7,4,9)(6,8)  =&gt; U R U' R' U R U R' U' R U2 R' U' R U' R' U'
-(1,10)(2,5,4)(6,8)      =&gt; U R U R' U R U2 R' U R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U'
-(1,10)(2,5,9,7,4)(6,8)  =&gt; U R U R' U R U R' U2
-(1,10)(2,5,7,9,4)(6,8)  =&gt; U2 R U R' U2 U R' U2 R U R' U R
-(1,10)(2,5,4,7,9)(6,8)  =&gt; U2 R U R' U2 R U R' U R U2 R' U
-(1,10)(2,5,9,4,7)(6,8)  =&gt; U R U R' U R U' R' U' R U' R' U R U R' U R U2 R' U
-(1,10)(2,5)(4,7)(6,8)   =&gt; U R' U2 R U R' U R U2 R U' R' U' R U2 R' U'
-(1,10)(2,5)(6,8)(7,9)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U2
-(1,10)(2,5,7)(6,8)      =&gt; U R U' R' U' R U2 R' U'
-(1,10)(2,5,9)(6,8)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U R' U' U' R U' R' U' R U' R'
-(1,10,3,8)(2,5,9,7)     =&gt; R U R' U R U R' U' R U' R'
-(1,10,3,8)(2,5)         =&gt; U R U2 R' U R U R' U' R U2 R' U' R U' R' U'
-(1,10,3,8)(2,5,7,9)     =&gt; U2 R U R' U2
-(1,10,3,8)(2,5,7,4)     =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R'
-(1,10,3,8)(2,5,4)(7,9)  =&gt; U R U R' U R U' U' R' U' R U' R' U' R U' R'
-(1,10,3,8)(2,5,9,4)     =&gt; U R U R' U R U R' U R U2 R' U' R U' R'
-(1,10,3,8)(2,5,7)(4,9)  =&gt; U' R U' R' U'
-(1,10,3,8)(2,5,4,9)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U2 R'
-(1,10,3,8)(2,5)(4,9,7)  =&gt; U R U' R' U R U R' U U R U R' U R U2 R' U
-(1,10,3,8)(2,5,9)(4,7)  =&gt; U R U R' U R U R' U R' U U R U R' U R U R U R' U R U2 R' U
-(1,10,3,8)(2,5,4,7)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U2 R U' R' U' R U2 R'
-(1,10,3,8)(2,5)(4,7,9)  =&gt; U R' U2 R U R' U R2 U' R' U'
-(1,10,6,3)(4,9)         =&gt; U' R U2 R' U' R U' R' U2 U' R U' R' U2 R U' R' U' R U' R' U'
-(1,10,6,3)(4,9,5,7)     =&gt; R U R' U R U2 R' U R U' R' U
-(1,10,6,3)(4,9,7,5)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U R'
-(1,10,6,3)(4,7)         =&gt; U R U R' U R U2 R' U2 R U' R' U2 R U' R'
-(1,10,6,3)(4,7,9,5)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R2 U' R' U
-(1,10,6,3)(4,7,5,9)     =&gt; U R U R' U R U R' R' U' R U' R' U2 R U'
-(1,10,6,3)(7,9)         =&gt; U R U R' U R U2 R' U' R U R'
-(1,10,6,3)(5,9)         =&gt; U R U R' U R U R' U
-(1,10,6,3)(5,7)         =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U2 R U' R' U2 R U' R'
-(1,10,6,3)(4,5)         =&gt; U R U2 R' U R U' R' U' R U' R'
-(1,10,6,3)(4,5,7,9)     =&gt; U2 R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,10,6,3)(4,5,9,7)     =&gt; R U R' U R U' R'
-(1,10)(4,9,7)(6,8)      =&gt; U' R U' R' U2
-(1,10)(4,9)(5,7)(6,8)   =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U2 R' U'
-(1,10)(4,9,5)(6,8)      =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' R U' R' U'
-(1,10)(4,7,5)(6,8)      =&gt; U R U R' U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U'
-(1,10)(4,7)(5,9)(6,8)   =&gt; R U R' U R U R' U' R U' R' U'
-(1,10)(4,7,9)(6,8)      =&gt; U2 R U R' U
-(1,10)(6,8)             =&gt; R' U' R U' R' U' U' R U' R U' R' U' R U2 R' U'
-(1,10)(5,9,7)(6,8)      =&gt; U R U R' U R U R' U R U2 R' U' R U' R' U'
-(1,10)(5,7,9)(6,8)      =&gt; U R U R' U R U' U' R' U' R U' R' U' R U' R' U'
-(1,10)(4,5)(6,8)(7,9)   =&gt; U R' U2 R U R' U R2 U' R' U2
-(1,10)(4,5,7)(6,8)      =&gt; U R U2 R' U R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,10)(4,5,9)(6,8)      =&gt; U R U R' U R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,10,8,3,6)(4,9,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U' R' U'
-(1,10,8,3,6)(4,9)(5,7)  =&gt; U R U' R' U R U' R' U' R U' R'
-(1,10,8,3,6)(4,9,7)     =&gt; R U' R' U' R U2 R' U' R U R'
-(1,10,8,3,6)(4,7,5)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U' R U' R' U' U' R U' R' U'
-(1,10,8,3,6)(4,7,9)     =&gt; U2 R U R' U R U2 R' U' R U' R' U' R U2 R' U' R U' R' U'
-(1,10,8,3,6)(4,7)(5,9)  =&gt; U R U R' U R U R' U R U R' U R U2 R' U
-(1,10,8,3,6)(4,5)(7,9)  =&gt; U2 R U R' U R' U2 R U R' U R
-(1,10,8,3,6)(4,5,9)     =&gt; U R U R' U R U R' U2 R' U U R U R' U R U R U R' U R U2 R' U
-(1,10,8,3,6)(4,5,7)     =&gt; U R U2 R' U R U R' U
-(1,10,8,3,6)(5,7,9)     =&gt; U' R U2 R' U' R U' R' U R U R' U'
-(1,10,8,3,6)            =&gt; U' R U2 R' U' R U2 R' U2 R U' R' U'
-(1,10,8,3,6)(5,9,7)     =&gt; U R U R' U R U R' U2 R U2 R' U' R U' R' U R U R' U R U2 R' U
-(1,10,3,8)(4,7)         =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U' R U' R' U' R U2 R'
-(1,10,3,8)(4,7,9,5)     =&gt; U2 R U R' U R' U' R U' R' U2 R2 U R' U R U2 R' U
-(1,10,3,8)(4,7,5,9)     =&gt; U R U R' U R U R' U R' U2 R U R' U R
-(1,10,3,8)(5,9)         =&gt; U R U R' U R U2 R' U R U' R' U' R U2 R' U' R U R' U'
-(1,10,3,8)(5,7)         =&gt; U' R U2 R' U' R U2 R' U' R U2 R'
-(1,10,3,8)(7,9)         =&gt; U' U' R U' R' U' R U' R'
-(1,10,3,8)(4,9)         =&gt; R' U' R U' R' U2 R U' U2 R U' R' U'
-(1,10,3,8)(4,9,5,7)     =&gt; U R U' R' U R U R2 U' R U' R' U2 R U'
-(1,10,3,8)(4,9,7,5)     =&gt; U R U' R' U R U R' U
-(1,10,3,8)(4,5,9,7)     =&gt; U R' U2 R U R' U R U' R U' R' U' R U' R'
-(1,10,3,8)(4,5)         =&gt; U R U U R' U R U R' U R U R' U R U2 R' U
-(1,10,3,8)(4,5,7,9)     =&gt; U2 R U R' U R U2 R' U' R U' R' U'
-(1,10,8,3,6)(2,9,5,7,4) =&gt; R' U' R U' R' U2 R2 U R' U'
-(1,10,8,3,6)(2,9,4)     =&gt; R U R' U R U R' U U R U R'
-(1,10,8,3,6)(2,9,7,5,4) =&gt; R U R' U R U R' U U R U R' U' R' U' R U' R' U2 R U'
-(1,10,8,3,6)(2,9)(5,7)  =&gt; U' R U2 R' U' R U' R' U2 R U' R'
-(1,10,8,3,6)(2,9,7)     =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U2 R U' R' U' R U2 R' U' R U R'
-(1,10,8,3,6)(2,9,5)     =&gt; U R U R' U R U2 R' U R U R' U R U' R' U'
-(1,10,8,3,6)(2,9,4,5,7) =&gt; R U R' U R U R' U2 R U R' U U R' U2 R U R' U R
-(1,10,8,3,6)(2,9)(4,5)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R'
-(1,10,8,3,6)(2,9,7,4,5) =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U' R U R'
-(1,10,8,3,6)(2,9,5,4,7) =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U R' U'
-(1,10,8,3,6)(2,9)(4,7)  =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U' R'
-(1,10,8,3,6)(2,9,4,7,5) =&gt; R U R' U R U R' U U R U R' U U R U2 R' U' R U' R'
-(1,10)(2,9,7,5,4)(6,8)  =&gt; R U R' U R U R' U2 R U R' R' U2 R U R' U R
-(1,10)(2,9,5,7,4)(6,8)  =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U' R' U'
-(1,10)(2,9,4)(6,8)      =&gt; R U R' U R U2 R' U2 R U' R' U' R U R' U'
-(1,10)(2,9,5,4,7)(6,8)  =&gt; R U R' U R U R' U U R U R' U U
-(1,10)(2,9,4,7,5)(6,8)  =&gt; U R U R' U R U2 R' U R U' R' U' R U R' U'
-(1,10)(2,9)(4,7)(6,8)   =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R'
-(1,10)(2,9)(4,5)(6,8)   =&gt; R U R' U R U R' U' U' R U' R' U' R U' R'
-(1,10)(2,9,7,4,5)(6,8)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U'
-(1,10)(2,9,4,5,7)(6,8)  =&gt; R U R' U R U R' U U R U R' U R' U' R U' R' U2 R U'
-(1,10)(2,9,7)(6,8)      =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U2
-(1,10)(2,9)(5,7)(6,8)   =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R'
-(1,10)(2,9,5)(6,8)      =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U' R' U' R U' R' U'
-(1,10,3,8)(2,9,7,4)     =&gt; R U R' U R U R' U U R U2 R' U R U2 R' U
-(1,10,3,8)(2,9,4)(5,7)  =&gt; U' R U2 R' U' R U' R' U' R U R' U R U2 R' U R U' R' U'
-(1,10,3,8)(2,9,5,4)     =&gt; U' R U2 R' U' R U' R' U' R U' R' U' R U' U' R' U' R U R' U'
-(1,10,3,8)(2,9,5,7)     =&gt; R U R' U R U R' U U R U R' U R U2 R' U' R U' R'
-(1,10,3,8)(2,9)         =&gt; U R U R' U R U2 R' U R U' R' U' R U R'
-(1,10,3,8)(2,9,7,5)     =&gt; R U R' U R U R' U U R U R' U'
-(1,10,3,8)(2,9)(4,7,5)  =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U R U' R' U' R U R'
-(1,10,3,8)(2,9,4,7)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U'
-(1,10,3,8)(2,9,5)(4,7)  =&gt; R U R' U R U R' U U R U R' U U R' U' R U' R' U2 R U'
-(1,10,3,8)(2,9)(4,5,7)  =&gt; R U R' U R U2 R' U2 R U' R' U' R U R'
-(1,10,3,8)(2,9,7)(4,5)  =&gt; U R U R' U R U2 R' U R U R' U R U R' U' R U' R'
-(1,10,3,8)(2,9,4,5)     =&gt; U' R U2 R' U' R U' R' U' R' U' R U' R' U' U' R U R U' R' U'
-(1,10,6,3)(2,9,7,5)     =&gt; U R U R' U R U2 R' U2 R' U2 R U R' U R U' R U R'
-(1,10,6,3)(2,9)         =&gt; R U R' U R U R' U U R U R2 U' R U' R' U2 R U'
-(1,10,6,3)(2,9,5,7)     =&gt; R U R' U R U R' U U R U R' U U R U R' U R U2 R' U
-(1,10,6,3)(2,9)(4,5,7)  =&gt; R U R' U R U R' U U R U R' U
-(1,10,6,3)(2,9,7)(4,5)  =&gt; R' U' R U' R' U2 R2 U R'
-(1,10,6,3)(2,9,4,5)     =&gt; U R U R' U R U2 R' U' R U' R' U' U' R U' R' U' R U' R' U'
-(1,10,6,3)(2,9,4)(5,7)  =&gt; R U R' U R U R' U' U' R U' R' U' R U' R' U'
-(1,10,6,3)(2,9,5,4)     =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' U2
-(1,10,6,3)(2,9,7,4)     =&gt; U R U R' U R U2 R' U R U R' U R U' R'
-(1,10,6,3)(2,9,5)(4,7)  =&gt; R U R' U R U R' U U R U R' U U2 R' U2 R U R' U R
-(1,10,6,3)(2,9)(4,7,5)  =&gt; U' R U2 R' U' R U' R' U' U' R U' R' U' R U2 R' U' R U' R'
-(1,10,6,3)(2,9,4,7)     =&gt; U' R U2 R' U' R U' R2 U2 R U R' U R U' R U' R' U' U' R U' R' U' R U' R' U'
-</code></pre></div></div>
-
-<ul>
-  <li>文章同时发表于 <a href="https://blog.csdn.net/seavers/article/details/132921616">https://blog.csdn.net/seavers/article/details/132921616?spm=1001.2014.3001.5502</a></li>
-</ul>
-</div>
   
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2018-09-18-maven-archetype-multimodule.html">maven构建archetype多模块工程模板的问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2018-09-18T20:40:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>今天遇到了maven创建archetype多模块工程时的很多问题, 记录一下</p>
-
-<h4 id="archetype工程的创建可以参考">archetype工程的创建可以参考:</h4>
-<ul>
-  <li><a href="http://maven.apache.org/archetype/maven-archetype-plugin/index.html">官方入口</a></li>
-  <li><a href="http://maven.apache.org/archetype/maven-archetype-plugin/examples/create-multi-module-project.html">官方文档</a></li>
-</ul>
-
-<h4 id="问题如下">问题如下:</h4>
-
-<ul>
-  <li>多模块时生成archetype-metadata.xml的问题
-    <ul>
-      <li>单模块工程时, 可以直接写archetype-metadata.xml文件</li>
-      <li>多模块工程时, 不可以写archetype-metadata.xml, 因为外层工程没有src目录</li>
-      <li>解决方案: 多模块工程可以配置出archetype-metadata.xml, 参考 <a href="http://maven.apache.org/archetype/maven-archetype-plugin/examples/create-with-property-file.html">这里</a></li>
-    </ul>
-  </li>
-  <li>无法拷贝.gitignore文件的问题
-    <ul>
-      <li>参考<a href="https://stackoverflow.com/questions/7981060/maven-archetype-plugin-doesnt-let-resources-in-archetype-resources-through">这里</a>的解决方案</li>
-    </ul>
-  </li>
-</ul>
-
-<h4 id="解决方案如下">解决方案如下:</h4>
-<ul>
-  <li>将.gitignore改名为__gitignore__</li>
-  <li>创建archetype.properties文件</li>
-</ul>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>## generate for archetype-metadata.xml
-excludePatterns=archetype.properties,*.iml,.idea/,.idea/libraries,logs/,build.sh
-
-
-## generate .gitignore file
-gitignore=.gitignore
-</code></pre></div></div>
-
-<ul>
-  <li>修改pom文件, 多模块工程最外层的pom文件</li>
-</ul>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    &lt;build&gt;
-        &lt;plugins&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;
-                &lt;version&gt;3.0.2&lt;/version&gt;
-                &lt;configuration&gt;
-                    &lt;addDefaultExcludes&gt;false&lt;/addDefaultExcludes&gt;      &lt;!-- 解决复制.gitignore的问题 --&gt;
-                &lt;/configuration&gt;
-            &lt;/plugin&gt;
-            &lt;plugin&gt;
-                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-                &lt;artifactId&gt;maven-archetype-plugin&lt;/artifactId&gt;
-                &lt;version&gt;3.0.1&lt;/version&gt;
-                &lt;configuration&gt;
-                    &lt;propertyFile&gt;archetype.properties&lt;/propertyFile&gt;   &lt;!-- 解决排除.idea目录的问题 --&gt;
-                &lt;/configuration&gt;
-            &lt;/plugin&gt;
-        &lt;/plugins&gt;
-    &lt;/build&gt;
-</code></pre></div></div>
-
-<p>完美解决以上两个问题</p>
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016-02-12-java-native-list.html">java native方法列表</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2016-02-12T12:40:08+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>想了解一下JDK里有多少方法是用navtive实现的, 所以统计了下</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">getClass</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">hashCode</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">notifyAll</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Object</span><span class="o">.</span><span class="na">wait</span><span class="o">(</span><span class="kt">long</span> <span class="n">timeout</span><span class="o">);</span>
-
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">intern</span><span class="o">();</span>
-
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Throwable</span><span class="o">.</span><span class="na">fillInStackTrace</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Throwable</span><span class="o">.</span><span class="na">getStackTraceDepth</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Throwable</span><span class="o">.</span><span class="na">getStackTraceElement</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">);</span>
-
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">forName0</span><span class="o">(</span><span class="nc">String</span> <span class="kd">native</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">initialize</span><span class="o">,</span> <span class="nc">ClassLoader</span> <span class="n">loader</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isInstance</span><span class="o">(</span><span class="nc">Object</span> <span class="n">obj</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">cls</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isInterface</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isArray</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">isPrimitive</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">getName0</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">getClassLoader0</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Class</span><span class="o">.</span><span class="na">getSuperclass</span><span class="o">();</span>
-<span class="c1">//.......</span>
-
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">setIn0</span><span class="o">(</span><span class="nc">InputStream</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">setOut0</span><span class="o">(</span><span class="nc">PrintStream</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">setErr0</span><span class="o">(</span><span class="nc">PrintStream</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">arraycopy</span><span class="o">(</span><span class="nc">Object</span><span class="o">,</span> <span class="kt">int</span><span class="o">,</span> <span class="nc">Object</span><span class="o">,</span> <span class="kt">int</span><span class="o">,</span> <span class="kt">int</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">identityHashCode</span><span class="o">(</span><span class="nc">Object</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">initProperties</span><span class="o">(</span><span class="nc">Properties</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">System</span><span class="o">.</span><span class="na">mapLibraryName</span><span class="o">(</span><span class="nc">String</span><span class="o">);</span>
-
-
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">registerNatives</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">yield</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="kt">long</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">start0</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">isInterrupted</span><span class="o">(</span><span class="kt">boolean</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">isAlive</span><span class="o">();</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">holdsLock</span><span class="o">(</span><span class="nc">Object</span><span class="o">);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">dumpThreads</span><span class="o">(</span><span class="nc">Thread</span><span class="o">[]);</span>
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Thread</span><span class="o">.</span><span class="na">getThreads</span><span class="o">();</span>
-<span class="c1">//......</span>
-
-<span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">reflect</span><span class="o">.</span><span class="na">Proxy</span><span class="o">.</span><span class="na">defineClass0</span><span class="o">(</span><span class="nc">ClassLoader</span><span class="o">,</span> <span class="nc">String</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[],</span> <span class="kt">int</span><span class="o">,</span> <span class="kt">int</span><span class="o">);</span>
-
-</code></pre></div></div>
-
-<p>得出以下结论:</p>
-
-<ul>
-  <li>这里的Object,Class,Throwable,System,Thread 都是比较底层的功能,都有native的方法</li>
-  <li>直接依赖了包装了native的类, 如
-    <ul>
-      <li>Math -&gt; StrictMath</li>
-      <li>File -&gt; FileSystem</li>
-      <li>Socket -&gt; PlainSocketImpl</li>
-    </ul>
-  </li>
-  <li>java.lang.reflect包里的多数是Pojo, 都是从Class获取到的Pojo, 然后是纯内存操作, 但 Array 比较例外</li>
-  <li>有很多纯内存计算, 没有使用native方法了, 如
-    <ul>
-      <li>String里编码转换</li>
-      <li>Date的api</li>
-      <li>ArrayList, HashMap的API</li>
-      <li>对象的序列化</li>
-      <li>BigInteger, BigDecimal数字运算</li>
-      <li>字符串格式化</li>
-    </ul>
-  </li>
-  <li>System, Thread, Runtime, Process都是系统核心紧密的, 几乎都需要调用至native方法的</li>
-  <li>Class, Object则是语言相关的, 需要操作至字节码, 也几乎都是调用至native方法的</li>
-  <li>还有比较特殊的 sun.misc.Unsafe 类, 主要是互斥锁类的API, 用于concurrent包</li>
-</ul>
-
-<p>而jdk之上, 几乎就很少有native了, 如以下</p>
-
-<ul>
-  <li>http的实现</li>
-  <li>sql,jdbc,log的实现</li>
-  <li>各类app应用</li>
-</ul>
-
-<p>所以总结了下, 涉及native的共几类</p>
-
-<ul>
-  <li>系统相关的 System, Runtime, Process, Thread, Unsafe, File, Socket</li>
-  <li>语言相关的 Object, Class, Array, ClassLoader</li>
-  <li>计算密集型的 StrictMath</li>
-</ul>
-
-<p>其实看native源代码是最直观的了, 点击 <a href="http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/file/tip/src/share/native/java/lang/">http://hg.openjdk.java.net/jdk7u/jdk7u/jdk/file/tip/src/share/native/java/lang/</a>
-或
-<a href="https://github.com/dmlloyd/openjdk/tree/jdk7u/jdk7u/jdk/src/share/native/java/lang">https://github.com/dmlloyd/openjdk/tree/jdk7u/jdk7u/jdk/src/share/native/java/lang</a></p>
+</article>
 
 </div>
-  
-  
 
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016-02-07-jekyll-update.html">升级jekyll</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2016-02-07T15:08:29+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>原先博客是使用 octopress 搭建的blog, jekyll版本是0.12
-其中一个代码弊端是blog的源码中, source与octopress的部分代码耦合
-所以希望能将代码分离, 这里采用直接jekyll的方案</p>
-
-<p>使用jekyll的方案</p>
-
-<ul>
-  <li>jekyll3 需要ruby2.0以上版本,安装总是出错,解决方案</li>
-</ul>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo ln -sf ~/.rvm/rubies/ruby-2.2.1/bin/ruby /usr/bin/ruby
-sudo ln -sf ~/.rvm/rubies/ruby-2.2.1/bin/gem /usr/bin/gem
-</code></pre></div></div>
-
-<ul>
-  <li>
-    <p>jekyll3升级了很多基本组件, 也存在很多的不兼容<br />
- markdown的解析组件有maruku|rdiscount|redcarpet|kramdown, 其中默认移除redcarpet, 采用kramdown</p>
-
-    <table>
-      <tbody>
-        <tr>
-          <td>highlighter的解析组件有pygments</td>
-          <td>coderay</td>
-          <td>rouge, 其中默认中移除pygments, 采用rouge</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <p>原先的markdown使用```做为code block的符号, 新的kramdown没有默认支持</p>
-    <ul>
-      <li>jekyll2中使用 kramdown.input=GFM , 可以继续使用</li>
-      <li>jekyll3.1.1时, 因为bug的原因, 无法支持,  参考 <a href="http://www.tuicool.com/articles/aQ3aqq">http://www.tuicool.com/articles/aQ3aqq</a> 可以解决</li>
-      <li>但是```前有没有换行符, 对页面的展现, 有着不同的展示方案</li>
-    </ul>
-  </li>
-</ul>
-
-<h2 id="自己遇到的一些bug">自己遇到的一些bug</h2>
-<ul>
-  <li>Q: Don’t know how to build task ‘default’</li>
-  <li>A: rake -v 不支持, 应该是 rake -V ,也就是说后面的命令有问题</li>
-  <li>Q: jekyll requires Ruby version &gt;= 2.0.0.</li>
-  <li>A: rvm是安排在当前用户的, sudo时使用的 /usr/bin/ruby /usr/bin/gem的, 需要修正
-    另外: ubuntu的ruby2.0也有问题, 切换至/usr/bin/ruby切换至rvm的2.2时, 问题解决</li>
-  <li>Q: ERROR: While executing gem … (TypeError) no implicit conversion of nil int</li>
-  <li>A: 同上</li>
-</ul>
-
-<hr />
-
-<p>参考文档:</p>
-<ol>
-  <li><a href="http://www.tuicool.com/articles/rAnmQvB">Jekyll kramdown配置</a></li>
-</ol>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014-11-25-mybatis-dong-tai-sao-miao-xml.html">mybatis 动态扫描xml</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-11-25T08:34:29+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>之前在java工程中引入mybatis, 在配置xml时总是这样子的</p>
-
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"userMapper"</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperFactoryBean"</span><span class="nt">&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"mapperInterface"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper.auth.UserMapper"</span> <span class="nt">/&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
-	<span class="nt">&lt;/bean&gt;</span>
-	
-	<span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"permissionMapper"</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperFactoryBean"</span><span class="nt">&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"mapperInterface"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper.auth.PermissionMapper"</span> <span class="nt">/&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
-	<span class="nt">&lt;/bean&gt;</span>
-	
-	<span class="nt">&lt;bean</span> <span class="na">id=</span><span class="s">"roleMapper"</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperFactoryBean"</span><span class="nt">&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"mapperInterface"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper.auth.RoleMapper"</span> <span class="nt">/&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
-	<span class="nt">&lt;/bean&gt;</span>
-</code></pre></div></div>
-
-<p>系统每增加一个mapper都要去配置一个bean, 这样不仅繁锁,而且多人编辑文件时,容易引起代码冲突</p>
-
-<p>其实可以使用自动扫描的方式去加载所有的mapper文件,方法如下:</p>
-
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nt">&lt;bean</span> <span class="na">class=</span><span class="s">"org.mybatis.spring.mapper.MapperScannerConfigurer"</span><span class="nt">&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"basePackage"</span> <span class="na">value=</span><span class="s">"com.company.application.mapper"</span> <span class="nt">/&gt;</span>
-		<span class="nt">&lt;property</span> <span class="na">name=</span><span class="s">"sqlSessionFactory"</span> <span class="na">ref=</span><span class="s">"sqlSessionFactory"</span> <span class="nt">/&gt;</span>
-	<span class="nt">&lt;/bean&gt;</span>
-</code></pre></div></div>
-
-<p>这个MapperScannerConfigurer是在mybatis-spring包中定义的
-引入方法为</p>
-
-<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nt">&lt;dependency&gt;</span>
-		<span class="nt">&lt;groupId&gt;</span>org.mybatis<span class="nt">&lt;/groupId&gt;</span>
-		<span class="nt">&lt;artifactId&gt;</span>mybatis-spring<span class="nt">&lt;/artifactId&gt;</span>
-		<span class="nt">&lt;version&gt;</span>1.1.1<span class="nt">&lt;/version&gt;</span>
-	<span class="nt">&lt;/dependency&gt;</span>
-</code></pre></div></div>
-
-<p>如果是 MyBatis-Spring 1.2.0 以上, 还有一种更简单的方法, <mybatis:scan></mybatis:scan>
-见http://mybatis.github.io/spring/mappers.html    (英文)
-或http://mybatis.github.io/spring/zh/mappers.html (中文)</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014-01-19-ruby-multiple-return.html">ruby语法糖 - 多返回值</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-19T13:01:18+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>前几天写代码的时候, 使用到了ruby的多返回值, 觉得很值得写一写</p>
-
-<p>记得第一次看见多返回值, 是在lua中, 当时觉得不过是一语法糖, 没什么特别的, 并不会带来什么特别的好处, 就没有细细研究下去</p>
-
-<p>多返回值, 比较经典的使用场景是交换数值, 最常用于排序等各类算法中, 比如</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">list</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-	<span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">height</span><span class="p">,</span> <span class="n">width</span>
-</code></pre></div></div>
-
-<p>而实际中, 我碰到的使用场景是这样的, 解析一个文本文件</p>
-
-<p>常见的写法这样的</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    <span class="no">IO</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="s1">'20140119_result.txt'</span><span class="p">).</span><span class="nf">lines</span><span class="p">.</span><span class="nf">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span>
-        <span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span>
-        <span class="nb">id</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="nb">name</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">type</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">status</span> <span class="o">=</span> <span class="n">words</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-        
-        <span class="nb">puts</span> <span class="s2">"[</span><span class="si">#{</span><span class="n">status</span><span class="si">}</span><span class="s2">] </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">/</span><span class="si">#{</span><span class="nb">id</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">type</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="p">}</span>   
-</code></pre></div></div>
-
-<p>如果用多返回值, 效果就完全不同了, 而且达到了相同的效果</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	IO.read('20140119_result.txt').lines.each { |line|
-		id,name,type,status = line.split(',')
-		puts "[#{status}] #{name}/#{id}" if type == 1
-	}
-</code></pre></div></div>
-
-<p>在java中, 经常见一些让我很痛苦的写法, 如</p>
-
-<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="nc">Result</span><span class="o">&lt;</span><span class="nc">PairValue</span><span class="o">&gt;</span> <span class="n">result</span> <span class="o">=</span> <span class="nc">NoSql</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-	<span class="k">if</span><span class="o">(!</span><span class="n">result</span><span class="o">.</span><span class="na">isSuccess</span> <span class="o">||</span> <span class="n">result</span><span class="o">.</span><span class="na">getResult</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">result</span><span class="o">.</span><span class="na">getResult</span><span class="o">().</span><span class="na">getValue</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-		<span class="n">logger</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">"......"</span><span class="o">,</span> <span class="n">result</span><span class="o">.</span><span class="na">getError</span><span class="o">());</span>
-	<span class="o">}</span>
-	<span class="nc">Model</span> <span class="n">model</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">getResult</span><span class="o">().</span><span class="na">getValue</span><span class="o">();</span>
-</code></pre></div></div>
-
-<p>单独看这行代码, 你觉得无所谓, 但是一个方法里, 只有四行逻辑, 但却有16行代码,其中12个是这种判断,你就是发疯了,看代码太累了,无法直接看到主要的逻辑</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="n">model</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="no">NoSql</span><span class="p">.</span><span class="nf">getValue</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
-	<span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="s2">"...."</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="k">if</span> <span class="n">err</span>
-
-	<span class="no">List</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="no">Service</span><span class="p">.</span><span class="nf">query</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="nf">itemIds</span><span class="p">)</span>
-	<span class="n">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="s2">"...."</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span> <span class="k">if</span> <span class="n">err</span>
-</code></pre></div></div>
-
-<p>纵观代码, 会把注意力集中到业务逻辑上, 而不是各种返回结果的判断上</p>
-
-<h2 id="本质">本质</h2>
-
-<p>让我们来看看, ruby多返回值的本质</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	<span class="k">def</span> <span class="nf">multi</span>
-		<span class="k">return</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span>
-	<span class="k">end</span>
-	<span class="n">result</span> <span class="o">=</span> <span class="n">multi</span>
-	<span class="nb">puts</span> <span class="n">result</span><span class="p">.</span><span class="nf">class</span>   <span class="c1">## Array</span>
-	<span class="nb">puts</span> <span class="n">result</span> <span class="o">===</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>  <span class="c1">## true </span>
-</code></pre></div></div>
-
-<p>我们发现, 原来ruby的多返回值就是一个数组, 而且</p>
-
-<ul>
-  <li>x=1,2,3,4,5,6 与 x=[1,2,3,4,5,6]  写法是一样的,结果也一样</li>
-  <li>x,y=1,2,3,4,5,6 与 x,y=[1,2,3,4,5,6]  写法也是一样的,结果也一样</li>
-  <li>不一样的一点是   [1,2,3,4,5,6].class 与  (1,2,3,4,5,6).class 是不一样的, 后面会报语法错误</li>
-  <li>因此, 不带中括号, 其实是一种简写的方式, 只是有些地方能简单, 有些地方无法简写</li>
-  <li>从另一个角度来看, []其实也是一种运算符号, 与()一样, 是为了提高运算符的优先级</li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014-01-12-ruby-enumerable.html">ruby Enumerator</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-12T17:33:56+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>之前看到这样的API文档</p>
-
-<p>关于数组Array的</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map { |item| block } → new_ary click to toggle source
-map → Enumerator
-Invokes the given block once for each element of self.
-
-Creates a new array containing the values returned by the block.
-
-See also Enumerable#collect.
-
-If no block is given, an Enumerator is returned instead.
-</code></pre></div></div>
-
-<p>当时不明白, Array的map方法不带参数时返回 Enumerator, 而Array已经支持各类迭代操作了, 为什么还要返回Enumerator, 与数组的操作有什么区别呢, 当时没有细究, 今天知道了</p>
-
-<!--more-->
-
-<p>我们知道数组是继承自Enumerable的</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>irb(main):077:0&gt; [].class.ancestors
-=&gt; [Array, Enumerable, Object, Kernel, BasicObject]
-</code></pre></div></div>
-
-<p>数组中的方法, 会比Enumerable多一些数组特色的方法, 如insert,push,pop,fist,last</p>
-
-<p>而Enumerable调用map时, 有一些常用的方法, 无法满足, 比如</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>	[2,3,5,7,9,11].map {|item,index| item+index}
-</code></pre></div></div>
-
-<p>map时, 参数中的第一个参数, 为item, 但是不支持索引位置</p>
-
-<p>而像select, count, reject 等方法时, 同样也不支持索引位置</p>
-
-<p>于是Enumerator发挥作用了, 注意这里不是Enumerable</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>irb(main):071:0&gt; [].map.methods - [].methods
-=&gt; [:with_index, :with_object, :next_values, :peek_values, :next, :peek, :feed, :rewind]
-</code></pre></div></div>
-
-<p>所以</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>irb(main):109:0&gt; [2,3,5,7,9,11].map.with_index {|item,index| item+index}
-=&gt; [2, 4, 7, 10, 13, 16]
-</code></pre></div></div>
-
-<p>结论: Array中map,select,count,reject时, 如果不带闭包参数, 将返回Enumerator, 这时可继续使用索引参数</p>
-
-<p>这里是ruby的官方文档, <a href="http://ruby-doc.org/core-1.9.3/Enumerator.html">Enumerator的API</a></p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014-01-05-ruby-string-array.html">ruby 字符串与数组</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-05T18:55:00+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>ruby的字符串与数组,在API设计上,有很多的相似之处,同时方法广度上,又有所区分,这里还是有很多学问</p>
-
-<!--more-->
-
-<p>字符串在底层上是字符的数组, 同是数组, 我们先从相同点开始</p>
-
-<h3 id="比较方法名">比较方法名</h3>
-
-<p>让我们先单纯的比较一下</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'string'.methods.length   ### 161
-('string'.methods - Object.new.methods).length   ## 107
-
-[].methods.length         ### 167
-([].methods - Object.new.methods).length   ## 113
-
-([].methods &amp; 'string'.methods).length    ## 76
-([].methods &amp; 'string'.methods - Object.new.methods).length  ## 22
-
-[].methods &amp; 'string'.methods - Object.new.methods
-[:[], :[]=, :concat, :&lt;&lt;, :insert, :length, :size, :empty?, :index, :rindex, :reverse, :reverse!, :delete, :replace, :clear, :include?, :slice, :slice!, :+, :*, :count, :partition]
-</code></pre></div></div>
-
-<ul>
-  <li>字符串共有161个方法,去掉继承后, 剩107个</li>
-  <li>数组共有167个方法,去掉继承后,剩113个</li>
-  <li>字符串与数组相同的方法,共有76,去掉继承的54个, 只剩22个</li>
-</ul>
-
-<p>让我们来仔细看看这22个方法</p>
-
-<ul>
-  <li>[],[]=, 下标操作</li>
-  <li>[],slice,slice! 子字符串,子数组操作</li>
-  <li>«,insert,+,*       插入操作</li>
-  <li>length,size,count,empty?   大小计算</li>
-  <li>index,rindex,include?    查找</li>
-  <li>reverse, reverse!  反转</li>
-  <li>delete,clear          删除</li>
-  <li>partition         拆分 (数组中没找到此方法????)</li>
-</ul>
-
-<p>汇总起来, 就是 增删改查, 子反转,大小</p>
-
-<h3 id="字符串">字符串</h3>
-
-<p>而字符串中去掉数组的方法, 就是真正的字符串操作了</p>
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>irb(main):026:0&gt; 'string'.methods - [].methods
-=&gt; [:casecmp, :%, :bytesize, :match, :succ, :succ!, :next, :next!, :upto, :chr, :getbyte, :setbyte, :byteslice, :to_i, :to_f, :to_str, :dump, :upcase, :downcase, :capitalize, :swapcase, :upcase!, :downcase!, :capitalize!, :swapcase!, :hex, :oct, :split, :lines, :bytes, :chars, :codepoints, :prepend, :crypt, :intern, :to_sym, :ord, :start_with?, :end_with?, :scan, :ljust, :rjust, :center, :sub, :gsub, :chop, :chomp, :strip, :lstrip, :rstrip, :sub!, :gsub!, :chop!, :chomp!, :strip!, :lstrip!, :rstrip!, :tr, :tr_s, :squeeze, :tr!, :tr_s!, :delete!, :squeeze!, :each_line, :each_byte, :each_char, :each_codepoint, :sum, :rpartition, :encoding, :force_encoding, :b, :valid_encoding?, :ascii_only?, :unpack, :encode, :encode!, :to_r, :to_c, :&gt;, :&gt;=, :&lt;, :&lt;=, :between?]
-</code></pre></div></div>
-
-<p>其中: getbyte,setbyte,byteslice,split,bytes,chars,codepoints,prepend,start_with?,end_with? ,sub,gsub,sub!,gsub!,delete!,each_line,each_byte,each_char,each_codepoint 等等,其实也是围绕这个概念,派生出来的方法,都是在”部分”,”全体”, 在这个概念上生成的方法</p>
-
-<p>而to_i, to_f, hex, &lt; &gt; 等, 这些是属于转换与比较的方法, 另upcase,downcase 是字符串间的转换</p>
-
-<p>除去这个概念后, 与字符串本质有关的方法, 只有encoding,force_encoding 这几个方法了</p>
-
-<p>所以字符串的方法, 我们可以归结为三类</p>
-
-<ul>
-  <li>字符数组, 数组的操作方法</li>
-  <li>转换与比较</li>
-  <li>编码相关</li>
-</ul>
-
-<h3 id="数组">数组</h3>
-
-<p>让我们再来看看数组</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>irb(main):031:0&gt; [].methods - 'string'.methods
-=&gt; [:to_a, :to_ary, :at, :fetch, :first, :last, :push, :pop, :shift, :unshift, :each, :each_index, :reverse_each, :find_index, :join, :rotate, :rotate!, :sort, :sort!, :sort_by!, :collect, :collect!, :map, :map!, :select, :select!, :keep_if, :values_at, :delete_at, :delete_if, :reject, :reject!, :zip, :transpose, :fill, :assoc, :rassoc, :-, :&amp;, :|, :uniq, :uniq!, :compact, :compact!, :flatten, :flatten!, :shuffle!, :shuffle, :sample, :cycle, :permutation, :combination, :repeated_permutation, :repeated_combination, :product, :take, :take_while, :drop, :drop_while, :bsearch, :pack, :entries, :sort_by, :grep, :find, :detect, :find_all, :flat_map, :collect_concat, :inject, :reduce, :group_by, :all?, :any?, :one?, :none?, :min, :max, :minmax, :min_by, :max_by, :minmax_by, :member?, :each_with_index, :each_entry, :each_slice, :each_cons, :each_with_object, :chunk, :slice_before, :lazy]
-</code></pre></div></div>
-
-<p>我们再来分下组</p>
-
-<ul>
-  <li>常用的增删改查, 子反转,大小</li>
-  <li>同样的转换与比较  to_a</li>
-  <li>单项相关,   at,first,last,pop,min,max,take</li>
-  <li>遍历,     each,each_index, collect, map,select, take_while,drop_while,grep,find,find_all,reduce,all?,any?,one?, each_*</li>
-</ul>
-
-<h3 id="后续">后续</h3>
-
-<p>我们可以看出,在数组中有很多方法,并没有在字符串中体现,字符串中部分数组的方法,必定是最常用</p>
-
-<p>假如,数组里所有的方法,都放在字符串中,虽然行得通,但并不好,相反不好理解, 比如string.grep,实际意义不大</p>
-
-<p>所以我们现在可以理解, 为什么 String 不是直接继承自 Array 了, 因为Array并不是String的核心, String中最核心的应该是别的, 比如字符与编码</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014-01-04-ruby-study-notes.html">ruby 学习笔记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2014-01-04T21:39:33+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><style>
-figure.code{width: 48%; display:inline-block}
-</style>
-
-<p>学习ruby已经有一段时间了, 抽点时间把常用的语法方法总结一下, 算是入门小笔记吧</p>
-
-<!--more-->
-
-<h2 id="简述">简述</h2>
-
-<ul>
-  <li>ruby为动态语言,弱类型,一切皆对象(就是可以.)</li>
-  <li>ruby没有属性,只有方法,看似属性的,其实都只是其成员变量的读方法</li>
-  <li>ruby调用方法时括号可省略, 行尾无分号, return 关键字可省略</li>
-  <li>ruby支持[]语法创建变长数组, {}语法创建Hash对象, 支持闭包</li>
-</ul>
-
-<h2 id="常用的语法结构">常用的语法结构</h2>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#encoding:utf-8</span>
-<span class="nb">require</span> <span class="s1">'nokogiri'</span>
-
-<span class="c1"># comment</span>
-
-<span class="k">return</span> <span class="k">if</span><span class="p">(</span><span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="k">if</span><span class="p">(</span><span class="n">page</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
-	<span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
-<span class="k">end</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span><span class="o">..</span><span class="mi">10</span>
-	<span class="nb">puts</span> <span class="n">i</span><span class="p">.</span><span class="nf">to_s</span> <span class="o">+</span> <span class="s1">'.'</span>
-<span class="k">end</span>
-
-<span class="k">for</span> <span class="n">step</span> <span class="k">in</span> <span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">]</span>
-	<span class="n">process</span><span class="p">(</span><span class="n">step</span><span class="p">)</span>
-<span class="k">end</span>
-
-<span class="n">list</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span>
-	<span class="nb">puts</span> <span class="s2">"echo </span><span class="si">#{</span><span class="n">x</span><span class="si">}</span><span class="s2">"</span>
-<span class="k">end</span>
-
-<span class="n">list</span><span class="p">.</span><span class="nf">each_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-    <span class="nb">puts</span> <span class="s2">"echo </span><span class="si">#{</span><span class="n">i</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">#{</span><span class="n">list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span>
-<span class="p">}</span>
-
-<span class="k">def</span> <span class="nf">nilisnull</span>
-	<span class="kp">nil</span><span class="p">.</span><span class="nf">to_s</span> <span class="o">===</span> <span class="s1">''</span>
-<span class="k">end</span>
-
-<span class="k">case</span> <span class="n">x</span>
-<span class="k">when</span> <span class="mi">1</span><span class="o">..</span><span class="mi">10</span>              <span class="c1">#匹配数字</span>
-    <span class="nb">puts</span> <span class="s2">"First branch"</span>
-<span class="k">when</span> <span class="n">foobar</span><span class="p">()</span>           <span class="c1">#批量方法返回的值</span>
-    <span class="nb">puts</span> <span class="s2">"Second branch"</span>
-<span class="k">when</span> <span class="sr">/^hel.*/</span><span class="err">           #匹配正则表达式
-    p</span><span class="sr">u</span><span class="n">ts</span> <span class="s2">"Third branch"</span>
-<span class="k">else</span>  
-    <span class="nb">puts</span> <span class="s2">"Last branch"</span>
-<span class="k">end</span>
-</code></pre></div></div>
-
-<h2 id="方法符号">方法符号</h2>
-
-<p>语法上除了一些常见的顺序,选择,循环,变量,函数,模块,类, 还有一些特有的内容</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># 查看一个变量可以调用哪些方法</span>
-<span class="n">irb</span><span class="p">(</span><span class="n">main</span><span class="p">):</span><span class="mi">108</span><span class="p">:</span><span class="mi">0</span><span class="o">&gt;</span> <span class="s1">'string'</span><span class="p">.</span><span class="nf">methods</span>
-<span class="o">=&gt;</span> <span class="p">[</span><span class="ss">:&lt;=&gt;</span><span class="p">,</span> <span class="ss">:==</span><span class="p">,</span> <span class="ss">:===</span><span class="p">,</span> <span class="ss">:eql?</span><span class="p">,</span> <span class="ss">:hash</span><span class="p">,</span> <span class="ss">:casecmp</span><span class="p">,</span> <span class="p">:</span><span class="o">+</span><span class="p">,</span> <span class="p">:</span><span class="o">*</span><span class="p">,</span> <span class="ss">:%</span><span class="p">,</span> <span class="ss">:[]</span><span class="p">,</span> <span class="ss">:[]=</span><span class="p">,</span> <span class="ss">:insert</span><span class="p">,</span> <span class="ss">:length</span><span class="p">,</span> <span class="ss">:size</span><span class="p">,</span> <span class="ss">:bytesize</span><span class="p">,</span> <span class="ss">:empty?</span><span class="p">,</span> <span class="p">:</span><span class="o">=~</span><span class="p">,</span> <span class="ss">:match</span><span class="p">,</span> <span class="ss">:succ</span><span class="p">,</span> <span class="ss">:succ!</span><span class="p">,</span> <span class="ss">:next</span><span class="p">,</span> <span class="ss">:next!</span><span class="p">,</span> <span class="ss">:upto</span><span class="p">,</span> <span class="ss">:index</span><span class="p">,</span> <span class="ss">:rindex</span><span class="p">,</span> <span class="ss">:replace</span><span class="p">,</span> <span class="ss">:clear</span><span class="p">,</span> <span class="ss">:chr</span><span class="p">,</span> <span class="ss">:getbyte</span><span class="p">,</span> <span class="ss">:setbyte</span><span class="p">,</span> <span class="ss">:byteslice</span><span class="p">,</span> <span class="ss">:to_i</span><span class="p">,</span> <span class="ss">:to_f</span><span class="p">,</span> <span class="ss">:to_s</span><span class="p">,</span> <span class="ss">:to_str</span><span class="p">,</span> <span class="ss">:inspect</span><span class="p">,</span> <span class="ss">:dump</span><span class="p">,</span> <span class="ss">:upcase</span><span class="p">,</span> <span class="ss">:downcase</span><span class="p">,</span> <span class="ss">:capitalize</span><span class="p">,</span> <span class="ss">:swapcase</span><span class="p">,</span> <span class="ss">:upcase!</span><span class="p">,</span> <span class="ss">:downcase!</span><span class="p">,</span> <span class="ss">:capitalize!</span><span class="p">,</span> <span class="ss">:swapcase!</span><span class="p">,</span> <span class="ss">:hex</span><span class="p">,</span> <span class="ss">:oct</span><span class="p">,</span> <span class="ss">:split</span><span class="p">,</span> <span class="ss">:lines</span><span class="p">,</span> <span class="ss">:bytes</span><span class="p">,</span> <span class="ss">:chars</span><span class="p">,</span> <span class="ss">:codepoints</span><span class="p">,</span> <span class="ss">:reverse</span><span class="p">,</span> <span class="ss">:reverse!</span><span class="p">,</span> <span class="ss">:concat</span><span class="p">,</span> <span class="ss">:&lt;&lt;</span><span class="p">,</span> <span class="ss">:prepend</span><span class="p">,</span> <span class="ss">:crypt</span><span class="p">,</span> <span class="ss">:intern</span><span class="p">,</span> <span class="ss">:to_sym</span><span class="p">,</span> <span class="ss">:ord</span><span class="p">,</span> <span class="ss">:include?</span><span class="p">,</span> <span class="ss">:start_with?</span><span class="p">,</span> <span class="ss">:end_with?</span><span class="p">,</span> <span class="ss">:scan</span><span class="p">,</span> <span class="ss">:ljust</span><span class="p">,</span> <span class="ss">:rjust</span><span class="p">,</span> <span class="ss">:center</span><span class="p">,</span> <span class="ss">:sub</span><span class="p">,</span> <span class="ss">:gsub</span><span class="p">,</span> <span class="ss">:chop</span><span class="p">,</span> <span class="ss">:chomp</span><span class="p">,</span> <span class="ss">:strip</span><span class="p">,</span> <span class="ss">:lstrip</span><span class="p">,</span> <span class="ss">:rstrip</span><span class="p">,</span> <span class="ss">:sub!</span><span class="p">,</span> <span class="ss">:gsub!</span><span class="p">,</span> <span class="ss">:chop!</span><span class="p">,</span> <span class="ss">:chomp!</span><span class="p">,</span> <span class="ss">:strip!</span><span class="p">,</span> <span class="ss">:lstrip!</span><span class="p">,</span> <span class="ss">:rstrip!</span><span class="p">,</span> <span class="ss">:tr</span><span class="p">,</span> <span class="ss">:tr_s</span><span class="p">,</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:squeeze</span><span class="p">,</span> <span class="ss">:count</span><span class="p">,</span> <span class="ss">:tr!</span><span class="p">,</span> <span class="ss">:tr_s!</span><span class="p">,</span> <span class="ss">:delete!</span><span class="p">,</span> <span class="ss">:squeeze!</span><span class="p">,</span> <span class="ss">:each_line</span><span class="p">,</span> <span class="ss">:each_byte</span><span class="p">,</span> <span class="ss">:each_char</span><span class="p">,</span> <span class="ss">:each_codepoint</span><span class="p">,</span> <span class="ss">:sum</span><span class="p">,</span> <span class="ss">:slice</span><span class="p">,</span> <span class="ss">:slice!</span><span class="p">,</span> <span class="ss">:partition</span><span class="p">,</span> <span class="ss">:rpartition</span><span class="p">,</span> <span class="ss">:encoding</span><span class="p">,</span> <span class="ss">:force_encoding</span><span class="p">,</span> <span class="ss">:b</span><span class="p">,</span> <span class="ss">:valid_encoding?</span><span class="p">,</span> <span class="ss">:ascii_only?</span><span class="p">,</span> <span class="ss">:unpack</span><span class="p">,</span> <span class="ss">:encode</span><span class="p">,</span> <span class="ss">:encode!</span><span class="p">,</span> <span class="ss">:to_r</span><span class="p">,</span> <span class="ss">:to_c</span><span class="p">,</span> <span class="p">:</span><span class="o">&gt;</span><span class="p">,</span> <span class="p">:</span><span class="o">&gt;=</span><span class="p">,</span> <span class="ss">:&lt;</span><span class="p">,</span> <span class="ss">:&lt;=</span><span class="p">,</span> <span class="ss">:between?</span><span class="p">,</span> <span class="ss">:nil?</span><span class="p">,</span> <span class="p">:</span><span class="o">!~</span><span class="p">,</span> <span class="ss">:class</span><span class="p">,</span> <span class="ss">:singleton_class</span><span class="p">,</span> <span class="ss">:clone</span><span class="p">,</span> <span class="ss">:dup</span><span class="p">,</span> <span class="ss">:taint</span><span class="p">,</span> <span class="ss">:tainted?</span><span class="p">,</span> <span class="ss">:untaint</span><span class="p">,</span> <span class="ss">:untrust</span><span class="p">,</span> <span class="ss">:untrusted?</span><span class="p">,</span> <span class="ss">:trust</span><span class="p">,</span> <span class="ss">:freeze</span><span class="p">,</span> <span class="ss">:frozen?</span><span class="p">,</span> <span class="ss">:methods</span><span class="p">,</span> <span class="ss">:singleton_methods</span><span class="p">,</span> <span class="ss">:protected_methods</span><span class="p">,</span> <span class="ss">:private_methods</span><span class="p">,</span> <span class="ss">:public_methods</span><span class="p">,</span> <span class="ss">:instance_variables</span><span class="p">,</span> <span class="ss">:instance_variable_get</span><span class="p">,</span> <span class="ss">:instance_variable_set</span><span class="p">,</span> <span class="ss">:instance_variable_defined?</span><span class="p">,</span> <span class="ss">:remove_instance_variable</span><span class="p">,</span> <span class="ss">:instance_of?</span><span class="p">,</span> <span class="ss">:kind_of?</span><span class="p">,</span> <span class="ss">:is_a?</span><span class="p">,</span> <span class="ss">:tap</span><span class="p">,</span> <span class="ss">:send</span><span class="p">,</span> <span class="ss">:public_send</span><span class="p">,</span> <span class="ss">:respond_to?</span><span class="p">,</span> <span class="ss">:extend</span><span class="p">,</span> <span class="ss">:display</span><span class="p">,</span> <span class="ss">:method</span><span class="p">,</span> <span class="ss">:public_method</span><span class="p">,</span> <span class="ss">:define_singleton_method</span><span class="p">,</span> <span class="ss">:object_id</span><span class="p">,</span> <span class="ss">:to_enum</span><span class="p">,</span> <span class="ss">:enum_for</span><span class="p">,</span> <span class="ss">:equal?</span><span class="p">,</span> <span class="p">:</span><span class="o">!</span><span class="p">,</span> <span class="p">:</span><span class="o">!=</span><span class="p">,</span> <span class="ss">:instance_eval</span><span class="p">,</span> <span class="ss">:instance_exec</span><span class="p">,</span> <span class="ss">:__send__</span><span class="p">,</span> <span class="ss">:__id__</span><span class="p">]</span>
-</code></pre></div></div>
-
-<p>其中:</p>
-
-<ul>
-  <li>冒号: 用冒号+字符串代表Symbol(名字), 表示创建了一个Symbol对象, 常用于表示方法, 可以参考<a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-rubysbl/index.html">这里</a></li>
-  <li>问号: 问号也是方法名的一部分,表示这个方法,返回true或者false</li>
-  <li>叹号: 叹号也是方法名的一部分,表示这个方法,与同名的方法(如gsub,gsub!)功能类似,但此方法会改变对象的内部属性, 相反, 另一个方法则不会修改</li>
-  <li>下划线: 如__send__, __id__, 为特殊命名方式, 因send太常见,可能被覆盖,用__send__可避免</li>
-</ul>
-
-<h2 id="字符串操作">字符串操作</h2>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">## 简单</span>
-<span class="s1">'hello'</span><span class="p">.</span><span class="nf">length</span>   <span class="c1">## 5</span>
-<span class="s1">'hello'</span><span class="p">.</span><span class="nf">start_with?</span><span class="p">(</span><span class="s1">'he'</span><span class="p">)</span>   <span class="c1">## true</span>
-<span class="s1">'hello'</span><span class="p">.</span><span class="nf">end_with?</span><span class="p">(</span><span class="s1">'he'</span><span class="p">)</span>     <span class="c1">## false</span>
-<span class="s1">' hello '</span><span class="p">.</span><span class="nf">strip</span>             <span class="c1">## 'hello'</span>
-
-<span class="c1"># 字符串连接</span>
-<span class="s1">'hello '</span> <span class="o">+</span> <span class="s1">'world '</span> <span class="o">+</span> <span class="mi">3</span><span class="p">.</span><span class="nf">to_s</span>  <span class="c1">## 'hello world 3'</span>
-
-<span class="c1"># 子字符串</span>
-<span class="s1">'hello world'</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>     <span class="c1">## 'l'</span>
-<span class="s1">'hello world'</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>   <span class="c1">## 'lo wo'</span>
-<span class="s1">'hello world'</span><span class="p">[</span><span class="mi">3</span><span class="o">..</span><span class="mi">5</span><span class="p">]</span>  <span class="c1">## 'lo '</span>
-
-<span class="c1"># 查找</span>
-<span class="s1">'hello world'</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="s1">'orl'</span><span class="p">)</span>   <span class="c1">## 7</span>
-<span class="s1">'hello world'</span><span class="p">.</span><span class="nf">index</span><span class="p">(</span><span class="sr">/[ole]+/</span><span class="err">)  ## 1
-
-# 替换
-'h</span><span class="sr">e</span><span class="n">llo</span> <span class="n">world</span><span class="s1">'.gsub('</span><span class="n">o</span><span class="s1">', '</span><span class="n">e</span><span class="s1">')  ## '</span><span class="n">helle</span> <span class="n">werld</span><span class="s1">'
-'</span><span class="n">hello</span> <span class="n">world</span><span class="s1">'.gsub(/[a-z]+/, '</span><span class="n">ok</span><span class="s1">')   ## '</span><span class="n">ok</span> <span class="n">ok</span><span class="s1">'
-
-# 分拆
-'</span><span class="n">hello</span> <span class="n">world</span><span class="s1">'.lines('</span> <span class="s1">')     ## ["hello ", "world"]
-" now'</span><span class="n">s</span>  <span class="n">the</span> <span class="n">time</span><span class="s2">".split(' ')   #=&gt; ["</span><span class="n">now</span><span class="err">'</span><span class="n">s</span><span class="s2">", "</span><span class="n">the</span><span class="s2">", "</span><span class="n">time</span><span class="s2">"]
-"</span><span class="n">hello</span><span class="s2">".split(//)               #=&gt; ["</span><span class="n">h</span><span class="s2">", "</span><span class="n">e</span><span class="s2">", "</span><span class="n">l</span><span class="s2">", "</span><span class="n">l</span><span class="s2">", "</span><span class="n">o</span><span class="s2">"]
-
-</span></code></pre></div></div>
-
-<h2 id="数组操作">数组操作</h2>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">].</span><span class="nf">length</span>    <span class="c1">## 3</span>
-<span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">].</span><span class="nf">include?</span><span class="p">(</span><span class="s1">'four'</span><span class="p">)</span>   <span class="c1">## false</span>
-<span class="p">[</span><span class="s1">'1'</span><span class="p">,</span><span class="s1">'2'</span><span class="p">,</span><span class="s1">'3'</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s1">'4'</span>            <span class="c1">## ['1','2','3','4']</span>
-<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">][</span><span class="mi">1</span><span class="o">..</span><span class="mi">3</span><span class="p">]</span>                 <span class="c1">## [2,3]</span>
-<span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">].</span><span class="nf">sort</span>					<span class="c1">## [1,2,3,4]</span>
-<span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">].</span><span class="nf">uniq</span>					<span class="c1">## [1,3,4]</span>
-<span class="p">[</span><span class="s1">'one'</span><span class="p">,</span><span class="s1">'two'</span><span class="p">,</span><span class="s1">'three'</span><span class="p">].</span><span class="nf">join</span><span class="p">(</span><span class="s1">','</span><span class="p">)</span> <span class="c1">## 'one,two,three'</span>
-
-</code></pre></div></div>
-
-<h2 id="函数">函数</h2>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def process
-
-end
-</code></pre></div></div>
-
-</div>
-  
-  
-
-
-    </article>
-  
-    
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013-12-31-iteye-blog-migration.html">iteye 博客迁移</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-
-<time datetime="2013-12-31T15:16:16+08:00" pubdate data-updated="true"></time>
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>之前一直是在iteye上写博客的, 后来建立了本博客系统后, 就希望将博客从iteye上迁移过来</p>
-
-<p>然而iteye上博客的文章太多了, 手动一篇一篇拷贝很不现实, 所以写了个工具来辅助迁移</p>
-
-<p>iteye2markdown是一款博客迁移工具,可以将博客从iteye迁移至octopress</p>
-
-<ul>
-  <li>此工具会自动下载iteye博客上的所有文章</li>
-  <li>接着会将博客中的bbcode代码转换成markdown</li>
-  <li>下载转换后的markdown可用于octopress,迁移至自己的博客系统上</li>
-</ul>
-
-<!--more-->
-
-<p>使用方式:</p>
-
-<ul>
-  <li>修改download.rb中的cookie配置, cookie将用于连接iteye.com的后台系统, 下载博客内容</li>
-  <li>修改download.rb中的博客地址</li>
-  <li>使用以下命令
-    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ruby download.rb
-</code></pre></div>    </div>
-    <p>执行下载转换, 结果保存于blog目录中</p>
-  </li>
-</ul>
-
-<p>源代码见:  <a href="https://github.com/seavers/iteye2markdown">github</a></p>
-
-<p>核心代码如下:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>re 'open-uri'
-require 'nokogiri'
-
-def process(id, date)
-	host = 'http://seavers.iteye.com'
-	cookie = ''      #IO.read('cookie.txt')
-	agent = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.14 Safari/537.36'
-
-	html = open(host + '/admin/blogs/' + id + '/edit', 'User-Agent'=&gt;agent, 'Cookie'=&gt;cookie).read
-	doc = Nokogiri::HTML(html)
-
-	title = doc.search('#blog_title').attr('value').to_s
-	text = doc.search('#editor_body').text
-	category = doc.search('#blog_category_list').attr('value').to_s
-	tag = doc.search('#blog_tag_list').attr('value').to_s
-	
-
-	content = text
-		.gsub('[size=xx-large]', '#')
-		.gsub('[size=x-large]', '##')
-		.gsub('[size=large]', '###')
-		.gsub('[size=medium]', '####')
-		.gsub('[size=small]', '')
-		.gsub('[size=x-small]', '')
-		.gsub('[size=xx-small]', '')
-		.gsub('[/size]', '')
-		.gsub(/\[url=(.*)\](.*)\[\/url\]/, '[\2](\1)')
-		.gsub('[url]', '').gsub('[/url]', '')
-		.gsub('[b]', '*').gsub('[/b]', '*')
-		.gsub('[list]', '').gsub('[/list]', '')
-		.gsub('[b]', '*').gsub('[/b]', '*')
-		.gsub('[*]', '* ')
-		.gsub('[code]', '```').gsub('[ne/code]', '```')
-		.gsub(/\[code="(.*)"\]/, '```')
-
-
-	filename = date[0..9] + '-' + id + '.markdown'
-	File.open('blog/' + filename, 'w') { |file|
-		file.puts '---'
-		file.puts 'layout: post'
-		file.puts 'title: "' + title.to_s + '"'
-		file.puts 'date: ' + date + ':00 +0800'
-		file.puts 'comments: true'
-		file.puts 'categories:'
-		file.puts '- ' + category.to_s
-		file.puts 'tags:'
-		tag.split(',').each {|x|
-			file.puts '- ' + x
-		}
-		file.puts '---'
-
-		file.puts ''
-		file.puts content 
-	}
-
-end
-
-def spider(page)
-	agent = 'Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.14 Safari/537.36'
-
-	url = 'http://seavers.iteye.com/?page='+page.to_s
-	html = open(url, 'User-Agent'=&gt;agent)
-
-	doc = Nokogiri::HTML(html)
-	doc.search('.blog_main').each {|x|
-		id = x.search('h3 a').attr('href').text[/[0-9]+/, 0]
-		date = x.search('.blog_bottom .date').text
-		puts id + "\t" + date
-		process(id, date)
-	}
-
-	return doc.search('.pagination a.next_page').length == 0
-end
-
-##process('1416013', '2013-12-31 14:01')
-(1..100).each {|page|
-	break if spider(page)
-}
-
-</code></pre></div></div>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="/blog/page/2">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -2670,6 +1420,7 @@ end
 
   
 </aside>
+
 
     </div>
   </div>
