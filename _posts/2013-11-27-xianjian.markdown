@@ -7,7 +7,7 @@ categories:
 - html5
 ---
 
-刚学习html5时, 为了练手, 基于html5写了版仙剑, [http://xianjian.github.com/](http://xianjian.github.com/)
+刚学习html5时, 为了练手, 基于html5写了版仙剑, 试玩点击[这里](http://dahai.online/xianjian/) 或 [github](http://xianjian.github.io/) 
 
 <!--more-->
 
@@ -15,11 +15,11 @@ categories:
 
 今天心血来潮, 在服务器上重新部署了一套, 欢迎试用 (图片点击右键, 新窗口打开)
 
-[![xianjian]({{site.baseurl}}/uploads/xianjian.png)](http://xianjian.u.qiniudn.com/)
+[![xianjian]({{site.baseurl}}/uploads/xianjian.png)](http://dahai.online/xianjian/)
 
 刚开始下载时, 速度有点慢, 请耐心等待, 后续再更改算法, 如果本地玩, 可以git clone哦~~
 
-  * 在线试玩,可以使用[qiniudn](http://xianjian.u.qiniudn.com) 或者 [github](http://xianjian.github.com) 或者 [博客内](http://www.lianghaijun.com/xianjian/)
+  * 在线试玩,可以使用 [github](http://xianjian.github.io) 或者 [博客内](http://dahai.online/xianjian/)
   * github地址在  [https://github.com/seavers/xianjian](https://github.com/seavers/xianjian)
   * 其实还有一个java版的 [https://github.com/seavers/pal](https://github.com/seavers/pal)
 
