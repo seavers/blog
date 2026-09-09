@@ -11,7 +11,7 @@ tags:
 - APK
 ---
 
-今天向大家介绍一个新的工具：[Web2App](https://github.com/seavers/web2app)，可以访问在线演示地址：[web2app.dahai.online](http://web2app.dahai.online)。
+今天开发上线了一个新工具：[Web2App](https://github.com/seavers/web2app)，可以访问在线演示地址：[web2app.dahai.online](http://web2app.dahai.online)。
 
 ## 什么是 Web2App？
 
@@ -29,3 +29,5 @@ Web2App 的核心在于使用了“预生成 APK + 动态修改”的技术：
 这种方式大大提高了生成效率，无需为每个请求重新编译整个项目。
 
 欢迎大家试用并反馈！ GitHub 地址：[https://github.com/seavers/web2app](https://github.com/seavers/web2app)
+
+另外，感慨一句：AI编程速度真快，这个文章也是AI写的
