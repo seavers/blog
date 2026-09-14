@@ -11,8 +11,12 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% assign canonical_path = page.url | replace: '/index.html', '/' %}
-  <link rel="canonical" href="{{ canonical_path | absolute_url }}">
+  {% if page.path == 'index.html' %}
+    <link rel="canonical" href="{{ site.url }}/">
+  {% else %}
+    {% assign canonical_path = page.url | replace: '/index.html', '/' %}
+    <link rel="canonical" href="{{ canonical_path | absolute_url }}">
+  {% endif %}
   <link href="{{ site.baseurl }}/static/screen.css" media="screen, projection" rel="stylesheet">
   <link href="{{ site.subscribe_rss }}" rel="alternate" title="{{site.title}}" type="application/atom+xml">
 </head>
