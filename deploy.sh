@@ -47,3 +47,7 @@ fi
 log "构建 _deploy"
 JEKYLL_NO_BUNDLER_REQUIRE=true jekyll build --destination _deploy
 log "构建完成: $BLOG_DIR/_deploy"
+
+log "同步根域名首页到 /var/www/html/index.html"
+cp "$BLOG_DIR/_deploy/index.html" /var/www/html/index.html
+log "根域名首页同步完成"
