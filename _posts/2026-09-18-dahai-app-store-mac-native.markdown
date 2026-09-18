@@ -120,7 +120,25 @@ DahaiAppStore/
 
 ---
 
-## 四、写在最后
+## 四、下载体验与安装指南
+
+DahaiAppStore 首个体验版本 **v0.1** 现已正式发布！欢迎下载体验并提出宝贵建议：
+
+### 📥 软件下载
+- **版本号**：v0.1 (首发版)
+- **运行环境**：macOS 13.0 (Ventura) 及更高版本（全面兼容 Apple Silicon M 系列及 Intel Mac）
+- **介质大小**：仅 2.1 MB（纯原生 Swift 构建，超轻量无负担）
+- **高速下载链接**：[点击直接下载 DahaiAppStore-v0.1.dmg](https://dahai.online/downloads/DahaiAppStore-v0.1.dmg)
+- **备用下载链接**：[点击通过博客镜像下载 DahaiAppStore-v0.1.dmg]({{site.baseurl}}/uploads/20260918/DahaiAppStore-v0.1.dmg)
+
+### 🚀 安装方式
+1. 下载完成后双击打开 `DahaiAppStore-v0.1.dmg` 磁盘镜像；
+2. 将 **DahaiAppStore** 图标直接拖入 **Applications**（应用程序）快捷文件夹；
+3. 打开 Launchpad 或应用程序列表，启动 DahaiAppStore 即可畅享极简优雅的应用发现与管理之旅！
+
+---
+
+## 五、写在最后
 
 在跨平台框架盛行的今天，为特定平台量身打磨一款纯原生的工具，依然有着不可替代的乐趣与体验优势。
 
