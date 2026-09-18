@@ -47,3 +47,18 @@ fi
 log "构建 _deploy"
 JEKYLL_NO_BUNDLER_REQUIRE=true jekyll build --destination _deploy
 log "构建完成: $BLOG_DIR/_deploy"
+
+ROOT_DIR="/www/wwwroot/dahai.online"
+if [ -d "$ROOT_DIR" ]; then
+  # 步骤 1: 将 sitemap.xml 同步到站点根目录，确保 https://dahai.online/sitemap.xml 无前缀直接访问
+  if [ -f "$BLOG_DIR/_deploy/sitemap.xml" ]; then
+    log "同步 sitemap.xml 到 $ROOT_DIR/sitemap.xml"
+    cp "$BLOG_DIR/_deploy/sitemap.xml" "$ROOT_DIR/sitemap.xml"
+  fi
+
+  # 步骤 2: 将 robots.txt 同步到站点根目录，引导爬虫发现 sitemap
+  if [ -f "$BLOG_DIR/_deploy/robots.txt" ]; then
+    log "同步 robots.txt 到 $ROOT_DIR/robots.txt"
+    cp "$BLOG_DIR/_deploy/robots.txt" "$ROOT_DIR/robots.txt"
+  fi
+fi
