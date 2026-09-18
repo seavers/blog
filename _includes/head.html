@@ -11,7 +11,9 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% if page.path == 'index.html' %}
+  {% if page.canonical %}
+    <link rel="canonical" href="{{ page.canonical }}">
+  {% elsif page.path == 'archives.html' or page.path == 'index.html' %}
     <link rel="canonical" href="{{ site.url }}/">
   {% else %}
     {% assign canonical_path = page.url | replace: '/index.html', '/' %}
