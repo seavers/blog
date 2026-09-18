@@ -8,7 +8,7 @@ SITEMAP_FILE="$BLOG_DIR/_deploy/sitemap.xml"
 
 # 步骤 1: 确定待推送的 URL 列表（支持参数指定，缺省自动获取最新 1 篇）
 if [ $# -gt 0 ]; then
-  urls="$*"
+  urls=$(printf "%s\n" "$@")
 else
   if [ -f "$SITEMAP_FILE" ]; then
     urls=$(grep -o 'https://dahai.online/blog/[^<]*\.html' "$SITEMAP_FILE" | grep -v 'archives\.html' | head -n 1)
