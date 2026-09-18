@@ -62,3 +62,9 @@ if [ -d "$ROOT_DIR" ]; then
     cp "$BLOG_DIR/_deploy/robots.txt" "$ROOT_DIR/robots.txt"
   fi
 fi
+
+# 步骤 3: 自动向百度普通收录 API 推送最新博文 URL（失败不阻断部署）
+if [ -x "$BLOG_DIR/push_baidu.sh" ]; then
+  log "向百度普通收录 API 推送最新文章"
+  "$BLOG_DIR/push_baidu.sh" || log "警告: 百度 API 推送未成功完成，继续完成部署"
+fi
