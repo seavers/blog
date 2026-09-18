@@ -24,7 +24,7 @@ tags:
 
 为了解决这些痛点，我用 **100% 纯苹果原生技术栈（Swift 6 + SwiftUI + AppKit）** 为 MacBook 量身打造了一款极简的原生 macOS 应用中心——**DahaiAppStore（大海应用商店）**。
 
-![大海 App Store 官方原生图标](/uploads/20260918/dahai-app-store-icon.png)
+![大海 App Store 官方原生图标]({{site.baseurl}}/uploads/20260918/dahai-app-store-icon.png)
 
 ---
 
