@@ -61,9 +61,15 @@ if [ -d "$ROOT_DIR" ]; then
     log "同步 robots.txt 到 $ROOT_DIR/robots.txt"
     cp "$BLOG_DIR/_deploy/robots.txt" "$ROOT_DIR/robots.txt"
   fi
+
+  # 步骤 3: 将 llms.txt 同步到站点根目录，便于 AI 和大模型直接抓取索引
+  if [ -f "$BLOG_DIR/_deploy/llms.txt" ]; then
+    log "同步 llms.txt 到 $ROOT_DIR/llms.txt"
+    cp "$BLOG_DIR/_deploy/llms.txt" "$ROOT_DIR/llms.txt"
+  fi
 fi
 
-# 步骤 3: 自动向百度普通收录 API 推送最新博文 URL（失败不阻断部署）
+# 步骤 4: 自动向百度普通收录 API 推送最新博文 URL（失败不阻断部署）
 if [ -x "$BLOG_DIR/push_baidu.sh" ]; then
   log "向百度普通收录 API 推送最新文章"
   "$BLOG_DIR/push_baidu.sh" || log "警告: 百度 API 推送未成功完成，继续完成部署"

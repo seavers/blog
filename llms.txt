@@ -1,0 +1,16 @@
+---
+layout: null
+---
+# {{ site.title }}
+
+> {{ site.subtitle | default: site.description | strip_newlines }}
+
+## 博文目录
+
+{% for post in site.posts -%}
+- [{{ post.title }}]({{ site.url }}{{ site.baseurl }}{{ post.url }}): {{ post.date | date: "%Y-%m-%d" }}{% if post.description %} - {{ post.description | strip_newlines }}{% elsif post.summary %} - {{ post.summary | strip_newlines }}{% endif %}
+{% endfor %}
+
+## 站点地图与资源
+- [Sitemap]({{ site.url }}/sitemap.xml): 全站 XML 站点地图
+- [归档]({{ site.url }}{{ site.baseurl }}/archives.html): 博客历史归档页面
