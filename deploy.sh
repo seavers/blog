@@ -67,10 +67,22 @@ if [ -d "$ROOT_DIR" ]; then
     log "同步 llms.txt 到 $ROOT_DIR/llms.txt"
     cp "$BLOG_DIR/_deploy/llms.txt" "$ROOT_DIR/llms.txt"
   fi
+
+  # 步骤 4: 将 IndexNow 校验密钥文件同步到站点根目录
+  if [ -f "$BLOG_DIR/6cba777ce8eea246ac93738da8d8592c.txt" ]; then
+    log "同步 IndexNow 密钥到 $ROOT_DIR/6cba777ce8eea246ac93738da8d8592c.txt"
+    cp "$BLOG_DIR/6cba777ce8eea246ac93738da8d8592c.txt" "$ROOT_DIR/6cba777ce8eea246ac93738da8d8592c.txt"
+  fi
 fi
 
-# 步骤 4: 自动向百度普通收录 API 推送最新博文 URL（失败不阻断部署）
+# 步骤 5: 自动向百度普通收录 API 推送最新博文 URL（失败不阻断部署）
 if [ -x "$BLOG_DIR/push_baidu.sh" ]; then
   log "向百度普通收录 API 推送最新文章"
   "$BLOG_DIR/push_baidu.sh" || log "警告: 百度 API 推送未成功完成，继续完成部署"
+fi
+
+# 步骤 6: 自动向 IndexNow API (Bing/Yandex) 推送最新博文 URL（失败不阻断部署）
+if [ -x "$BLOG_DIR/push_indexnow.sh" ]; then
+  log "向 IndexNow (Bing/Yandex) 推送最新文章"
+  "$BLOG_DIR/push_indexnow.sh" || log "警告: IndexNow 推送未成功完成，继续完成部署"
 fi
