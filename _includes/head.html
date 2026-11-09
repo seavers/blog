@@ -11,14 +11,8 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  {% if page.canonical %}
-    <link rel="canonical" href="{{ page.canonical }}">
-  {% elsif page.path == 'archives.html' or page.path == 'index.html' %}
-    <link rel="canonical" href="{{ site.url }}/">
-  {% else %}
-    {% assign canonical_path = page.url | replace: '/index.html', '/' %}
-    <link rel="canonical" href="{{ canonical_path | absolute_url }}">
-  {% endif %}
+  {% assign canonical_path = page.url | replace: '/index.html', '/' %}
+  <link rel="canonical" href="{{ canonical_path | absolute_url }}">
   <link href="{{ site.baseurl }}/static/screen.css" media="screen, projection" rel="stylesheet">
   <link href="{{ site.subscribe_rss }}" rel="alternate" title="{{site.title}}" type="application/atom+xml">
 </head>
