@@ -68,6 +68,12 @@ if [ -d "$ROOT_DIR" ]; then
     cp "$BLOG_DIR/_deploy/llms.txt" "$ROOT_DIR/llms.txt"
   fi
 
+  # 步骤 3.5: 将站点首页（home/ 目录构建产物）同步到站点根目录，供 https://dahai.online/ 直接访问
+  if [ -f "$BLOG_DIR/_deploy/home/index.html" ]; then
+    log "同步首页到 $ROOT_DIR/index.html"
+    cp "$BLOG_DIR/_deploy/home/index.html" "$ROOT_DIR/index.html"
+  fi
+
   # 步骤 4: 将 IndexNow 校验密钥文件同步到站点根目录
   if [ -f "$BLOG_DIR/6cba777ce8eea246ac93738da8d8592c.txt" ]; then
     log "同步 IndexNow 密钥到 $ROOT_DIR/6cba777ce8eea246ac93738da8d8592c.txt"

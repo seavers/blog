@@ -1,0 +1,468 @@
+---
+layout: null
+permalink: /home/index.html
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ site.title }} - 作品与文章</title>
+<meta name="description" content="大海Online 的个人主页：HarmoBridge、DahaiAppStore、鸿蒙 2FA 身份验证器、Web2App、HTML5 版仙剑等独立作品，以及 2013 年至今的技术博客文章。">
+<link rel="canonical" href="{{ site.url }}/">
+<link rel="icon" href="/favicon.ico">
+<link rel="alternate" type="application/atom+xml" title="{{ site.title }}" href="{{ site.baseurl }}/atom.xml">
+<style>
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface-2: #eeebe3;
+  --ink: #1d1c1a;
+  --ink-2: #55524b;
+  --ink-3: #8a867c;
+  --line: #e2ddd2;
+  --accent: #0b6178;
+  --accent-soft: #dcecef;
+  --shadow: 0 1px 2px rgba(30, 28, 24, .04), 0 8px 24px -12px rgba(30, 28, 24, .12);
+  --radius: 14px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111417;
+    --surface: #181c20;
+    --surface-2: #20252a;
+    --ink: #e8e5de;
+    --ink-2: #a9a59b;
+    --ink-3: #757168;
+    --line: #2a3036;
+    --accent: #66b9cc;
+    --accent-soft: #1b3138;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .5);
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+/* ---------- 顶栏 ---------- */
+.topbar {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  backdrop-filter: saturate(1.4) blur(12px);
+  -webkit-backdrop-filter: saturate(1.4) blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 650; letter-spacing: .01em; white-space: nowrap; }
+.brand-mark {
+  width: 28px; height: 28px; border-radius: 8px; flex: none;
+  background: var(--accent); display: grid; place-items: center;
+}
+.brand-mark svg { width: 18px; height: 18px; }
+.nav { display: flex; gap: 4px; align-items: center; }
+.nav a, .nav button {
+  font: inherit; font-size: 15px; color: var(--ink-2); background: none; border: 0; cursor: pointer;
+  padding: 6px 12px; border-radius: 8px; transition: color .15s, background .15s;
+}
+.nav a:hover, .nav button:hover { color: var(--ink); background: var(--surface-2); }
+.nav button[aria-selected="true"] { color: var(--ink); background: var(--surface-2); font-weight: 600; }
+
+/* ---------- 头图 ---------- */
+.hero { padding: 72px 0 40px; }
+.eyebrow { font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; margin: 0 0 14px; }
+.hero h1 { font-size: clamp(30px, 5vw, 46px); line-height: 1.2; margin: 0 0 16px; font-weight: 700; letter-spacing: -.01em; }
+.hero p.lead { font-size: 18px; color: var(--ink-2); max-width: 620px; margin: 0 0 28px; }
+.stats { display: flex; gap: 32px; flex-wrap: wrap; color: var(--ink-3); font-size: 14px; }
+.stats b { display: block; color: var(--ink); font-size: 24px; font-weight: 650; font-variant-numeric: tabular-nums; }
+
+/* ---------- 分区切换 ---------- */
+.tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--line); margin-bottom: 32px; }
+.tab {
+  font: inherit; background: none; border: 0; cursor: pointer; padding: 12px 0; margin-bottom: -1px;
+  color: var(--ink-3); font-size: 17px; font-weight: 600; border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+.tab small { font-weight: 500; color: var(--ink-3); margin-left: 6px; font-size: 13px; }
+.panel[hidden] { display: none; }
+main { padding-bottom: 64px; }
+
+/* ---------- 作品 ---------- */
+.works { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.work {
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 24px; display: flex; flex-direction: column; box-shadow: var(--shadow);
+  transition: transform .2s, border-color .2s;
+}
+.work:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 35%, var(--line)); }
+.work.featured { grid-column: 1 / -1; }
+.work-head { display: flex; gap: 16px; align-items: center; margin-bottom: 14px; }
+.icon {
+  width: 56px; height: 56px; border-radius: 14px; flex: none; overflow: hidden;
+  display: grid; place-items: center; color: #fff;
+}
+.icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.icon svg { width: 28px; height: 28px; }
+.work h3 { margin: 0; font-size: 20px; line-height: 1.3; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.tag { font-size: 12px; line-height: 1; padding: 5px 8px; border-radius: 6px; background: var(--surface-2); color: var(--ink-2); }
+.work p { margin: 0 0 14px; color: var(--ink-2); }
+.feats { list-style: none; padding: 0; margin: 0 0 20px; display: grid; gap: 6px; font-size: 14.5px; color: var(--ink-2); }
+.feats li { padding-left: 18px; position: relative; }
+.feats li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); opacity: .7; }
+.featured .feats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 550;
+  padding: 8px 14px; border-radius: 9px; border: 1px solid var(--line); color: var(--ink);
+  background: var(--surface); transition: background .15s, border-color .15s;
+}
+.btn:hover { background: var(--surface-2); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn.primary { color: #0d1a1e; } }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn svg { width: 15px; height: 15px; }
+.works-note { margin-top: 28px; color: var(--ink-3); font-size: 14px; }
+
+/* ---------- 文章 ---------- */
+.toolbar { display: flex; flex-direction: column; gap: 14px; margin-bottom: 28px; }
+.search {
+  position: relative;
+}
+.search svg { position: absolute; left: 14px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%); color: var(--ink-3); }
+.search input {
+  width: 100%; font: inherit; font-size: 16px; padding: 12px 14px 12px 42px; border-radius: 11px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.search input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: inherit; font-size: 13.5px; cursor: pointer; padding: 5px 12px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink-2); transition: all .15s;
+}
+.chip:hover { color: var(--ink); border-color: var(--ink-3); }
+.chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.chip span { opacity: .6; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.year { display: grid; grid-template-columns: 88px minmax(0, 1fr); gap: 16px; padding: 20px 0; border-top: 1px solid var(--line); }
+.year:first-child { border-top: 0; padding-top: 0; }
+.year h2 { margin: 0; font-size: 22px; font-weight: 650; color: var(--ink-3); font-variant-numeric: tabular-nums; position: sticky; top: 76px; align-self: start; }
+.posts { list-style: none; margin: 0; padding: 0; }
+.post a { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 16px; padding: 10px 12px; margin: 0 -12px; border-radius: 10px; transition: background .15s; }
+.post a:hover { background: var(--surface); }
+.post .t { font-size: 16.5px; font-weight: 550; line-height: 1.45; }
+.post a:hover .t { color: var(--accent); }
+.post .d { font-size: 13.5px; color: var(--ink-3); font-variant-numeric: tabular-nums; white-space: nowrap; padding-top: 2px; }
+.post .m { grid-column: 1 / -1; font-size: 13px; color: var(--ink-3); display: flex; gap: 10px; flex-wrap: wrap; }
+.post .m i { font-style: normal; }
+.empty { color: var(--ink-3); padding: 40px 0; text-align: center; }
+.more { margin-top: 24px; font-size: 14px; color: var(--ink-3); }
+.more a { color: var(--accent); }
+
+footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--ink-3); font-size: 13.5px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+footer a:hover { color: var(--ink); }
+
+@media (max-width: 760px) {
+  .wrap { padding: 0 16px; }
+  .nav .hide-sm { display: none; }
+  .hero { padding: 44px 0 28px; }
+  .hero p.lead { font-size: 16.5px; }
+  .stats { gap: 24px; }
+  .works { grid-template-columns: minmax(0, 1fr); }
+  .featured .feats { grid-template-columns: minmax(0, 1fr); }
+  .work { padding: 20px; }
+  .year { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .year h2 { position: static; font-size: 18px; }
+  .post a { grid-template-columns: minmax(0, 1fr); }
+  .post .d { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg>
+      </span>
+      大海 Online
+    </a>
+    <nav class="nav" aria-label="站点导航">
+      <button type="button" data-go="works">作品</button>
+      <button type="button" data-go="posts">文章</button>
+      <a class="hide-sm" href="{{ site.baseurl }}/about.html">关于</a>
+      <a class="hide-sm" href="{{ site.baseurl }}/atom.xml">RSS</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Looking for Interest</p>
+    <h1>写点小工具，也写点笔记。</h1>
+    <p class="lead">我是大海。这里放着我业余做的独立作品，覆盖 Mac、鸿蒙、Android 和网页；还有从 2013 年写到现在的技术博客。</p>
+    <div class="stats">
+      <div><b>5</b>件独立作品</div>
+      <div><b>{{ site.posts | size }}</b>篇文章</div>
+      <div><b>{{ site.posts.last.date | date: "%Y" }}</b>开始写博客</div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="tabs" role="tablist" aria-label="内容分区">
+    <button class="tab" role="tab" id="tab-works" aria-controls="works" data-go="works">作品展示<small>5</small></button>
+    <button class="tab" role="tab" id="tab-posts" aria-controls="posts" data-go="posts">文章列表<small>{{ site.posts | size }}</small></button>
+  </div>
+
+  <!-- ================= 作品展示 ================= -->
+  <section class="panel" id="works" role="tabpanel" aria-labelledby="tab-works">
+    <div class="works">
+
+      <article class="work featured">
+        <div class="work-head">
+          <div class="icon" style="background:linear-gradient(135deg,#1f6feb,#7b3fe4)" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="13" height="10" rx="1.5"/><path d="M5 18h7"/><rect x="17" y="6" width="5" height="12" rx="1.2"/><path d="M13 9h3m-1.5-1.5L16 9l-1.5 1.5"/></svg>
+          </div>
+          <div>
+            <h3>HarmoBridge</h3>
+            <div class="tags"><span class="tag">macOS</span><span class="tag">HarmonyOS</span><span class="tag">最新</span></div>
+          </div>
+        </div>
+        <p>让一台 Mac 和一部鸿蒙手机一对一互通。扫码配对后，快捷键就有了固定目标：在 Mac 上按一下，就能把手机屏幕、剪贴板或文件取过来。</p>
+        <ul class="feats">
+          <li>⌘⌃V 直接粘贴手机剪贴板</li>
+          <li>一键截取手机屏幕到 Mac</li>
+          <li>Mac 与手机之间互传文件</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="{{ site.baseurl }}/uploads/20261117/HarmoBridge-v0.1.0-macos-arm64.zip">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>Mac 试用版</a>
+          <a class="btn" href="{{ site.baseurl }}/2026-11-17-harmobridge-mac-harmonyos-pairing.html">阅读介绍</a>
+        </div>
+      </article>
+
+      <article class="work">
+        <div class="work-head">
+          <div class="icon" aria-hidden="true"><img src="{{ site.baseurl }}/uploads/20260918/dahai-app-store-icon.png" alt="" loading="lazy"></div>
+          <div>
+            <h3>DahaiAppStore</h3>
+            <div class="tags"><span class="tag">macOS</span><span class="tag">Swift · SwiftUI</span></div>
+          </div>
+        </div>
+        <p>纯原生的 Mac 应用商店，把官方商店里找不到的开发者工具和开源软件放在一处。</p>
+        <ul class="feats">
+          <li>应用发现、一键安装与更新</li>
+          <li>下载队列与进度管理</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="/downloads/DahaiAppStore-v0.1.dmg">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>下载 DMG</a>
+          <a class="btn" href="{{ site.baseurl }}/2026-09-18-dahai-app-store-mac-native.html">阅读介绍</a>
+        </div>
+      </article>
+
+      <article class="work">
+        <div class="work-head">
+          <div class="icon" aria-hidden="true"><img src="https://2fa.dahai.online/app_icon.png" alt="" loading="lazy"></div>
+          <div>
+            <h3>Authenticator</h3>
+            <div class="tags"><span class="tag">HarmonyOS NEXT</span><span class="tag">ArkTS</span></div>
+          </div>
+        </div>
+        <p>鸿蒙原生的两步验证器，生成 TOTP 动态口令，全程离线，密钥只存在本机。</p>
+        <ul class="feats">
+          <li>扫码导入 GitHub、云平台等账号</li>
+          <li>本地加密存储，零网络依赖</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="https://2fa.dahai.online">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>产品主页</a>
+          <a class="btn" href="{{ site.baseurl }}/2026-09-14-harmonyos-next-2fa-authenticator-tech.html">技术解析</a>
+        </div>
+      </article>
+
+      <article class="work">
+        <div class="work-head">
+          <div class="icon" style="background:linear-gradient(135deg,#16a34a,#0d9488)" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg>
+          </div>
+          <div>
+            <h3>Web2App</h3>
+            <div class="tags"><span class="tag">Android</span><span class="tag">在线工具</span><span class="tag">开源</span></div>
+          </div>
+        </div>
+        <p>输入网址、标题，再传一个图标，几分钟后就能拿到这个网站专属的 Android APK。</p>
+        <ul class="feats">
+          <li>在线生成，无需安装 Android 开发环境</li>
+          <li>源码公开在 GitHub</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="http://web2app.dahai.online">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>在线生成</a>
+          <a class="btn" href="https://github.com/seavers/web2app">GitHub</a>
+          <a class="btn" href="{{ site.baseurl }}/2026-01-25-web2app-intro.html">阅读介绍</a>
+        </div>
+      </article>
+
+      <article class="work">
+        <div class="work-head">
+          <div class="icon" style="background:linear-gradient(135deg,#c2410c,#a21caf)" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 16 8"/><path d="M14 4h6v6l-4 4-6-6z"/><path d="m6 14 4 4"/></svg>
+          </div>
+          <div>
+            <h3>HTML5 版仙剑</h3>
+            <div class="tags"><span class="tag">HTML5</span><span class="tag">游戏</span><span class="tag">2013</span></div>
+          </div>
+        </div>
+        <p>刚学 HTML5 时写来练手的作品，当时解决了不少算法问题，浏览器打开就能玩。</p>
+        <ul class="feats">
+          <li>在线试玩，完成度约八成</li>
+          <li>源码可 clone 到本地运行</li>
+        </ul>
+        <div class="actions">
+          <a class="btn primary" href="/xianjian/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>在线试玩</a>
+          <a class="btn" href="http://xianjian.github.io/">GitHub</a>
+          <a class="btn" href="{{ site.baseurl }}/2013-11-27-xianjian.html">阅读介绍</a>
+        </div>
+      </article>
+
+    </div>
+    <p class="works-note">每件作品都有一篇文章，讲它为什么做、怎么做。更多内容见 <a href="#posts" data-go="posts" style="color:var(--accent)">文章列表</a>。</p>
+  </section>
+
+  <!-- ================= 文章列表 ================= -->
+  <section class="panel" id="posts" role="tabpanel" aria-labelledby="tab-posts" hidden>
+    <div class="toolbar">
+      <label class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="搜索文章标题、分类或标签" autocomplete="off" aria-label="搜索文章">
+      </label>
+      <div class="chips" id="chips" role="group" aria-label="按分类筛选"></div>
+    </div>
+
+    <div id="post-list">
+    {%- assign years = site.posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
+    {%- for y in years %}
+      <section class="year" data-year="{{ y.name }}">
+        <h2>{{ y.name }}</h2>
+        <ul class="posts">
+        {%- for post in y.items %}
+          <li class="post" data-cats="{{ post.categories | join: '|' | escape }}" data-text="{{ post.title | escape }} {{ post.categories | join: ' ' | escape }} {{ post.tags | join: ' ' | escape }}">
+            <a href="{{ site.baseurl }}{{ post.url }}">
+              <span class="t">{{ post.title }}</span>
+              <time class="d" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%m-%d" }}</time>
+              {%- if post.categories.size > 0 %}
+              <span class="m">{% for c in post.categories %}<i>#{{ c }}</i>{% endfor %}</span>
+              {%- endif %}
+            </a>
+          </li>
+        {%- endfor %}
+        </ul>
+      </section>
+    {%- endfor %}
+    </div>
+    <p class="empty" id="empty" hidden>没有找到匹配的文章，换个关键词试试。</p>
+    <p class="more">也可以按 <a href="{{ site.baseurl }}/archives.html">归档</a> 或 <a href="{{ site.baseurl }}/">博客原版首页</a> 浏览。</p>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; {{ site.time | date: "%Y" }} 大海 Online · <a href="{{ site.baseurl }}/">博客</a> · <a href="{{ site.baseurl }}/atom.xml">RSS</a></span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">浙ICP备13034675号-3</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var tabs = document.querySelectorAll('.tab');
+  var navBtns = document.querySelectorAll('.nav button');
+  var panels = { works: document.getElementById('works'), posts: document.getElementById('posts') };
+
+  function show(name, push) {
+    if (!panels[name]) name = 'works';
+    Object.keys(panels).forEach(function (k) { panels[k].hidden = k !== name; });
+    [].forEach.call(tabs, function (t) { t.setAttribute('aria-selected', String(t.dataset.go === name)); });
+    [].forEach.call(navBtns, function (t) { t.setAttribute('aria-selected', String(t.dataset.go === name)); });
+    if (push && location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+  }
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-go]');
+    if (!el) return;
+    e.preventDefault();
+    show(el.dataset.go, true);
+    if (el.closest('.nav') || el.closest('.works-note')) {
+      document.querySelector('.tabs').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+  window.addEventListener('hashchange', function () { show(location.hash.slice(1)); });
+  show(location.hash.slice(1));
+
+  // ---------- 文章筛选 ----------
+  var items = [].slice.call(document.querySelectorAll('.post'));
+  var years = [].slice.call(document.querySelectorAll('.year'));
+  var input = document.getElementById('q');
+  var chipsBox = document.getElementById('chips');
+  var empty = document.getElementById('empty');
+  var activeCat = '';
+
+  var counts = {};
+  items.forEach(function (li) {
+    (li.dataset.cats || '').split('|').forEach(function (c) { if (c) counts[c] = (counts[c] || 0) + 1; });
+  });
+  var cats = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).slice(0, 14);
+
+  function chip(label, value, n) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'chip'; b.dataset.cat = value;
+    b.setAttribute('aria-pressed', String(value === activeCat));
+    b.textContent = label;
+    var s = document.createElement('span'); s.textContent = n; b.appendChild(s);
+    return b;
+  }
+  chipsBox.appendChild(chip('全部', '', items.length));
+  cats.forEach(function (c) { chipsBox.appendChild(chip(c, c, counts[c])); });
+
+  chipsBox.addEventListener('click', function (e) {
+    var b = e.target.closest('.chip');
+    if (!b) return;
+    activeCat = b.dataset.cat;
+    [].forEach.call(chipsBox.children, function (c) { c.setAttribute('aria-pressed', String(c === b)); });
+    filter();
+  });
+  input.addEventListener('input', filter);
+
+  function filter() {
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    items.forEach(function (li) {
+      var okCat = !activeCat || ('|' + li.dataset.cats + '|').indexOf('|' + activeCat + '|') > -1;
+      var okQ = !q || li.dataset.text.toLowerCase().indexOf(q) > -1;
+      li.hidden = !(okCat && okQ);
+      if (!li.hidden) shown++;
+    });
+    years.forEach(function (y) { y.hidden = !y.querySelector('.post:not([hidden])'); });
+    empty.hidden = shown > 0;
+  }
+})();
+</script>
+<script async src="https://hm.baidu.com/hm.js?c0ef5fbe89903d42ae2616fb93947acc"></script>
+</body>
+</html>
