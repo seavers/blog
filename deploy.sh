@@ -28,20 +28,27 @@ fi
 log "构建 _deploy"
 node tools/build.mjs _deploy
 
+# 内容有变化才复制（先写临时文件再 mv，原子替换），未变化的文件保留原修改时间
+sync_file() {
+  src="$1"
+  dest="$2"
+  [ -f "$src" ] || return 0
+  if [ -f "$dest" ] && cmp -s "$src" "$dest"; then
+    log "未变化，跳过 $dest"
+  else
+    log "同步 $dest"
+    cp -p "$src" "$dest.tmp.$$"
+    mv -f "$dest.tmp.$$" "$dest"
+  fi
+}
+
 if [ -d "$ROOT_DIR" ]; then
   # 站点根目录文件：首页、sitemap、robots、llms.txt、IndexNow 密钥
-  log "同步首页到 $ROOT_DIR/index.html"
-  cp "$BLOG_DIR/_deploy/home/index.html" "$ROOT_DIR/index.html"
-
+  sync_file "$BLOG_DIR/_deploy/home/index.html" "$ROOT_DIR/index.html"
   for f in sitemap.xml robots.txt llms.txt; do
-    log "同步 $f 到 $ROOT_DIR/$f"
-    cp "$BLOG_DIR/_deploy/$f" "$ROOT_DIR/$f"
+    sync_file "$BLOG_DIR/_deploy/$f" "$ROOT_DIR/$f"
   done
-
-  if [ -f "$BLOG_DIR/6cba777ce8eea246ac93738da8d8592c.txt" ]; then
-    log "同步 IndexNow 密钥到 $ROOT_DIR/6cba777ce8eea246ac93738da8d8592c.txt"
-    cp "$BLOG_DIR/6cba777ce8eea246ac93738da8d8592c.txt" "$ROOT_DIR/6cba777ce8eea246ac93738da8d8592c.txt"
-  fi
+  sync_file "$BLOG_DIR/6cba777ce8eea246ac93738da8d8592c.txt" "$ROOT_DIR/6cba777ce8eea246ac93738da8d8592c.txt"
 fi
 
 # 向百度普通收录 API 推送最新博文 URL（失败不阻断部署）

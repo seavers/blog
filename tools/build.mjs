@@ -3,7 +3,7 @@
  * 大海Online 博客静态站点构建脚本（替代 Jekyll）
  *
  * 输入：_posts/*.markdown、pages/*、home/works.json、site.json、static/、uploads/
- * 输出：_deploy/（nginx 以 /blog 别名指向该目录；home/index.html 由 deploy.sh 复制到站点根目录）
+ * 输出：_deploy/（增量更新，内容未变的文件保留修改时间；nginx 以 /blog 别名指向该目录；home/index.html 由 deploy.sh 复制到站点根目录）
  *
  * 保持与旧 Jekyll 站点一致的 URL：
  *   /blog/YYYY-MM-DD-slug.html（日期取 front matter 的 date）
@@ -14,15 +14,24 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { Marked } from 'marked';
 import hljs from 'highlight.js';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT = path.resolve(ROOT, process.argv[2] || '_deploy');
-const TMP = OUT + '.building';
+if (OUT === ROOT || ROOT.startsWith(OUT + path.sep) || OUT === path.parse(OUT).root) throw new Error(`输出目录不安全：${OUT}`);
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.json'), 'utf8'));
 const BASE = site.baseurl;
-const BUILD_TIME = new Date();
+
+// 输出必须是确定性的：同样的输入每次生成完全相同的字节，未变化的文件才能保持原修改时间。
+// 因此不使用“构建时间”，改用静态资源内容哈希和最新文章日期。
+const ASSET_VER = crypto.createHash('sha1')
+  .update(fs.readFileSync(path.join(ROOT, 'static', 'site.css')))
+  .update(fs.readFileSync(path.join(ROOT, 'static', 'site.js')))
+  .digest('hex').slice(0, 10);
+let SITE_UPDATED = ''; // 最新文章的 ISO 时间，main() 中赋值
+let SITE_YEAR = '';
 
 // ---------------------------------------------------------------- 工具函数
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -34,15 +43,69 @@ const stripHtml = (s) => String(s).replace(/<script[\s\S]*?<\/script>/gi, '').re
 const truncate = (s, n) => (s.length > n ? s.slice(0, n).trimEnd() + '…' : s);
 const absUrl = (p) => site.url + p;
 
-function write(rel, content) {
-  const file = path.join(TMP, rel);
+// ---------------------------------------------------------------- 增量输出
+// 直接在 _deploy 中原地更新：内容相同的文件不碰（保留修改时间），有变化的先写临时文件再 rename（原子替换，
+// nginx 不会读到半个文件），本次没有生成的旧文件在最后删除。
+const outputs = new Set();
+const stats = { changed: 0, unchanged: 0, removed: 0 };
+
+function replaceAtomically(file, writeTmp) {
   fs.mkdirSync(path.dirname(file), { recursive: true });
-  fs.writeFileSync(file, content);
+  const tmp = `${file}.tmp-${process.pid}`;
+  writeTmp(tmp);
+  fs.renameSync(tmp, file);
+  stats.changed++;
 }
 
-function copyDir(src, dest) {
+function write(rel, content) {
+  const file = path.join(OUT, rel);
+  outputs.add(file);
+  const buf = Buffer.from(content);
+  try {
+    if (fs.readFileSync(file).equals(buf)) { stats.unchanged++; return; }
+  } catch { /* 文件不存在 */ }
+  replaceAtomically(file, (tmp) => fs.writeFileSync(tmp, buf));
+}
+
+/** 复制静态文件：大小和修改时间都与源一致即视为未变；否则比对内容，确实不同才复制（保留源文件的修改时间） */
+function copyFile(src, rel) {
+  const file = path.join(OUT, rel);
+  outputs.add(file);
+  const s = fs.statSync(src);
+  try {
+    const d = fs.statSync(file);
+    if (d.size === s.size && (Math.trunc(d.mtimeMs) === Math.trunc(s.mtimeMs) || fs.readFileSync(file).equals(fs.readFileSync(src)))) {
+      stats.unchanged++;
+      return;
+    }
+  } catch { /* 文件不存在 */ }
+  replaceAtomically(file, (tmp) => { fs.copyFileSync(src, tmp); fs.utimesSync(tmp, s.atime, s.mtime); });
+}
+
+function copyDir(src, relDir) {
   if (!fs.existsSync(src)) return;
-  fs.cpSync(src, dest, { recursive: true, filter: (p) => !path.basename(p).startsWith('.') });
+  for (const ent of fs.readdirSync(src, { withFileTypes: true })) {
+    if (ent.name.startsWith('.')) continue;
+    const from = path.join(src, ent.name);
+    const rel = path.join(relDir, ent.name);
+    if (ent.isDirectory()) copyDir(from, rel);
+    else if (ent.isFile()) copyFile(from, rel);
+  }
+}
+
+/** 删除本次构建没有产出的文件（文章删除/改名、分类变化等），并清掉空目录 */
+function removeStale(dir = OUT) {
+  if (!fs.existsSync(dir)) return;
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, ent.name);
+    if (ent.isDirectory()) {
+      removeStale(p);
+      if (fs.readdirSync(p).length === 0) fs.rmdirSync(p);
+    } else if (!outputs.has(p)) {
+      fs.rmSync(p, { force: true });
+      stats.removed++;
+    }
+  }
 }
 
 /** 解析 front matter（只支持本站用到的 YAML 子集：标量、"- 项" 列表、[a, b] 行内列表） */
@@ -199,7 +262,7 @@ function layout({ title, description, canonical, body, active, home = false, hea
 <meta property="og:url" content="${esc(canonical)}">
 <link rel="icon" href="/favicon.ico">
 <link rel="alternate" type="application/atom+xml" title="${esc(site.title)}" href="${BASE}/atom.xml">
-<link rel="stylesheet" href="${BASE}/static/site.css?v=${BUILD_TIME.getTime()}">
+<link rel="stylesheet" href="${BASE}/static/site.css?v=${ASSET_VER}">
 ${head}</head>
 <body>
 <header class="topbar">
@@ -216,11 +279,11 @@ ${head}</head>
 ${body}
 <footer>
   <div class="wrap">
-    <span>&copy; ${BUILD_TIME.getFullYear()} ${esc(site.brand)} · <a href="${BASE}/">文章</a> · <a href="${BASE}/archives.html">归档</a> · <a href="${BASE}/atom.xml">RSS</a></span>
+    <span>&copy; ${SITE_YEAR}${esc(site.brand)} · <a href="${BASE}/">文章</a> · <a href="${BASE}/archives.html">归档</a> · <a href="${BASE}/atom.xml">RSS</a></span>
     <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">${esc(site.icp)}</a>
   </div>
 </footer>
-<script src="${BASE}/static/site.js?v=${BUILD_TIME.getTime()}" defer></script>
+<script src="${BASE}/static/site.js?v=${ASSET_VER}" defer></script>
 <script async src="https://hm.baidu.com/hm.js?${site.baiduTongji}"></script>
 </body>
 </html>
@@ -454,7 +517,7 @@ function buildFeeds(posts, works) {
   <title><![CDATA[${cdata(site.title)}]]></title>
   <link href="${site.url}${BASE}/atom.xml" rel="self"/>
   <link href="${site.url}/"/>
-  <updated>${BUILD_TIME.toISOString()}</updated>
+  <updated>${SITE_UPDATED}</updated>
   <id>${site.url}/</id>
   <author>
     <name><![CDATA[${cdata(site.author)}]]></name>
@@ -471,7 +534,7 @@ ${posts.slice(0, 200).map((p) => `  <entry>
 `);
 
   const urlEntry = (loc, lastmod, freq, prio) => `  <url>\n    <loc>${esc(loc)}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>${freq}</changefreq>\n    <priority>${prio}</priority>\n  </url>`;
-  const now = BUILD_TIME.toISOString();
+  const now = SITE_UPDATED;
   write('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${[
@@ -508,10 +571,11 @@ ${posts.map((p) => `- [${p.title}](${absUrl(p.url)}): ${p.date.ymd}`).join('\n')
 // ---------------------------------------------------------------- 主流程
 function main() {
   const started = Date.now();
-  fs.rmSync(TMP, { recursive: true, force: true });
-  fs.mkdirSync(TMP, { recursive: true });
+  fs.mkdirSync(OUT, { recursive: true });
 
   const posts = loadPosts();
+  SITE_UPDATED = posts[0].date.iso;
+  SITE_YEAR = posts[0].date.y;
   const works = JSON.parse(fs.readFileSync(path.join(ROOT, 'home', 'works.json'), 'utf8'));
   const categories = groupBy(posts, 'categories');
   const tags = groupBy(posts, 'tags');
@@ -522,18 +586,14 @@ function main() {
   buildPages();
   buildFeeds(posts, works);
 
-  copyDir(path.join(ROOT, 'static'), path.join(TMP, 'static'));
-  copyDir(path.join(ROOT, 'uploads'), path.join(TMP, 'uploads'));
-  fs.copyFileSync(path.join(ROOT, 'robots.txt'), path.join(TMP, 'robots.txt'));
+  copyDir(path.join(ROOT, 'static'), 'static');
+  copyDir(path.join(ROOT, 'uploads'), 'uploads');
+  copyFile(path.join(ROOT, 'robots.txt'), 'robots.txt');
 
-  // 原子替换：nginx 正在读取 _deploy，先建好新目录再整体切换
-  const old = OUT + '.old';
-  fs.rmSync(old, { recursive: true, force: true });
-  if (fs.existsSync(OUT)) fs.renameSync(OUT, old);
-  fs.renameSync(TMP, OUT);
-  fs.rmSync(old, { recursive: true, force: true });
+  removeStale();
 
-  console.log(`[build] ${posts.length} 篇文章，${categories.length} 个分类，${tags.length} 个标签 → ${path.relative(ROOT, OUT) || OUT}（${Date.now() - started}ms）`);
+  console.log(`[build] ${posts.length} 篇文章，${categories.length} 个分类，${tags.length} 个标签 → ${path.relative(ROOT, OUT) || OUT}`
+    + `：更新 ${stats.changed}，未变 ${stats.unchanged}，删除 ${stats.removed}（${Date.now() - started}ms）`);
 }
 
 main();
