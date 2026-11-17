@@ -279,7 +279,7 @@ ${head}</head>
 ${body}
 <footer>
   <div class="wrap">
-    <span>&copy; ${SITE_YEAR}${esc(site.brand)} · <a href="${BASE}/">文章</a> · <a href="${BASE}/archives.html">归档</a> · <a href="${BASE}/atom.xml">RSS</a></span>
+    <span>&copy; ${SITE_YEAR} ${esc(site.brand)} · <a href="${BASE}/">文章</a> · <a href="${BASE}/archives.html">归档</a> · <a href="${BASE}/atom.xml">RSS</a></span>
     <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">${esc(site.icp)}</a>
   </div>
 </footer>
