@@ -42,9 +42,9 @@ tags:
 
 ## 四、下载 Mac 试用版
 
-[下载 HarmoBridge 0.1.0（Apple 芯片 Mac，ZIP，需准备 HDC）]({{ site.baseurl }}/uploads/20261117/HarmoBridge-v0.1.0-macos-arm64.zip)
+[下载 HarmoBridge 0.1.0（Apple 芯片 Mac，ZIP，已内置 HDC）]({{ site.baseurl }}/uploads/20261117/HarmoBridge-v0.1.0-macos-arm64.zip)
 
 解压后将 `HarmoBridge.app` 拖到「应用程序」。这是采用临时签名、未经 Apple 公证的试用包。
 
-- **HDC 模式**要求 macOS 13 或更新版本。新版已把 arm64 版 `hdc` 和 USB 动态库内置到 App，在 Apple 芯片 Mac 上打开即可使用，无需安装 DevEco Studio 或配置 `PATH`。内置版的公开下载待确认第三方组件的分发条件。使用上方试用版时，可从华为 [macOS 命令行工具包](https://developer.huawei.com/consumer/cn/download/command-line-tools-for-hmos)获取 `hdc` 和随附的 USB 动态库，将工具目录加入 `PATH` 后从同一终端运行 `/Applications/HarmoBridge.app/Contents/MacOS/HarmoBridge`。手机需开启开发者调试，可通过 USB 或无线连接。截图和文件传输走 HDC，文字剪贴板还要求手机支持 `testhelper`。
+- **HDC 模式**要求 macOS 13 或更新版本，仅支持 Apple Silicon。下载的 App 已内置 arm64 版 `hdc` 和 USB 动态库，拖入「应用程序」后即可使用，无需安装 DevEco Studio、下载额外工具或配置 `PATH`。手机需开启开发者调试，可通过 USB 或无线连接。截图和文件传输走 HDC，文字剪贴板还要求手机支持 `testhelper`。
 - **配套 App 模式**要求 macOS 15 或更新版本，手机需另行安装鸿蒙配套 App。本次提供 Mac 下载包。两端已接入双向截图、文字与图片剪贴板和文件传输，完整真机流程仍待验证，尤其是手机切到后台后的连接和截图。
