@@ -1,0 +1,13 @@
+{
+  "title": "大海Online的博客",
+  "brand": "大海 Online",
+  "subtitle": "Looking for Interest",
+  "description": "大海Online 的个人主页与技术博客：独立作品展示，以及 Java、前端、Linux、macOS、鸿蒙等方向的开发笔记。",
+  "author": "lianghaijun",
+  "email": "lianghaijun@163.com",
+  "url": "https://dahai.online",
+  "baseurl": "/blog",
+  "paginate": 10,
+  "icp": "浙ICP备13034675号-3",
+  "baiduTongji": "c0ef5fbe89903d42ae2616fb93947acc"
+}

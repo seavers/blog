@@ -1,0 +1,15 @@
+{
+  "name": "dahai-blog",
+  "private": true,
+  "type": "module",
+  "description": "大海Online 博客静态站点构建（替代 Jekyll）",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "serve": "node tools/serve.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "highlight.js": "11.11.1",
+    "marked": "15.0.12"
+  }
+}

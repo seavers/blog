@@ -1,0 +1,65 @@
+[
+  {
+    "name": "HarmoBridge",
+    "featured": true,
+    "icon": { "gradient": "#1f6feb,#7b3fe4", "svg": "<rect x=\"2\" y=\"4\" width=\"13\" height=\"10\" rx=\"1.5\"/><path d=\"M5 18h7\"/><rect x=\"17\" y=\"6\" width=\"5\" height=\"12\" rx=\"1.2\"/><path d=\"M13 9h3m-1.5-1.5L16 9l-1.5 1.5\"/>" },
+    "tags": ["macOS", "HarmonyOS", "最新"],
+    "desc": "让一台 Mac 和一部鸿蒙手机一对一互通。扫码配对后，快捷键就有了固定目标：在 Mac 上按一下，就能把手机屏幕、剪贴板或文件取过来。",
+    "feats": ["⌘⌃V 直接粘贴手机剪贴板", "一键截取手机屏幕到 Mac", "Mac 与手机之间互传文件"],
+    "post": "2026-11-17-harmobridge-mac-harmonyos-pairing",
+    "actions": [
+      { "label": "Mac 试用版", "href": "{base}/uploads/20261117/HarmoBridge-v0.1.0-macos-arm64.zip", "primary": true, "kind": "download" },
+      { "label": "阅读介绍", "post": true }
+    ]
+  },
+  {
+    "name": "DahaiAppStore",
+    "icon": { "img": "{base}/uploads/20260918/dahai-app-store-icon.png" },
+    "tags": ["macOS", "Swift · SwiftUI"],
+    "desc": "纯原生的 Mac 应用商店，把官方商店里找不到的开发者工具和开源软件放在一处。",
+    "feats": ["应用发现、一键安装与更新", "下载队列与进度管理"],
+    "post": "2026-09-18-dahai-app-store-mac-native",
+    "actions": [
+      { "label": "下载 DMG", "href": "/downloads/DahaiAppStore-v0.1.dmg", "primary": true, "kind": "download" },
+      { "label": "阅读介绍", "post": true }
+    ]
+  },
+  {
+    "name": "Authenticator",
+    "icon": { "img": "https://2fa.dahai.online/app_icon.png" },
+    "tags": ["HarmonyOS NEXT", "ArkTS"],
+    "desc": "鸿蒙原生的两步验证器，生成 TOTP 动态口令，全程离线，密钥只存在本机。",
+    "feats": ["扫码导入 GitHub、云平台等账号", "本地加密存储，零网络依赖"],
+    "post": "2026-09-14-harmonyos-next-2fa-authenticator-tech",
+    "actions": [
+      { "label": "产品主页", "href": "https://2fa.dahai.online", "primary": true, "kind": "external" },
+      { "label": "技术解析", "post": true }
+    ]
+  },
+  {
+    "name": "Web2App",
+    "icon": { "gradient": "#16a34a,#0d9488", "svg": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z\"/>" },
+    "tags": ["Android", "在线工具", "开源"],
+    "desc": "输入网址、标题，再传一个图标，几分钟后就能拿到这个网站专属的 Android APK。",
+    "feats": ["在线生成，无需安装 Android 开发环境", "源码公开在 GitHub"],
+    "post": "2026-01-25-web2app-intro",
+    "actions": [
+      { "label": "在线生成", "href": "http://web2app.dahai.online", "primary": true, "kind": "external" },
+      { "label": "GitHub", "href": "https://github.com/seavers/web2app" },
+      { "label": "阅读介绍", "post": true }
+    ]
+  },
+  {
+    "name": "HTML5 版仙剑",
+    "icon": { "gradient": "#c2410c,#a21caf", "svg": "<path d=\"M4 20 16 8\"/><path d=\"M14 4h6v6l-4 4-6-6z\"/><path d=\"m6 14 4 4\"/>" },
+    "tags": ["HTML5", "游戏", "2013"],
+    "desc": "刚学 HTML5 时写来练手的作品，当时解决了不少算法问题，浏览器打开就能玩。",
+    "feats": ["在线试玩，完成度约八成", "源码可 clone 到本地运行"],
+    "post": "2013-11-27-xianjian",
+    "actions": [
+      { "label": "在线试玩", "href": "/xianjian/", "primary": true, "kind": "play" },
+      { "label": "GitHub", "href": "http://xianjian.github.io/" },
+      { "label": "阅读介绍", "post": true }
+    ]
+  }
+]
