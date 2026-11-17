@@ -7,4 +7,4 @@ categories:
 - windows
 ---
 
-<img alt="" src="http://p.blog.csdn.net/images/p_blog_csdn_net/seavers/NT%E6%8A%80%E6%9C%AF.bmp">
+> 这篇文章原本只有一张整理 Windows NT 技术要点的图片，发布在 CSDN 旧版博客图床上，该图床已停止服务，原图无法再显示。
