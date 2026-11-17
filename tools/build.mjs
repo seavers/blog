@@ -104,6 +104,24 @@ const marked = new Marked({
 });
 
 const renderMarkdown = (src) => marked.parse(src);
+
+/**
+ * 旧文（iteye / CSDN 粘贴）内联样式里的硬编码颜色改写为 CSS 变量，原色作为回退值：
+ *   style="color: #0000ff"  →  style="color: var(--lg-c-0000ff, #0000ff)"
+ * 亮色模式下显示不变，暗色模式由 site.css 把这些变量映射到站点配色，避免黑字落在深色背景上。
+ */
+function themeInlineColors(html) {
+  return html.replace(/\sstyle="([^"]*)"/gi, (attr, style) => {
+    const themed = style.replace(/(^|;)(\s*)(background-color|background|color)(\s*:\s*)#([0-9a-f]{6}|[0-9a-f]{3})\b/gi,
+      (m, sep, sp, prop, colon, hex) => {
+        hex = hex.toLowerCase();
+        if (hex.length === 3) hex = hex.replace(/./g, (c) => c + c);
+        const kind = prop.toLowerCase() === 'color' ? 'c' : 'bg';
+        return `${sep}${sp}${prop}${colon}var(--lg-${kind}-${hex}, #${hex})`;
+      });
+    return ` style="${themed}"`;
+  });
+}
 const applyVars = (src) => src.replace(/\{\{\s*site\.baseurl\s*\}\}/g, BASE).replace(/\{\{\s*site\.url\s*\}\}/g, site.url);
 
 // ---------------------------------------------------------------- 读取文章
@@ -118,7 +136,7 @@ function loadPosts() {
     const date = parseDate(data.date, fm[1]);
     const slug = fm[2];
     const md = applyVars(body);
-    const html = renderMarkdown(md);
+    const html = themeInlineColors(renderMarkdown(md));
     const moreAt = md.indexOf('<!--more-->');
     const excerptMd = moreAt > -1 ? md.slice(0, moreAt) : md.split(/\r?\n\s*\r?\n/).find((p) => p.trim()) || '';
     posts.push({
@@ -339,8 +357,9 @@ function buildLists(posts, categories, tags) {
     rel: 'index.html', title: '文章', eyebrow: `${posts.length} 篇 · ${firstYear} 至今`, posts, canonicalPath: `${BASE}/`,
     lead: '从 iteye 时代的 Java 笔记，到 macOS 和鸿蒙上的独立开发。可以搜索，也可以按分类筛选。',
   });
+  // 归档与 /blog/ 是同一批文章的两种列表，canonical 统一指向 /blog/，sitemap 只收录 /blog/
   listPage({
-    rel: 'archives.html', title: '归档', eyebrow: `${posts.length} 篇文章`, posts, canonicalPath: `${BASE}/archives.html`,
+    rel: 'archives.html', title: '归档', eyebrow: `${posts.length} 篇文章`, posts, canonicalPath: `${BASE}/`,
     search: false, chips: chipLinks(categories, `${BASE}/categories/`),
   });
 
@@ -458,7 +477,6 @@ ${posts.slice(0, 200).map((p) => `  <entry>
 ${[
     urlEntry(`${site.url}/`, now, 'daily', '1.0'),
     urlEntry(`${site.url}${BASE}/`, now, 'daily', '0.9'),
-    urlEntry(`${site.url}${BASE}/archives.html`, now, 'daily', '0.9'),
     ...posts.map((p) => urlEntry(absUrl(p.url), p.date.iso, 'monthly', '0.8')),
   ].join('\n')}
 </urlset>
@@ -482,7 +500,7 @@ ${posts.map((p) => `- [${p.title}](${absUrl(p.url)}): ${p.date.ymd}`).join('\n')
 ## 站点地图与资源
 - [首页](${site.url}/): 作品展示与文章列表
 - [Sitemap](${site.url}/sitemap.xml): 全站 XML 站点地图
-- [归档](${site.url}${BASE}/archives.html): 博客历史归档页面
+- [文章](${site.url}${BASE}/): 全部博文列表，可按分类筛选
 - [RSS](${site.url}${BASE}/atom.xml): Atom 订阅
 `);
 }

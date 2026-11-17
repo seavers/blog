@@ -18,6 +18,10 @@
   --hl-comment: #8a867c;
   --hl-title: #0b5aa6;
   --hl-attr: #7a4fb0;
+  /* 旧文内联背景色（构建时改写为 var(--lg-bg-*)）：两种模式都融入代码块底色 */
+  --lg-bg-ffffff: transparent;
+  --lg-bg-e6e6e6: var(--code-bg);
+  --lg-bg-cccccc: var(--surface-2);
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -39,6 +43,14 @@
     --hl-comment: #7d7a72;
     --hl-title: #7fb6f0;
     --hl-attr: #c4a3ef;
+    /* 旧文内联文字色（var(--lg-c-*)）在暗色下映射到站点代码配色 */
+    --lg-c-000000: var(--ink);
+    --lg-c-0000ff: var(--hl-title);
+    --lg-c-008000: var(--hl-string);
+    --lg-c-808080: var(--hl-comment);
+    --lg-c-999999: var(--hl-comment);
+    --lg-c-800000: var(--hl-number);
+    --lg-c-800080: var(--hl-attr);
     color-scheme: dark;
   }
 }
