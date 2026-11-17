@@ -46,5 +46,5 @@ tags:
 
 解压后将 `HarmoBridge.app` 拖到「应用程序」。这是采用临时签名、未经 Apple 公证的试用包。
 
-- **HDC 模式**适用于已有 DevEco Studio 调试环境的用户。Mac 端要求 macOS 13 或更新版本，手机需开启开发者调试，可用 USB 或无线连接。手机截图、文字剪贴板和文件传输走 HDC，文字剪贴板还取决于设备是否支持 `testhelper`。
+- **HDC 模式**要求 macOS 13 或更新版本，可单独使用华为 [macOS 命令行工具包](https://developer.huawei.com/consumer/cn/download/command-line-tools-for-hmos)里的 `hdc`，无需安装 DevEco Studio。保留 `hdc` 和随附的 `libusb_shared` 在同一目录，手机开启开发者调试后通过 USB 或无线连接，运行 `hdc list targets` 确认能看到设备。若只在终端配置了 `PATH`，请在同一终端运行 `/Applications/HarmoBridge.app/Contents/MacOS/HarmoBridge`，让应用继承该设置。截图和文件传输走 HDC，文字剪贴板还要求手机支持 `testhelper`。
 - **配套 App 模式**要求 macOS 15 或更新版本，手机需另行安装鸿蒙配套 App。本次提供 Mac 下载包。两端已接入双向截图、文字与图片剪贴板和文件传输，完整真机流程仍待验证，尤其是手机切到后台后的连接和截图。
