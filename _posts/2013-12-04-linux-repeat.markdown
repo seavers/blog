@@ -50,9 +50,9 @@ repeat() {
 	repeat ls -l
 	repeat date
 	repeat iostat
-	repeat -n 3 curl 'http://www.lianghaijun.com'
-	repeat -n 3 -s 300 curl 'http://www.lianghaijun.com'
-	repeat -n 3 -s 0.5 sh -c "curl -I -s 'http://www.lianghaijun.com' | head -1"
+	repeat -n 3 curl 'https://dahai.online'
+	repeat -n 3 -s 300 curl 'https://dahai.online'
+	repeat -n 3 -s 0.5 sh -c "curl -I -s 'https://dahai.online' | head -1"
 ```
 
 

@@ -521,7 +521,6 @@ function buildFeeds(posts, works) {
   <id>${site.url}/</id>
   <author>
     <name><![CDATA[${cdata(site.author)}]]></name>
-    <email><![CDATA[${cdata(site.email)}]]></email>
   </author>
 ${posts.slice(0, 200).map((p) => `  <entry>
     <title type="html"><![CDATA[${cdata(p.title)}]]></title>
