@@ -187,6 +187,20 @@ function themeInlineColors(html) {
 }
 const applyVars = (src) => src.replace(/\{\{\s*site\.baseurl\s*\}\}/g, BASE).replace(/\{\{\s*site\.url\s*\}\}/g, site.url);
 
+/**
+ * 文章摘要（用于 meta description 和列表）：取正文文字，跳过标题、代码块和表格；
+ * 很多旧文第一行就是标题本身，开头与标题重复的部分去掉，避免 description 等于 title。
+ */
+function summarize(html, title) {
+  let text = stripHtml(html
+    .replace(/<h[1-6][^>]*>[\s\S]*?<\/h[1-6]>/gi, ' ')
+    .replace(/<pre[\s\S]*?<\/pre>/gi, ' ')
+    .replace(/<table[\s\S]*?<\/table>/gi, ' '));
+  const t = stripHtml(title);
+  while (t && text.startsWith(t)) text = text.slice(t.length).replace(/^[\s:：,，.。\-—]+/, '');
+  return truncate(text, 120);
+}
+
 // ---------------------------------------------------------------- 读取文章
 function loadPosts() {
   const dir = path.join(ROOT, '_posts');
@@ -201,15 +215,16 @@ function loadPosts() {
     const md = applyVars(body);
     const html = themeInlineColors(renderMarkdown(md));
     const moreAt = md.indexOf('<!--more-->');
-    const excerptMd = moreAt > -1 ? md.slice(0, moreAt) : md.split(/\r?\n\s*\r?\n/).find((p) => p.trim()) || '';
+    const title = data.title || slug;
+    const summary = (moreAt > -1 && summarize(renderMarkdown(md.slice(0, moreAt)), title)) || summarize(html, title);
     posts.push({
       file, slug, date,
-      title: data.title || slug,
+      title,
       categories: asList(data.categories),
       tags: asList(data.tags),
       url: `${BASE}/${date.ymd}-${slug}.html`,
       html,
-      summary: truncate(stripHtml(renderMarkdown(excerptMd)), 120),
+      summary,
     });
   }
   posts.sort((a, b) => b.date.date - a.date.date || b.file.localeCompare(a.file));
@@ -390,7 +405,7 @@ function buildHome(posts, works) {
   }));
 }
 
-function listPage({ rel, title, eyebrow, lead, posts, canonicalPath, active = 'posts', chips = '', search = true, withSummary = false, pager = '' }) {
+function listPage({ rel, title, eyebrow, lead, description, posts, canonicalPath, active = 'posts', chips = '', search = true, withSummary = false, pager = '' }) {
   const body = `
 <section class="hero compact">
   <div class="wrap">
@@ -406,8 +421,10 @@ function listPage({ rel, title, eyebrow, lead, posts, canonicalPath, active = 'p
   ${search ? emptyHint : ''}
   ${pager}
 </main>`;
-  write(rel, layout({ title, body, active, canonical: absUrl(canonicalPath), description: lead ? stripHtml(lead) : undefined }));
+  write(rel, layout({ title, body, active, canonical: absUrl(canonicalPath), description: description || (lead ? stripHtml(lead) : undefined) }));
 }
+
+const sampleTitles = (list) => truncate(list.slice(0, 3).map((p) => `《${p.title}》`).join('、') + (list.length > 3 ? ' 等' : ''), 110);
 
 function chipLinks(groups, base, currentSlug) {
   return `<div class="chips" style="margin-bottom:28px">${groups.map((g) =>
@@ -424,6 +441,7 @@ function buildLists(posts, categories, tags) {
   listPage({
     rel: 'archives.html', title: '归档', eyebrow: `${posts.length} 篇文章`, posts, canonicalPath: `${BASE}/`,
     search: false, chips: chipLinks(categories, `${BASE}/categories/`),
+    description: `${site.title}全部 ${posts.length} 篇文章按年份归档，${firstYear} 年至今，涵盖 ${categories.slice(0, 6).map((g) => g.name).join('、')} 等分类。`,
   });
 
   // 分页：/blog/page/2/ ...（第 1 页即 /blog/）
@@ -435,6 +453,7 @@ function buildLists(posts, categories, tags) {
     listPage({
       rel: `page/${n}/index.html`, title: `文章 · 第 ${n} 页`, eyebrow: `第 ${n} / ${pages} 页`,
       posts: posts.slice((n - 1) * per, n * per), canonicalPath: `${BASE}/page/${n}/`, search: false, withSummary: true,
+      description: `${site.title}文章列表第 ${n} 页，包括：${sampleTitles(posts.slice((n - 1) * per, n * per))}。`,
       pager: `<nav class="pager"><a class="btn" href="${prev}">← 较新</a>${next ? `<a class="btn" href="${next}">较早 →</a>` : '<span></span>'}</nav>`,
     });
   }
@@ -444,12 +463,14 @@ function buildLists(posts, categories, tags) {
       rel: `categories/${g.slug}/index.html`, title: g.name, eyebrow: `<a href="${BASE}/archives.html">分类</a> · ${g.posts.length} 篇`,
       posts: g.posts, canonicalPath: `${BASE}/categories/${encodeURI(g.slug)}/`, search: false, withSummary: true,
       chips: chipLinks(categories, `${BASE}/categories/`, g.slug),
+      description: `「${g.name}」分类下的 ${g.posts.length} 篇文章，包括：${sampleTitles(g.posts)}。`,
     });
   }
   for (const g of tags) {
     listPage({
       rel: `tag/${g.slug}/index.html`, title: `#${g.name}`, eyebrow: `标签 · ${g.posts.length} 篇`,
       posts: g.posts, canonicalPath: `${BASE}/tag/${encodeURI(g.slug)}/`, search: false, withSummary: true,
+      description: `标签「${g.name}」下的 ${g.posts.length} 篇文章，包括：${sampleTitles(g.posts)}。`,
     });
   }
 }
@@ -497,7 +518,7 @@ function buildPages() {
     const html = m[2] === 'html' ? src : renderMarkdown(src);
     const url = `${BASE}/${m[1]}.html`;
     write(`${m[1]}.html`, layout({
-      title: data.title, active: m[1], canonical: absUrl(url), description: data.description,
+      title: data.title, active: m[1], canonical: absUrl(url), description: data.description || summarize(html, data.title || ''),
       body: `
 <main class="wrap narrow">
   <header class="post-head"><h1>${esc(data.title)}</h1></header>

@@ -48,7 +48,7 @@ categories:
 	</dependency>
 ```
 
-如果是 MyBatis-Spring 1.2.0 以上, 还有一种更简单的方法, <mybatis:scan/>
+如果是 MyBatis-Spring 1.2.0 以上, 还有一种更简单的方法, `<mybatis:scan/>`
 见http://mybatis.github.io/spring/mappers.html    (英文)
 或http://mybatis.github.io/spring/zh/mappers.html (中文)
 

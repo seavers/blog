@@ -11,7 +11,7 @@ tags:
 ---
 
 <div class="iteye-blog-content-contain" style="font-size: 14px;">
-<p>(<span style="font-size: 12px; line-height: 1.5;">这篇文章是从blog.csdn.net/seavers导入的, </span><span style="font-size: 12px; line-height: 1.5;">最新版本见: </span><a style="font-size: 12px; line-height: 1.5;" href="/blog/1416013">http://seavers.iteye.com/blog/1416013</a><span style="font-size: 12px; line-height: 1.5;">,  </span><span style="font-size: 12px; line-height: 1.5;">)</span></p>
+<p>(<span style="font-size: 12px; line-height: 1.5;">这篇文章是从blog.csdn.net/seavers导入的, </span><span style="font-size: 12px; line-height: 1.5;">最新版本见: </span><a style="font-size: 12px; line-height: 1.5;" href="/blog/2012-02-21-1416013.html">利用bat反编译jar包生成源码jar包（新版）</a><span style="font-size: 12px; line-height: 1.5;">,  </span><span style="font-size: 12px; line-height: 1.5;">)</span></p>
 <p>反编译所使用的工具是jad.exe,笔者的测试版本是1.5.8e,压缩与解压缩使用的是WinRAR</p>
 <p>jad.exe 可反编译一个class文件为java文件,笔者的BAT可通过此工具将一个jar包反编译成一个完整的源码jar包,同时生成的目录也可以在eclipse中使用</p>
 <p>jad.exe 官方网站 ： <a href="http://www.kpdus.com/jad.html">http://www.kpdus.com/jad.html</a> (英文的)</p>

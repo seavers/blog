@@ -24,16 +24,17 @@ tags:
 
 
 一些列表
-[table]
-|name   | list | install | uninstall| update | search | init|
-|apt-get| apt-cache  | install | uninstall | upgrade | apt-cache search | |
-|yum     | ||||||
-|brew    | list | install | uninstall | upgrade | search | |
-|npm     | local | -g --save  | prune  | update |  /regexp | package.json|
-|gem     | --local | local| cleanup | update | --remote | Gemfile (bundle init)|
-|pip       | freeze | install | uninstall | ---- | search | |
-|bower  | list  | -g --save | cache-clean | update | search  |  component.json |
-[/table]
+
+| name | list | install | uninstall | update | search | init |
+| --- | --- | --- | --- | --- | --- | --- |
+| apt-get | apt-cache | install | uninstall | upgrade | apt-cache search |  |
+| yum |  |
+| brew | list | install | uninstall | upgrade | search |  |
+| npm | local | -g --save | prune | update | /regexp | package.json |
+| gem | --local | local | cleanup | update | --remote | Gemfile (bundle init) |
+| pip | freeze | install | uninstall | ---- | search |  |
+| bower | list | -g --save | cache-clean | update | search | component.json |
+
 
 
 心得

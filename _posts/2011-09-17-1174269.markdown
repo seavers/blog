@@ -25,9 +25,10 @@ Ps: 原文中的box未翻译, 可理解为盒模型, 或盒子
 
 
 
-[table]
-|specified value| computed value |
-|inline-table   | table          |
-|inline, table-row-group, table-column, table-column-group, table-header-group, table-footer-group, table-row, table-cell, table-caption, inline-block| block |
-|others|same as specified |
-[/table]
+
+| specified value | computed value |
+| --- | --- |
+| inline-table | table |
+| inline, table-row-group, table-column, table-column-group, table-header-group, table-footer-group, table-row, table-cell, table-caption, inline-block | block |
+| others | same as specified |
+
