@@ -256,6 +256,10 @@ const ICON = {
   download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>',
   external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>',
   play: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4v16l13-8z"/></svg>',
+  check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 9.5 17 19 7"/></svg>',
+  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+  sun: '<svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32 1.41-1.41"/></svg>',
+  moon: '<svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 0 0 12 21a9.003 9.003 0 0 0 8.354-5.646z"/></svg>',
 };
 
 function layout({ title, description, canonical, body, active, home = false, head = '' }) {
@@ -277,6 +281,7 @@ function layout({ title, description, canonical, body, active, home = false, hea
 <meta property="og:url" content="${esc(canonical)}">
 <link rel="icon" href="/favicon.ico">
 <link rel="alternate" type="application/atom+xml" title="${esc(site.title)}" href="${BASE}/atom.xml">
+<script>(function(){try{var t=localStorage.getItem('theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <link rel="stylesheet" href="${BASE}/static/site.css?v=${ASSET_VER}">
 ${head}</head>
 <body>
@@ -286,15 +291,16 @@ ${head}</head>
     <nav class="nav" aria-label="站点导航">
       ${navItem('works', '作品', '/#works')}
       ${navItem('posts', '文章', `${BASE}/`)}
-      ${navItem('about', '关于', `${BASE}/about.html`, 'hide-sm')}
+      ${navItem('about', '关于', `${BASE}/about.html`)}
       <a class="hide-sm" href="${BASE}/atom.xml">RSS</a>
+      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换明暗主题" title="切换明暗主题">${ICON.sun}${ICON.moon}</button>
     </nav>
   </div>
 </header>
 ${body}
 <footer>
   <div class="wrap">
-    <span>&copy; ${SITE_YEAR} ${esc(site.brand)} · <a href="${BASE}/">文章</a> · <a href="${BASE}/archives.html">归档</a> · <a href="${BASE}/atom.xml">RSS</a></span>
+    <span>&copy; ${SITE_YEAR} ${esc(site.brand)} · <a href="/">首页</a> · <a href="${BASE}/">文章</a> · <a href="${BASE}/archives.html">归档</a> · <a href="${BASE}/about.html">关于</a> · <a href="${BASE}/atom.xml">RSS</a></span>
     <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener">${esc(site.icp)}</a>
   </div>
 </footer>
@@ -318,7 +324,7 @@ function postList(posts, { withSummary = false } = {}) {
   }
   let html = '<div id="post-list">\n';
   for (const [y, items] of years) {
-    html += `<section class="year" data-year="${y}">\n<h2>${y}</h2>\n<ul class="posts">\n`;
+    html += `<section class="year" data-year="${y}">\n<h2>${y}<small>${items.length} 篇</small></h2>\n<ul class="posts">\n`;
     for (const p of items) {
       const text = [p.title, ...p.categories, ...p.tags].join(' ');
       html += `<li class="post" data-cats="${esc(p.categories.join('|'))}" data-text="${esc(text)}"><a href="${p.url}">`
@@ -334,8 +340,9 @@ function postList(posts, { withSummary = false } = {}) {
 }
 
 const searchBox = (withChips = true) => `<div class="toolbar">
-  <label class="search">${ICON.search}<input id="q" type="search" placeholder="搜索文章标题、分类或标签" autocomplete="off" aria-label="搜索文章"></label>
+  <label class="search">${ICON.search}<input id="q" type="search" placeholder="搜索文章标题、分类或标签" autocomplete="off" aria-label="搜索文章"><kbd class="search-kbd" aria-hidden="true">/</kbd><button type="button" class="search-clear" id="q-clear" aria-label="清除搜索" hidden>${ICON.close}</button></label>
   ${withChips ? '<div class="chips" id="chips" role="group" aria-label="按分类筛选"></div>' : ''}
+  <p class="filter-status" id="filter-status" hidden></p>
 </div>`;
 const emptyHint = '<p class="empty" id="empty" hidden>没有找到匹配的文章，换个关键词试试。</p>';
 
@@ -349,16 +356,37 @@ function renderWorks(works, postsBySlug) {
     const actions = w.actions.map((a) => {
       const href = a.post ? post?.url : a.href.replace('{base}', BASE);
       if (!href) throw new Error(`作品 ${w.name} 的链接找不到对应文章：${w.post}`);
-      return `<a class="btn${a.primary ? ' primary' : ''}" href="${esc(href)}">${a.kind ? ICON[a.kind] : ''}${esc(a.label)}</a>`;
+      const isExternal = /^https?:\/\//.test(href) || a.kind === 'external' || a.kind === 'play';
+      const extra = isExternal ? ' target="_blank" rel="noopener"' : a.kind === 'download' ? ' download' : '';
+      return `<a class="btn${a.primary ? ' primary' : ''}" href="${esc(href)}"${extra}>${a.kind ? ICON[a.kind] : ''}${esc(a.label)}</a>`;
     }).join('\n          ');
-    return `
-      <article class="work${w.featured ? ' featured' : ''}">
+    const featsHtml = w.feats.map((f) => `<li>${ICON.check}<span>${esc(f)}</span></li>`).join('');
+    const headHtml = `
         <div class="work-head">
           ${icon}
-          <div><h3>${esc(w.name)}</h3><div class="tags">${w.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div></div>
+          <div><h3>${esc(w.name)}</h3><div class="tags">${w.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div></div>${w.featured ? '<span class="work-badge">近期主打</span>' : ''}
+        </div>`;
+    if (w.featured) {
+      return `
+      <article class="work featured">
+        <div class="featured-grid">
+          <div class="featured-main">${headHtml}
+            <p>${esc(w.desc)}</p>
+            <div class="actions">
+              ${actions}
+            </div>
+          </div>
+          <div class="work-feats-box">
+            <p class="work-feats-title">核心能力</p>
+            <ul class="feats">${featsHtml}</ul>
+          </div>
         </div>
+      </article>`;
+    }
+    return `
+      <article class="work">${headHtml}
         <p>${esc(w.desc)}</p>
-        <ul class="feats">${w.feats.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+        <ul class="feats">${featsHtml}</ul>
         <div class="actions">
           ${actions}
         </div>
@@ -366,31 +394,95 @@ function renderWorks(works, postsBySlug) {
   }).join('\n');
 }
 
-function buildHome(posts, works) {
+function buildHome(posts, works, categories) {
   const postsBySlug = new Map(posts.map((p) => [`${p.file.replace(/\.(markdown|md)$/, '')}`, p]));
   const firstYear = posts[posts.length - 1].date.y;
+  const yearsSpan = Number(SITE_YEAR) - Number(firstYear) + 1;
+  const latestPost = posts[0];
+  const spotlightMore = posts.slice(1, 3);
+  const recentPosts = posts.slice(0, 6);
+  const topCats = categories.slice(0, 12);
+
+  // 首屏右侧「近期动态」卡片，展示最新一篇带摘要的文章和紧随的两篇更新
+  const spotlight = `
+    <aside class="spotlight" aria-label="近期更新">
+      <div class="spotlight-head">
+        <span class="spotlight-label">近期更新</span>
+        <time datetime="${latestPost.date.iso}">${latestPost.date.ymd}</time>
+      </div>
+      <a class="spotlight-main" href="${latestPost.url}">
+        <h2>${esc(latestPost.title)}</h2>
+        ${latestPost.summary ? `<p>${esc(latestPost.summary)}</p>` : ''}
+        ${latestPost.categories.length ? `<div class="tags">${latestPost.categories.map((c) => `<span class="tag">#${esc(c)}</span>`).join('')}</div>` : ''}
+      </a>
+      <ul class="spotlight-more">
+        ${spotlightMore.map((p) => `<li><a href="${p.url}"><span>${esc(p.title)}</span><time datetime="${p.date.iso}">${p.date.ymd}</time></a></li>`).join('\n        ')}
+      </ul>
+      <div class="spotlight-foot">
+        <span>跨越 ${yearsSpan} 年的技术记录</span>
+        <button type="button" data-go="posts">全部 ${posts.length} 篇文章 →</button>
+      </div>
+    </aside>`;
+
+  // 近期文章 6 篇卡片网格
+  const recentHtml = `
+    <section class="home-section" aria-labelledby="recent-heading">
+      <div class="section-head">
+        <h2 id="recent-heading">近期文章</h2>
+        <button type="button" class="section-more" data-go="posts">查看全部 ${posts.length} 篇 →</button>
+      </div>
+      <div class="recent-grid">
+        ${recentPosts.map((p) => `<a class="recent-card" href="${p.url}">
+          <div class="recent-meta"><span>${p.categories.map((c) => `#${esc(c)}`).join(' · ') || '文章'}</span><time datetime="${p.date.iso}">${p.date.ymd}</time></div>
+          <h3>${esc(p.title)}</h3>
+          ${p.summary ? `<p>${esc(p.summary)}</p>` : ''}
+        </a>`).join('\n        ')}
+      </div>
+    </section>`;
+
+  // 热门分类入口
+  const catsHtml = `
+    <section class="home-section" aria-labelledby="cats-heading">
+      <div class="section-head">
+        <h2 id="cats-heading">按分类探索</h2>
+        <a class="section-more" href="${BASE}/archives.html">时间归档 →</a>
+      </div>
+      <div class="cat-cloud">
+        ${topCats.map((g) => `<a class="cat-pill" href="${catLink(g.name)}">${esc(g.name)}<span>${g.posts.length}</span></a>`).join('\n        ')}
+      </div>
+    </section>`;
+
   const body = `
-<section class="hero">
-  <div class="wrap">
-    <p class="eyebrow">${esc(site.subtitle)}</p>
-    <h1>写点小工具，也写点笔记。</h1>
-    <p class="lead">我是大海。这里放着我业余做的独立作品，覆盖 Mac、鸿蒙、Android 和网页；还有从 ${firstYear} 年写到现在的技术博客。</p>
-    <div class="stats">
-      <div><b>${works.length}</b>件独立作品</div>
-      <div><b>${posts.length}</b>篇文章</div>
-      <div><b>${firstYear}</b>开始写博客</div>
+<section class="hero hero-home">
+  <div class="wrap hero-grid">
+    <div>
+      <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>${esc(site.subtitle)} · ${firstYear} — ${SITE_YEAR}</p>
+      <h1>写点小工具，也写点笔记。</h1>
+      <p class="lead">我是大海。这里放着我业余做的独立作品，覆盖 macOS、鸿蒙、Android 和网页；还有从 ${firstYear} 年写到现在的技术博客。</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="${latestPost.url}">阅读最新文章 →</a>
+        <a class="btn" href="${BASE}/about.html">关于我</a>
+      </div>
+      <div class="stats">
+        <button type="button" class="stat-item" data-go="works"><b>${works.length}</b>件独立作品</button>
+        <button type="button" class="stat-item" data-go="posts"><b>${posts.length}</b>篇技术文章</button>
+        <a class="stat-item" href="${BASE}/archives.html"><b>${firstYear}</b>开始写博客</a>
+      </div>
     </div>
+    ${spotlight}
   </div>
 </section>
 <main class="wrap">
   <div class="tabs" role="tablist" aria-label="内容分区">
-    <button class="tab" role="tab" id="tab-works" aria-controls="works" data-go="works">作品展示<small>${works.length}</small></button>
-    <button class="tab" role="tab" id="tab-posts" aria-controls="posts" data-go="posts">文章列表<small>${posts.length}</small></button>
+    <button class="tab" role="tab" id="tab-works" aria-controls="works" aria-selected="true" data-go="works">作品展示<small>${works.length}</small></button>
+    <button class="tab" role="tab" id="tab-posts" aria-controls="posts" aria-selected="false" data-go="posts">文章列表<small>${posts.length}</small></button>
   </div>
   <section id="works" role="tabpanel" aria-labelledby="tab-works">
     <div class="works">${renderWorks(works, postsBySlug)}
     </div>
     <p class="note">每件作品都有一篇文章，讲它为什么做、怎么做。更多内容见 <a href="#posts" data-go="posts">文章列表</a>。</p>
+    ${recentHtml}
+    ${catsHtml}
   </section>
   <section id="posts" role="tabpanel" aria-labelledby="tab-posts" hidden>
     ${searchBox()}
@@ -600,7 +692,7 @@ function main() {
   const categories = groupBy(posts, 'categories');
   const tags = groupBy(posts, 'tags');
 
-  buildHome(posts, works);
+  buildHome(posts, works, categories);
   buildLists(posts, categories, tags);
   posts.forEach(buildPost);
   buildPages();
