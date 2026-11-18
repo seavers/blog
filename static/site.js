@@ -1,4 +1,4 @@
-/* 大海 Online 站点脚本：明暗主题切换 + 首页分区切换 + 文章列表搜索与分类筛选 */
+/* 大海 Online 站点脚本：主题切换、分段滑块、作品筛选、滚动入场与文章搜索 */
 (function () {
   // ---------- 明暗主题切换 ----------
   var themeBtn = document.getElementById('theme-toggle');
@@ -17,44 +17,157 @@
       var next = getTheme() === 'dark' ? 'light' : 'dark';
       document.documentElement.setAttribute('data-theme', next);
       try { localStorage.setItem('theme', next); } catch (e) {}
+      themeBtn.classList.remove('is-spinning');
+      void themeBtn.offsetWidth;
+      themeBtn.classList.add('is-spinning');
       syncThemeTitle();
     });
     syncThemeTitle();
   }
 
-  // ---------- 首页分区切换（只有首页存在 [role=tabpanel]） ----------
-  var panels = {};
-  [].forEach.call(document.querySelectorAll('[role="tabpanel"]'), function (p) { panels[p.id] = p; });
-  var names = Object.keys(panels);
-  var currentPanel = '';
-  var showPanel = null;
-  if (names.length) {
-    showPanel = function (name, sync) {
-      if (!panels[name]) name = names[0];
-      currentPanel = name;
-      names.forEach(function (k) { panels[k].hidden = k !== name; });
-      [].forEach.call(document.querySelectorAll('[data-go]'), function (t) {
-        if (t.classList.contains('tab') || t.closest('.nav')) {
-          t.setAttribute('aria-selected', String(t.dataset.go === name));
-        }
-      });
-      if (sync && location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
-    };
-    document.addEventListener('click', function (e) {
-      var el = e.target.closest('[data-go]');
-      if (!el) return;
-      e.preventDefault();
-      showPanel(el.dataset.go, true);
-      if (!el.classList.contains('tab')) {
-        var tabs = document.querySelector('.tabs');
-        if (tabs) tabs.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+  // ---------- 回到顶部按钮（全站） ----------
+  var backTop = document.getElementById('back-top');
+  if (backTop) {
+    backTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    window.addEventListener('hashchange', function () { showPanel(location.hash.slice(1)); });
-    showPanel(location.hash.slice(1));
   }
 
-  // ---------- 文章筛选 ----------
+  // ---------- 滑动分段控制器通用助手 ----------
+  var segUpdaters = [];
+  function setupSeg(segEl, onSelect) {
+    if (!segEl) return null;
+    var thumb = segEl.querySelector('.seg-thumb');
+    var btns = [].slice.call(segEl.querySelectorAll('button[data-val]'));
+    var moveThumb = function (btn) {
+      if (!thumb || !btn) return;
+      segEl.style.setProperty('--seg-x', btn.offsetLeft + 'px');
+      segEl.style.setProperty('--seg-w', btn.offsetWidth + 'px');
+    };
+    var activate = function (val, trigger) {
+      var activeBtn = btns.find(function (b) { return b.dataset.val === val; }) || btns[0];
+      btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b === activeBtn)); });
+      moveThumb(activeBtn);
+      if (trigger && onSelect) onSelect(activeBtn.dataset.val);
+    };
+    segEl.addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-val]');
+      if (!b || b.getAttribute('aria-pressed') === 'true') return;
+      activate(b.dataset.val, true);
+    });
+    var syncCurrent = function () {
+      var cur = btns.find(function (b) { return b.getAttribute('aria-pressed') === 'true'; }) || btns[0];
+      moveThumb(cur);
+    };
+    segUpdaters.push(syncCurrent);
+    syncCurrent();
+    return activate;
+  }
+  window.addEventListener('resize', function () { segUpdaters.forEach(function (fn) { fn(); }); });
+
+  // ---------- 首页交互：作品平台筛选 & 文章视图切换 & ScrollSpy ----------
+  var worksGrid = document.getElementById('works-grid');
+  if (worksGrid) {
+    var workCards = [].slice.call(worksGrid.querySelectorAll('.work'));
+    setupSeg(document.querySelector('.seg[data-seg="works-filter"]'), function (platform) {
+      var idx = 0;
+      workCards.forEach(function (card) {
+        var list = (card.dataset.platforms || '').split('|');
+        var show = platform === 'all' || list.indexOf(platform) > -1;
+        card.hidden = !show;
+        card.classList.remove('is-entering', 'reveal');
+        if (show) {
+          void card.offsetWidth;
+          card.style.animationDelay = Math.min(idx * 45, 180) + 'ms';
+          card.classList.add('is-entering');
+          idx++;
+        }
+      });
+    });
+  }
+
+  var recentPane = document.getElementById('recent-posts-pane');
+  var allPane = document.getElementById('all-posts-pane');
+  var setPostsMode = null;
+  if (recentPane && allPane) {
+    var segPosts = setupSeg(document.querySelector('.seg[data-seg="posts-mode"]'), function (mode) {
+      var isAll = mode === 'all';
+      recentPane.hidden = isAll;
+      allPane.hidden = !isAll;
+      if (isAll) {
+        allPane.classList.remove('is-entering');
+        void allPane.offsetWidth;
+        allPane.classList.add('is-entering');
+        if (location.hash !== '#posts') history.replaceState(null, '', '#posts');
+      } else if (location.hash === '#posts') {
+        history.replaceState(null, '', '#articles');
+      }
+    });
+    setPostsMode = function (mode) { if (segPosts) segPosts(mode, true); };
+  }
+
+  // 首页内快捷滚动与模式联动（支持 [data-scroll] 与兼容旧 #posts hash）
+  document.addEventListener('click', function (e) {
+    var trigger = e.target.closest('[data-scroll], [data-posts-mode]');
+    if (!trigger) return;
+    if (trigger.dataset.postsMode && setPostsMode) {
+      setPostsMode(trigger.dataset.postsMode);
+    }
+    var targetId = trigger.dataset.scroll;
+    if (targetId) {
+      var target = document.getElementById(targetId);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  });
+
+  if (location.hash === '#posts' && setPostsMode) {
+    setPostsMode('all');
+    var articlesEl = document.getElementById('articles');
+    if (articlesEl) setTimeout(function () { articlesEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+  }
+
+  // ---------- 滚动渐显（Reveal）与 ScrollSpy ----------
+  var reveals = [].slice.call(document.querySelectorAll('.reveal'));
+  if (reveals.length && 'IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      var batch = 0;
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        var el = entry.target;
+        el.style.transitionDelay = Math.min(batch * 45, 180) + 'ms';
+        el.classList.add('is-in');
+        io.unobserve(el);
+        batch++;
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+    reveals.forEach(function (el) { io.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add('is-in'); });
+  }
+
+  var navWorks = document.querySelector('.nav [data-scroll="works"]');
+  var navArticles = document.querySelector('.nav [data-scroll="articles"]');
+  var secWorks = document.getElementById('works');
+  var secArticles = document.getElementById('articles');
+  var onScroll = function () {
+    var y = window.scrollY || document.documentElement.scrollTop;
+    if (backTop) backTop.classList.toggle('is-show', y > 420);
+    if (navWorks && navArticles && secWorks && secArticles) {
+      var artTop = secArticles.getBoundingClientRect().top;
+      var workTop = secWorks.getBoundingClientRect().top;
+      var inArticles = artTop <= 180;
+      var inWorks = !inArticles && workTop <= 220;
+      navWorks.classList.toggle('is-active', inWorks);
+      navArticles.classList.toggle('is-active', inArticles);
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ---------- 文章搜索与分类筛选 ----------
   var input = document.getElementById('q');
   var chipsBox = document.getElementById('chips');
   if (!input) return;
@@ -98,16 +211,16 @@
     });
   }
 
-  // "/" 快捷键快速聚焦文章搜索框
+  // "/" 快捷键快速聚焦文章搜索框（首页会自动切到全部文章视图）
   document.addEventListener('keydown', function (e) {
     if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
     var tag = document.activeElement && document.activeElement.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) return;
     e.preventDefault();
-    if (showPanel && currentPanel !== 'posts') {
-      showPanel('posts', true);
-      var tabs = document.querySelector('.tabs');
-      if (tabs) tabs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (setPostsMode && allPane && allPane.hidden) {
+      setPostsMode('all');
+      var articlesEl = document.getElementById('articles');
+      if (articlesEl) articlesEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     input.focus();
   });
