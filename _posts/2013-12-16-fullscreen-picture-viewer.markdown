@@ -23,7 +23,7 @@ categories:
  * 按f键 (fullscreen的缩写)
  * 按w/s按来调整threshold, 调整图片最小尺寸的阀值
 
-扩展下载: [fullscreen.crx](https://dahai.online/download/fullscreen.crx)
+扩展下载: [fullscreen.crx](https://dahai.online/downloads/fullscreen.crx)
 源码浏览: [github](https://github.com/seavers/fullscreen)
 
 ## 试用
