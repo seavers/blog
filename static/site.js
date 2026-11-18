@@ -1,4 +1,4 @@
-/* 大海 Online 站点脚本：主题切换、分段滑块、作品筛选、滚动入场与文章搜索 */
+/* 大海 Online 站点脚本：主题切换、分段滑块、快捷搜索、滚动入场与文章筛选 */
 (function () {
   // ---------- 明暗主题切换 ----------
   var themeBtn = document.getElementById('theme-toggle');
@@ -25,7 +25,7 @@
     syncThemeTitle();
   }
 
-  // ---------- 回到顶部按钮（全站） ----------
+  // ---------- 回到顶部 ----------
   var backTop = document.getElementById('back-top');
   if (backTop) {
     backTop.addEventListener('click', function () {
@@ -65,7 +65,7 @@
   }
   window.addEventListener('resize', function () { segUpdaters.forEach(function (fn) { fn(); }); });
 
-  // ---------- 首页交互：作品平台筛选 & 文章视图切换 & ScrollSpy ----------
+  // ---------- 首页作品筛选与文章视图切换 ----------
   var worksGrid = document.getElementById('works-grid');
   if (worksGrid) {
     var workCards = [].slice.call(worksGrid.querySelectorAll('.work'));
@@ -78,7 +78,7 @@
         card.classList.remove('is-entering', 'reveal');
         if (show) {
           void card.offsetWidth;
-          card.style.animationDelay = Math.min(idx * 45, 180) + 'ms';
+          card.style.animationDelay = Math.min(idx * 50, 180) + 'ms';
           card.classList.add('is-entering');
           idx++;
         }
@@ -106,7 +106,7 @@
     setPostsMode = function (mode) { if (segPosts) segPosts(mode, true); };
   }
 
-  // 首页内快捷滚动与模式联动（支持 [data-scroll] 与兼容旧 #posts hash）
+  // ---------- 首页锚点平滑滚动 & 模式联动 ----------
   document.addEventListener('click', function (e) {
     var trigger = e.target.closest('[data-scroll], [data-posts-mode]');
     if (!trigger) return;
@@ -129,7 +129,7 @@
     if (articlesEl) setTimeout(function () { articlesEl.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
   }
 
-  // ---------- 滚动渐显（Reveal）与 ScrollSpy ----------
+  // ---------- 滚动渐显（Reveal）与顶栏 ScrollSpy ----------
   var reveals = [].slice.call(document.querySelectorAll('.reveal'));
   if (reveals.length && 'IntersectionObserver' in window) {
     var io = new IntersectionObserver(function (entries) {
@@ -137,7 +137,7 @@
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         var el = entry.target;
-        el.style.transitionDelay = Math.min(batch * 45, 180) + 'ms';
+        el.style.transitionDelay = Math.min(batch * 50, 180) + 'ms';
         el.classList.add('is-in');
         io.unobserve(el);
         batch++;
@@ -169,8 +169,30 @@
 
   // ---------- 文章搜索与分类筛选 ----------
   var input = document.getElementById('q');
-  var chipsBox = document.getElementById('chips');
+  var navSearch = document.getElementById('nav-search');
+  var focusSearch = function () {
+    if (!input) return;
+    if (setPostsMode && allPane && allPane.hidden) {
+      setPostsMode('all');
+      var articlesEl = document.getElementById('articles');
+      if (articlesEl) articlesEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (input.closest('main')) {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    setTimeout(function () { input.focus(); }, 80);
+  };
+  if (navSearch && input) {
+    navSearch.addEventListener('click', function (e) {
+      e.preventDefault();
+      focusSearch();
+    });
+  }
+  if (input && location.hash === '#search') {
+    setTimeout(focusSearch, 60);
+  }
+
   if (!input) return;
+  var chipsBox = document.getElementById('chips');
   var items = [].slice.call(document.querySelectorAll('.post'));
   var years = [].slice.call(document.querySelectorAll('.year'));
   var empty = document.getElementById('empty');
@@ -211,18 +233,12 @@
     });
   }
 
-  // "/" 快捷键快速聚焦文章搜索框（首页会自动切到全部文章视图）
   document.addEventListener('keydown', function (e) {
     if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
     var tag = document.activeElement && document.activeElement.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) return;
     e.preventDefault();
-    if (setPostsMode && allPane && allPane.hidden) {
-      setPostsMode('all');
-      var articlesEl = document.getElementById('articles');
-      if (articlesEl) articlesEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    input.focus();
+    focusSearch();
   });
 
   input.addEventListener('input', filter);

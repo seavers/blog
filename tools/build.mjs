@@ -251,7 +251,7 @@ function groupBy(posts, field) {
 
 // ---------------------------------------------------------------- 模板
 const ICON = {
-  waves: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg>',
+  waves: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 9c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/><path d="M2 15c2.5 0 2.5-2 5-2s2.5 2 5 2 2.5-2 5-2 2.5 2 5 2"/></svg>',
   search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
   download: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>',
   external: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>',
@@ -295,7 +295,9 @@ ${head}</head>
       ${navItem('posts', '文章', `${BASE}/`)}
       ${navItem('about', '关于', `${BASE}/about.html`)}
       <a class="hide-sm" href="${BASE}/atom.xml">RSS</a>
-      <button type="button" class="theme-toggle" id="theme-toggle" aria-label="切换明暗主题" title="切换明暗主题">${ICON.sun}${ICON.moon}</button>
+      <span class="nav-sep" aria-hidden="true"></span>
+      <a class="icon-btn" id="nav-search" href="${BASE}/#search" aria-label="搜索文章" title="搜索文章 (/)">${ICON.search}</a>
+      <button type="button" class="icon-btn theme-toggle" id="theme-toggle" aria-label="切换明暗主题" title="切换明暗主题">${ICON.sun}${ICON.moon}</button>
     </nav>
   </div>
 </header>
@@ -343,7 +345,7 @@ function postList(posts, { withSummary = false } = {}) {
 }
 
 const searchBox = (withChips = true) => `<div class="toolbar">
-  <label class="search">${ICON.search}<input id="q" type="search" placeholder="搜索文章标题、分类或标签" autocomplete="off" aria-label="搜索文章"><kbd class="search-kbd" aria-hidden="true">/</kbd><button type="button" class="search-clear" id="q-clear" aria-label="清除搜索" hidden>${ICON.close}</button></label>
+  <label class="search">${ICON.search}<input id="q" type="search" placeholder="搜索文章标题、分类或标签" autocomplete="off" aria-label="搜索文章"><kbd class="kbd search-kbd" aria-hidden="true">/</kbd><button type="button" class="search-clear" id="q-clear" aria-label="清除搜索" hidden>${ICON.close}</button></label>
   ${withChips ? '<div class="chips" id="chips" role="group" aria-label="按分类筛选"></div>' : ''}
   <p class="filter-status" id="filter-status" hidden></p>
 </div>`;
@@ -363,7 +365,7 @@ function workPlatforms(tags) {
 function renderWorks(works, postsBySlug) {
   return works.map((w) => {
     const post = postsBySlug.get(w.post);
-    const flatColor = w.icon.gradient ? w.icon.gradient.split(',')[0] : '#0b6178';
+    const flatColor = w.icon.gradient ? w.icon.gradient.split(',')[0] : '#006fee';
     const icon = w.icon.img
       ? `<div class="icon" aria-hidden="true"><img src="${esc(w.icon.img.replace('{base}', BASE))}" alt="" loading="lazy"></div>`
       : `<div class="icon" style="background:${esc(flatColor)}" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${w.icon.svg}</svg></div>`;
@@ -372,34 +374,52 @@ function renderWorks(works, postsBySlug) {
       if (!href) throw new Error(`作品 ${w.name} 的链接找不到对应文章：${w.post}`);
       const isExternal = /^https?:\/\//.test(href) || a.kind === 'external' || a.kind === 'play';
       const extra = isExternal ? ' target="_blank" rel="noopener"' : a.kind === 'download' ? ' download' : '';
-      return `<a class="btn${a.primary ? ' primary' : ''}" href="${esc(href)}"${extra}>${a.kind ? ICON[a.kind] : ''}${esc(a.label)}</a>`;
+      return `<a class="btn sm${a.primary ? ' primary' : ''}" href="${esc(href)}"${extra}>${a.kind ? ICON[a.kind] : ''}${esc(a.label)}</a>`;
     }).join('\n          ');
-    const featsHtml = w.feats.map((f) => `<li>${ICON.check}<span>${esc(f)}</span></li>`).join('');
     const platforms = workPlatforms(w.tags);
-    const headHtml = `
-        <div class="work-head">
-          ${icon}
-          <div><h3>${esc(w.name)}</h3><div class="tags">${w.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div></div>${w.featured ? '<span class="work-badge">近期主打</span>' : ''}
-        </div>`;
     if (w.featured) {
+      const featuredActions = w.actions.map((a) => {
+        const href = a.post ? post?.url : a.href.replace('{base}', BASE);
+        const isExternal = /^https?:\/\//.test(href) || a.kind === 'external' || a.kind === 'play';
+        const extra = isExternal ? ' target="_blank" rel="noopener"' : a.kind === 'download' ? ' download' : '';
+        return `<a class="btn${a.primary ? ' accent' : ''}" href="${esc(href)}"${extra}>${a.kind ? ICON[a.kind] : ''}${esc(a.label)}</a>`;
+      }).join('\n            ');
       return `
       <article class="work featured reveal" data-platforms="${esc(platforms)}">
         <div class="featured-grid">
-          <div class="featured-main">${headHtml}
-            <p>${esc(w.desc)}</p>
+          <div>
+            <p class="featured-kicker">${esc(w.tags.slice(0, 2).join(' × '))}</p>
+            <h3>${esc(w.name)}</h3>
+            <p class="featured-desc">${esc(w.desc)}</p>
+            <div class="featured-chips">
+              ${w.feats.map((f) => `<span class="featured-chip">${ICON.check}${esc(f)}</span>`).join('\n              ')}
+            </div>
             <div class="actions">
-              ${actions}
+              ${featuredActions}
             </div>
           </div>
-          <div class="featured-side">
-            <p class="work-feats-title">核心能力</p>
-            <ul class="feats">${featsHtml}</ul>
+          <div class="bridge-stage" aria-hidden="true">
+            <div class="bridge-devices">
+              <div class="dev-mac"><div class="dev-dots"><span></span><span></span><span></span></div><div class="dev-lines"><span></span><span></span></div></div>
+              <div class="bridge-link"><span class="bridge-pulse"></span></div>
+              <div class="dev-phone"><div class="dev-notch"></div><div class="dev-screen"><span></span></div></div>
+            </div>
+            <div class="bridge-caps">
+              <span class="bridge-cap">⌘⌃V 剪贴板</span>
+              <span class="bridge-cap">截屏直达</span>
+              <span class="bridge-cap">双向文件</span>
+            </div>
           </div>
         </div>
       </article>`;
     }
+    const featsHtml = w.feats.map((f) => `<li>${ICON.check}<span>${esc(f)}</span></li>`).join('');
     return `
-      <article class="work reveal" data-platforms="${esc(platforms)}">${headHtml}
+      <article class="work reveal" data-platforms="${esc(platforms)}">
+        <div class="work-head">
+          ${icon}
+          <div><h3>${esc(w.name)}</h3><div class="tags">${w.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join('')}</div></div>
+        </div>
         <p>${esc(w.desc)}</p>
         <ul class="feats">${featsHtml}</ul>
         <div class="actions">
@@ -412,48 +432,40 @@ function renderWorks(works, postsBySlug) {
 function buildHome(posts, works, categories) {
   const postsBySlug = new Map(posts.map((p) => [`${p.file.replace(/\.(markdown|md)$/, '')}`, p]));
   const firstYear = posts[posts.length - 1].date.y;
-  const yearsSpan = Number(SITE_YEAR) - Number(firstYear) + 1;
-  const latestPost = posts[0];
-  const recentPosts = posts.slice(0, 6);
+  const featuredWork = works.find((w) => w.featured) || works[0];
+  const featuredPost = postsBySlug.get(featuredWork.post);
+  const recentPosts = posts.slice(0, 5); // 1 篇通栏头条 + 4 篇 2×2 双列，视觉对齐零空缺
   const topCats = categories.slice(0, 14);
-  const segArrow = `<span class="bento-arrow" aria-hidden="true">${ICON.external}</span>`;
 
   const body = `
 <section class="hero hero-home">
-  <div class="wrap hero-grid">
-    <div>
-      <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>${esc(site.subtitle)} · ${firstYear} — ${SITE_YEAR}</p>
-      <h1>写点小工具，也写点笔记。</h1>
-      <p class="lead">我是大海。这里放着我业余做的独立作品，覆盖 macOS、鸿蒙、Android 和网页；还有从 ${firstYear} 年写到现在的技术博客。</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="#works" data-scroll="works">浏览独立作品</a>
-        <a class="btn" href="${latestPost.url}">阅读最新文章 →</a>
-      </div>
+  <div class="wrap">
+    <a class="hero-pill" href="${esc(featuredPost?.url || '#works')}">
+      <span class="hero-pill-dot" aria-hidden="true"></span>
+      <span class="hero-pill-tag">${esc(featuredWork.name)}</span>
+      <span>Mac 与鸿蒙手机一对一互通</span>
+      <span class="hero-pill-arrow" aria-hidden="true">→</span>
+    </a>
+    <h1>写点小工具，<span class="muted">也写点笔记。</span></h1>
+    <p class="lead">我是大海。业余构建 macOS、鸿蒙与 Web 独立工具，并从 ${firstYear} 年至今持续记录技术思考。</p>
+    <div class="hero-cta">
+      <a class="btn lg primary" href="#works" data-scroll="works">探索独立作品</a>
+      <a class="btn lg" href="#posts" data-scroll="articles" data-posts-mode="all">阅读博客文章</a>
     </div>
-    <div class="bento-stats" aria-label="站点概览">
-      <a class="bento-card accent" href="#works" data-scroll="works">
-        <div class="bento-top"><b>${works.length}</b>${segArrow}</div>
-        <span class="bento-label">独立开发作品</span>
-      </a>
-      <a class="bento-card" href="#posts" data-scroll="articles" data-posts-mode="all">
-        <div class="bento-top"><b>${posts.length}</b>${segArrow}</div>
-        <span class="bento-label">技术博客文章</span>
-      </a>
-      <a class="bento-card" href="${BASE}/archives.html">
-        <div class="bento-top"><b>${yearsSpan} 年</b>${segArrow}</div>
-        <span class="bento-label">${firstYear} 年写作至今</span>
-      </a>
-      <a class="bento-card" href="#topics" data-scroll="topics">
-        <div class="bento-top"><b>${categories.length}</b>${segArrow}</div>
-        <span class="bento-label">技术专栏分类</span>
-      </a>
+    <div class="hero-meta">
+      <span>${works.length} 件独立作品</span><i>·</i>
+      <span>${posts.length} 篇技术文章</span><i>·</i>
+      <a href="${BASE}/archives.html">${firstYear} — ${SITE_YEAR}</a>
     </div>
   </div>
 </section>
 <main class="wrap">
-  <section id="works" class="home-section" aria-labelledby="works-heading">
+  <section id="works" class="section" aria-labelledby="works-heading">
     <div class="section-head">
-      <div class="section-title"><h2 id="works-heading">独立作品</h2><span>${works.length} 件</span></div>
+      <div>
+        <p class="section-kicker">Selected Works</p>
+        <h2 id="works-heading">独立作品</h2>
+      </div>
       <div class="section-tools">
         <div class="seg" data-seg="works-filter" role="group" aria-label="按平台筛选作品">
           <span class="seg-thumb" aria-hidden="true"></span>
@@ -466,32 +478,37 @@ function buildHome(posts, works, categories) {
     </div>
     <div class="works" id="works-grid">${renderWorks(works, postsBySlug)}
     </div>
-    <p class="note">每件作品都有一篇文章，记录它为什么做与如何实现。</p>
   </section>
 
-  <section id="articles" class="home-section" aria-labelledby="articles-heading">
+  <section id="articles" class="section" aria-labelledby="articles-heading">
     <div class="section-head">
-      <div class="section-title"><h2 id="articles-heading">技术文章</h2><span>${posts.length} 篇</span></div>
+      <div>
+        <p class="section-kicker">Writing</p>
+        <h2 id="articles-heading">写作与笔记</h2>
+      </div>
       <div class="section-tools">
         <div class="seg" data-seg="posts-mode" role="group" aria-label="文章显示范围">
           <span class="seg-thumb" aria-hidden="true"></span>
           <button type="button" data-val="recent" aria-pressed="true">近期精选</button>
           <button type="button" data-val="all" aria-pressed="false">全部 ${posts.length} 篇</button>
         </div>
-        <a class="section-link" href="${BASE}/">独立文章页 →</a>
+        <a class="section-more" href="${BASE}/">独立文章页 →</a>
       </div>
     </div>
     <div id="recent-posts-pane">
-      <div class="recent-grid">
-        ${recentPosts.map((p) => `<a class="recent-card reveal" href="${p.url}">
-          <div class="recent-meta"><span>${p.categories.map((c) => `#${esc(c)}`).join(' · ') || '文章'}</span><time datetime="${p.date.iso}">${p.date.ymd}</time></div>
-          <h3>${esc(p.title)}</h3>
-          ${p.summary ? `<p>${esc(p.summary)}</p>` : ''}
+      <div class="editorial">
+        ${recentPosts.map((p, i) => `<a class="post-card${i === 0 ? ' lead-post' : ''} reveal" href="${p.url}">
+          <div>
+            <div class="post-card-top"><span class="post-card-cat">${p.categories.map((c) => `#${esc(c)}`).join(' · ') || '文章'}</span><time datetime="${p.date.iso}">${p.date.ymd}</time></div>
+            <h3>${esc(p.title)}</h3>
+            ${p.summary ? `<p>${esc(p.summary)}</p>` : ''}
+          </div>
+          <div class="post-card-foot">阅读全文 <span>→</span></div>
         </a>`).join('\n        ')}
       </div>
-      <div class="recent-foot">
-        <button type="button" class="btn" data-posts-mode="all">展开全部 ${posts.length} 篇文章与搜索</button>
-        <span class="note">按 <kbd class="kbd-inline">/</kbd> 键快速搜索</span>
+      <div class="editorial-foot">
+        <button type="button" class="btn" data-posts-mode="all">浏览全部 ${posts.length} 篇文章与搜索</button>
+        <span class="kbd-hint">按 <kbd class="kbd">/</kbd> 键快速搜索</span>
       </div>
     </div>
     <div id="all-posts-pane" hidden>
@@ -502,10 +519,13 @@ function buildHome(posts, works, categories) {
     </div>
   </section>
 
-  <section id="topics" class="home-section" aria-labelledby="topics-heading">
+  <section id="topics" class="section" aria-labelledby="topics-heading">
     <div class="section-head">
-      <div class="section-title"><h2 id="topics-heading">专栏分类</h2><span>${categories.length} 个</span></div>
-      <a class="section-link" href="${BASE}/archives.html">查看时间归档 →</a>
+      <div>
+        <p class="section-kicker">Topics</p>
+        <h2 id="topics-heading">按分类探索</h2>
+      </div>
+      <a class="section-more" href="${BASE}/archives.html">时间归档 →</a>
     </div>
     <div class="cat-cloud reveal">
       ${topCats.map((g) => `<a class="cat-pill" href="${catLink(g.name)}">${esc(g.name)}<span>${g.posts.length}</span></a>`).join('\n      ')}
